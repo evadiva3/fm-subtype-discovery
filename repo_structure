@@ -1,0 +1,321 @@
+# Repository Architecture
+## fm-subtype-discovery
+
+---
+
+## Folder Structure
+
+```
+fm-subtype-discovery/
+│
+├── README.md                          # Project overview + setup instructions
+├── requirements.txt                   # All Python dependencies pinned
+├── .gitignore                         # Excludes data/, checkpoints/, __pycache__/
+│
+├── data/                              # NOT pushed to GitHub -- local only
+│   ├── raw/                           # Symlink or pointer to ~/Desktop/DATA
+│   ├── clinical/                      # Symlink or pointer to ~/Desktop/DATA_clinical
+│   └── README.md                      # Documents where data lives locally
+│
+├── preprocessing/                     # Eva + Partner -- data preparation scripts
+│   ├── run_fmriprep.sh                # Docker command to run fMRIPrep
+│   ├── extract_roi_timeseries.py      # fMRIPrep output → 200 ROI CSVs per subject
+│   ├── compute_fc_matrices.py         # ROI CSVs → 9 FC matrices per subject
+│   └── verify_setup.py               # Checks all dependencies installed correctly
+│
+├── models/                            # Partner -- all PyTorch model code
+│   ├── __init__.py
+│   ├── dataset.py                     # PyTorch Geometric dataset class
+│   ├── gnn_encoder.py                 # 3-layer GAT encoder
+│   ├── attention_pool.py              # Condition attention pooling layer
+│   ├── contrastive_loss.py            # NT-Xent loss (Eva writes this)
+│   └── augmentations.py              # Node masking + edge noise (Eva writes this)
+│
+├── src/                               # Partner -- training and clustering
+│   ├── __init__.py
+│   ├── train.py                       # Full training loop + early stopping
+│   ├── hyperparameter_search.py       # Optuna hyperparameter search
+│   ├── clustering.py                  # Extract embeddings + k-means
+│   └── ablations.py                   # 4 ablation experiments
+│
+├── analysis/                          # Eva -- evaluation and clinical validation
+│   ├── __init__.py
+│   ├── clinical_validation.py         # Mann-Whitney U + FDR + Cohen's d
+│   ├── evaluate.py                    # Silhouette + permutation test + gap statistic
+│   ├── interpretability.py            # GAT attention weight extraction + brain maps
+│   ├── baselines.py                   # PCA+kmeans, raw kmeans, SVM baselines
+│   ├── figures.py                     # All figure generation functions
+│   └── merge_clinical_imaging.py      # Merge clinical CSV with model embeddings
+│
+├── notebooks/                         # Eva -- exploratory analysis
+│   ├── 01_clinical_data_exploration.ipynb   # Clinical data cleaning + stats
+│   ├── 02_training.ipynb                    # Training runs + loss curves
+│   └── 03_results.ipynb                     # Final results + figures
+│
+├── results/                           # NOT pushed to GitHub -- local only
+│   ├── checkpoints/                   # Saved model weights
+│   │   └── best_model.pt
+│   ├── embeddings/                    # Extracted subject embeddings
+│   │   └── subject_embeddings.npy
+│   ├── figures/                       # All saved figures
+│   │   ├── clinical_FM_vs_HC.png
+│   │   ├── umap_embeddings.png
+│   │   ├── silhouette_comparison.png
+│   │   ├── clinical_violin_plots.png
+│   │   ├── attention_brain_maps.png
+│   │   └── condition_contributions.png
+│   ├── ablation_results.json          # Ablation experiment results
+│   ├── best_params.json               # Best hyperparameters from Optuna
+│   └── clinical_validation_results.csv # Statistical test results
+│
+├── tests/                             # Both -- unit tests
+│   ├── test_dataset.py
+│   ├── test_gnn_encoder.py
+│   ├── test_contrastive_loss.py
+│   ├── test_augmentations.py
+│   ├── test_evaluate.py
+│   └── test_clinical_validation.py
+│
+└── paper/                             # Eva -- manuscript files
+    ├── draft_v1.md
+    ├── figures/                       # Copy of results/figures for paper
+    └── references.bib
+```
+
+---
+
+## File Ownership
+
+| File | Owner | Status |
+|---|---|---|
+| `preprocessing/run_fmriprep.sh` | Eva | Done |
+| `preprocessing/extract_roi_timeseries.py` | Eva | Done |
+| `preprocessing/compute_fc_matrices.py` | Eva | Day 3 |
+| `models/contrastive_loss.py` | Eva | Day 2 |
+| `models/augmentations.py` | Eva | Day 2 |
+| `analysis/clinical_validation.py` | Eva | Day 1 |
+| `analysis/evaluate.py` | Eva | Day 1 |
+| `analysis/figures.py` | Eva | Day 2 |
+| `analysis/merge_clinical_imaging.py` | Eva | Day 4 |
+| `notebooks/01_clinical_data_exploration.ipynb` | Eva | Day 1 |
+| `models/dataset.py` | Partner | Day 1 |
+| `models/gnn_encoder.py` | Partner | Day 1 |
+| `models/attention_pool.py` | Partner | Day 1 |
+| `src/train.py` | Partner | Day 2 |
+| `src/hyperparameter_search.py` | Partner | Day 2 |
+| `src/clustering.py` | Partner | Day 2 |
+| `analysis/interpretability.py` | Partner | Day 3 |
+| `analysis/baselines.py` | Partner | Day 3 |
+| `src/ablations.py` | Partner | Day 4 |
+
+---
+
+## Interface Contracts
+
+These specs are fixed. Both developers code to these exactly.
+
+### FC Matrix Files
+```
+Location:  ~/Desktop/DATA_clinical/fc_matrices/
+Filename:  sub-002_condition-attend_positive_FC.npy
+Shape:     (200, 200)
+Dtype:     float32
+Values:    Fisher Z-transformed Pearson correlations
+Diagonal:  set to 0
+```
+
+### ROI Time Series Files
+```
+Location:  ~/Desktop/DATA_clinical/roi_timeseries/
+Filename:  sub-002_task-epr_schaefer200.csv
+Shape:     (834, 200)
+Columns:   parcel_001 ... parcel_200
+Index:     TR index (0-833)
+```
+
+### Clinical Clean CSV
+```
+Location:  ~/Desktop/DATA_clinical/clinical_clean.csv
+Columns:   subject_id, group, age, vas_pain, hamd_total, hamd_cat,
+           hama_total, tas_total, tas_dif, tas_ddf, tas_eot,
+           alexithymia, erq_reappraisal, erq_suppression
+subject_id: sub-002 format (zero-padded to 3 digits)
+group:      FM or HC (string, not 0/1)
+Rows:       63 (excludes sub-005, sub-012, sub-032)
+```
+
+### PyG Data Object (output of dataset.__getitem__)
+```
+data.x:          node features       [200, 5]   float32
+data.edge_index: graph connectivity  [2, E]     long
+data.edge_attr:  edge weights        [E]        float32
+data.y:          group label         [1]        long    (0=FM, 1=HC)
+data.subject_id: subject identifier  string     e.g. 'sub-002'
+data.condition:  condition label     string     e.g. 'attend_positive'
+```
+
+### GAT Encoder Output
+```
+Input:   PyG Batch object
+Output:  torch.Tensor [batch_size, 64]  float32
+```
+
+### Embeddings Dictionary
+```
+Key:    subject_id string  e.g. 'sub-002'
+Value:  torch.Tensor [9, 64]  float32
+        rows ordered: attend_positive, attend_negative, attend_neutral,
+                      reappraise_positive, reappraise_negative, reappraise_neutral,
+                      suppress_positive, suppress_negative, suppress_neutral
+```
+
+### Cluster Labels Array
+```
+Type:   numpy array [63]  int
+Values: 0, 1, or 2
+Order:  must match row order of clinical_clean.csv exactly
+```
+
+### Attention Pool Output
+```
+Input:   torch.Tensor [9, 64]  float32  (9 condition embeddings)
+Output:  torch.Tensor [64]     float32  (pooled subject embedding)
+Weights: torch.Tensor [9]      float32  (sum to 1.0)
+```
+
+---
+
+## Git Workflow
+
+```
+main branch        -- Eva's code
+partner-dev branch -- Partner's code
+```
+
+### Partner Setup
+```bash
+git clone https://github.com/Anonymous2578/fm-subtype-discovery.git
+cd fm-subtype-discovery
+git checkout -b partner-dev
+```
+
+### Daily Commit Pattern
+```bash
+git add .
+git commit -m "Day X: description of what was built"
+git push origin partner-dev
+```
+
+### Eva Reviews Partner Code Daily
+```bash
+git fetch origin
+git diff main origin/partner-dev
+```
+
+### Day 5 Merge
+```bash
+git checkout main
+git merge partner-dev
+# Fix any conflicts
+git push origin main
+```
+
+---
+
+## Dependencies
+
+### Eva's environment (MacBook, conda UTD)
+```
+pandas
+numpy
+scipy
+matplotlib
+seaborn
+openpyxl
+torch
+scikit-learn
+umap-learn
+jupyter
+```
+
+### Partner's environment (Windows WSL2)
+```
+torch
+torch-geometric
+numpy
+pandas
+scipy
+scikit-learn
+umap-learn
+wandb
+optuna
+matplotlib
+seaborn
+```
+
+### Shared preprocessing (both need)
+```
+nilearn
+nibabel
+fmriprep (Docker)
+```
+
+---
+
+## Data Flow Summary
+
+```
+Raw .nii.gz files (OpenNeuro ds004144)
+        │
+        ▼
+fMRIPrep (Docker) ── preprocessing/run_fmriprep.sh
+        │
+        ▼
+Preprocessed BOLD + confounds
+        │
+        ▼
+ROI Time Series CSVs [834 x 200] ── preprocessing/extract_roi_timeseries.py
+        │
+        ▼
+FC Matrices [200 x 200] x 9 conditions ── preprocessing/compute_fc_matrices.py
+        │
+        ▼
+PyG Graph Dataset ── models/dataset.py
+        │
+        ├──── Augmentation ── models/augmentations.py
+        │
+        ▼
+GAT Encoder [batch x 64] ── models/gnn_encoder.py
+        │
+        ▼  (trained with)
+NT-Xent Contrastive Loss ── models/contrastive_loss.py
+        │
+        ▼
+Subject Embeddings [63 x 9 x 64] ── src/clustering.py
+        │
+        ▼
+Attention Pooling [63 x 64] ── models/attention_pool.py
+        │
+        ▼
+K-Means Clustering ── src/clustering.py
+        │
+        ├──── Silhouette + Permutation Test ── analysis/evaluate.py
+        │
+        ▼
+Subtype Labels [63]
+        │
+        ▼
+Clinical Validation ── analysis/clinical_validation.py
+        │
+        ▼
+Results + Figures ── analysis/figures.py
+        │
+        ▼
+Paper ── paper/draft_v1.md
+```
+
+---
+
+*Last updated: June 25, 2026*
+*Eva: main branch | Partner: partner-dev branch*
+*Merge target: Day 5*
