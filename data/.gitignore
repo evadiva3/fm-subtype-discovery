@@ -1,0 +1,8 @@
+# Ignore everything in the data folder by default.
+*
+
+# But keep this .gitignore file itself.
+!.gitignore
+
+# Allow git to recurse into existing directories.
+!*/
