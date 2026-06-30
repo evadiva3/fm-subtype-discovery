@@ -16,7 +16,7 @@ class trainer():
     def train_epoch(self, dataloader, augmentor):
         self.model.train()
         i=0
-        total_loss = 0
+        total_loss=0
         for k in dataloader:
             k=k.to(self.device)
             view1,view2=augmentor.augment(k)
@@ -28,6 +28,46 @@ class trainer():
             self.optimize.step()
             total_loss+=loss.item()
             i+=1
+        self.schedule.step()
+        return(total_loss/i)
+    def validate(self, dataloader, augmentor):
+        self.model.eval()
+        i=0
+        total_loss=0
+        with torch.no_grad():
+            for k in dataloader:
+                k=k.to(self.device)
+                view1,view2=augmentor.augment(k)
+                a=self.model(view1)
+                b=self.model(view2)
+                loss=self.loss(a,b)
+                total_loss+=loss.item()
+                i+=1
+        return(total_loss/i)
+    def fit(self, train_load, val_load, augmentor, epochs=200, patience=10):
+        c=0
+        path=os.path.join(self.dire, 'best_model.pt')
+        for i in range(epochs):
+            a=self.train_epoch(train_load,augmentor)
+            b=self.validate(val_load,augmentor)
+            if b<self.best_val_loss:
+                self.best_val_loss=b
+                torch.save(self.model.state_dict(), path)
+                c=0
+            else:
+                c+=1
+                if c>=patience:
+                    print('model has stopped learning :(')
+                    break;
+            print(f"Epoch {i}: train={a:.4f} val={b:.4f}")
+        self.load_best()
+    def load_best(self):
+        path=os.path.join(self.dire, 'best_model.pt')
+        self.model.load_state_dict(torch.load(path))
+
+
+
+
 
 
             
