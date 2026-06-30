@@ -9,7 +9,7 @@ class GNNEncoder(nn.Module):
         super().__init__();
         self.conv1 = GATv2Conv(in_channels=5, out_channels=32, heads=4, concat=True, edge_dim=1);
         self.conv2 = GATv2Conv(in_channels=128, out_channels=32, heads=4, concat=True, edge_dim=1);
-        self.conv3 = GATv2Conv(in_channels=128, out_channels=64, heads=4, concat=False, edge_dim=1);g
+        self.conv3 = GATv2Conv(in_channels=128, out_channels=64, heads=4, concat=False, edge_dim=1);
         self.layerNorm1 = LayerNorm(in_channels=128, mode='node');
         self.layerNorm2 = LayerNorm(in_channels=128, mode = 'node');
         self.elu = nn.ELU();
