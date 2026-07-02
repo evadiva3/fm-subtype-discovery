@@ -24,5 +24,16 @@ class attention_interpreter():
         return results
 
 
-    def subtype_importance(self,attention_w,subtype_label):
+    def subtype_importance(self,attention_w,s_label):
+        group={}
+        for subject_id, label in s_label.items():
+            if label not in group:
+                group[label]=[]
+            group[label].append(attention_w[subject_id])
+
+        for cat in group:
+            group[cat]=np.mean(group[cat],axis=0)
+        return group
+    
+    def map_to_net(self)
 
