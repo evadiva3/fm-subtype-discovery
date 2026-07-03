@@ -1,8 +1,3 @@
-import numpy as np;
-import pandas as pd;
-from nilearn.maskers import NiftiLabelsMasker;
-from pathlib import Path;
-import os;
 class preprocessBOLD:
   def __init__(self):
     self.datafolder = "../pathname";
@@ -43,7 +38,7 @@ class preprocessBOLD:
           CTR[i].append(timeSeries[row[1]//2-1:(row[1]+row[2])//2,:]);
     for condition in range(0,len(CTR)):
       CTRF[condition] = pd.DataFrame(np.concatenate(CTR[condition]));
-
+    self.saveTimeSeries = CTRF.to_numpy();
     return CTRF;
   def buildFCMatrices(self):
     CTR = self.splitConditions();
@@ -63,5 +58,6 @@ class preprocessBOLD:
           conditions = self.buildFCMatrices()
           for i in range(0,len(conditions)):
             np.save(self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_FCMatrixCondition" + self.conditions[i].replace(" ", "") + ".npy",conditions[i]);
+            np.save(self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_ROITimeSeries" + self.conditions[i].replace(" ", "") + ".npy",self.saveTimeSeries[i]);
     except Exception as error:
       raise RuntimeError("Check Pathname Hardcodes") from error;

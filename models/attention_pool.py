@@ -14,3 +14,6 @@ class condition_attention_pool(nn.Module):
         c=F.softmax(b,dim=0)
         weight_sum=torch.einsum('i,ij->j',c,embed)
         return (weight_sum,c)
+#Nikhil: looking at this, attention_pool uses nn.Linear which I am pretty sure is a linear model and has learnable featuree
+# and weights so I could've sworn that using it as is and not training it at some point would mean it when I use
+# it for cluster it would initialize with random weights which I don't think would be good. idk you can ask claude.wh
