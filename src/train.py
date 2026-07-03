@@ -82,9 +82,27 @@ class trainer():
                 total_loss+=loss.item()
             print(f"Epoch {i}: train={total_loss/len(dataloader):.4f}")
 
-
-
-
+if __name__ == "__main__":
+    from gnn_encoder import GNNEncoder;
+    from contrastive_loss import NTXentLoss;
+    from torch_geometric.data import DataLoader;
+    from dataset import datasetPreparation;
+    from torch.optim import AdamW;
+    from transformers import get_cosine_schedule_with_warmup;
+    dataset = datasetPreparation();
+    dataSetup = DataLoader(dataset, batch_size=8, shuffle = True);
+    stepSize = len(dataSetup);
+    epochs = 200;
+    totalSteps = stepSize * epochs;
+    partitionWarmupSteps = int(totalSteps * .10);
+    encoder = GNNEncoder();
+    lossing = NTXentLoss(temperature = 0.5);
+    optimizer = AdamW(encoder.parameters(), lr=1e-4,weight_decay=1e-4);
+    scheduler = get_cosine_schedule_with_warmup(optimizer, num_warmup_steps = partitionWarmupSteps, num_training_steps=totalSteps);
+    deviceChoice = torch.device('cpu');
+    if torch.cuda.is_available():
+            deviceChoice = torch.device('cuda');
+    training = trainer(encoder,lossing,optimizer,scheduler,deviceChoice,"results/checkpoints");
 
 
             
