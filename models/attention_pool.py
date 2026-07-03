@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class condition_attention_pool(nn.Module):
-    def __init__(self,d_model=64,num_cons=9):
+    def __init__(self,d_model=64,num_cons=7):
         super().__init__()
         self.d_model=d_model
         self.num_cons=num_cons

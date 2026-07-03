@@ -10,7 +10,7 @@ class graph_augmentor:
     def node_masking(self, data):
         data=data.clone()
         n=data.x.shape[0]
-        mask = torch.bernoulli(torch.full((n,), self.mask_rate))        
+        mask=torch.bernoulli(torch.full((n,), self.mask_rate).to(data.x.device))  
         data.x[mask.bool()]=0
         return data
     
