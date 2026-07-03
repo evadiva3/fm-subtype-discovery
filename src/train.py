@@ -63,7 +63,7 @@ class trainer():
         self.load_best()
     def load_best(self):
         path=os.path.join(self.dire, 'best_model.pt')
-        self.model.load_state_dict(torch.load(path))
+        self.model.load_state_dict(torch.load(path, map_location=self.device))  # fix: map_location ensures checkpoint loads correctly regardless of device
     def train_attention(self, attention_pool, dataloader, epochs=200):
         self.model.eval()
         pool_opt=torch.optim.AdamW(attention_pool.parameters(), lr=1e-4)

@@ -20,7 +20,7 @@ class attention_interpreter():
                 output=self.model(i)
                 for sub in range(len(i.subject_id)):              
                     a=i.subject_id[sub]
-                    results[a]=output[sub]
+                    results[a]=output[sub].detach().cpu()
                 
         return results
 
@@ -41,7 +41,7 @@ class attention_interpreter():
         label=a['labels']
         networks={}
         for idx, label_str in enumerate(label):
-            network=label_str.split('_')[2]
+            network=label_str.decode('utf-8').split('_')[2] 
             if network not in networks:
                 networks[network] = []
             networks[network].append(importance[idx])
@@ -58,7 +58,7 @@ class attention_interpreter():
                 embedd=self.model(i)
                 pooled, weights=self.attention_pool(embedd)
                 aw.append(weights)
-        return torch.stack(aw).mean(dim=0)
+        return torch.cat(aw).mean(dim=0)
 
         
 

@@ -1,7 +1,4 @@
-import numpy as np
-import pandas as pd
-import sklearn
-import torch
+import torch  
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -16,7 +13,7 @@ class NTXentLoss(nn.Module):
         sim=torch.mm(c,c.T)/self.temperature
         sim.fill_diagonal_(-1e9)
         n=ag1.shape[0]
-        labels=torch.cat([torch.arange(n,2*n),torch.arange(n)])
+        labels=torch.cat([torch.arange(n,2*n),torch.arange(n)]).to(ag1.device)  
         loss=F.cross_entropy(sim,labels)
         return loss
 
