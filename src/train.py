@@ -64,6 +64,23 @@ class trainer():
     def load_best(self):
         path=os.path.join(self.dire, 'best_model.pt')
         self.model.load_state_dict(torch.load(path))
+    def train_attention(self, attention_pool, dataloader, epochs=200):
+        self.model.eval()
+        pool_opt=torch.optim.AdamW(attention_pool.parameters(), lr=1e-4)
+        attention_pool.train()
+        for i in range(epochs):
+            total_loss=0
+            for k in dataloader:
+                k=k.to(self.device)
+                pool_opt.zero_grad()
+                with torch.no_grad():
+                    a=self.model(k)
+                pooled,weights=attention_pool(a)
+                loss=-pooled.var()
+                loss.backward()
+                pool_opt.step()
+                total_loss+=loss.item()
+            print(f"Epoch {i}: train={total_loss/len(dataloader):.4f}")
 
 if __name__ == "__main__":
     from gnn_encoder import GNNEncoder;
