@@ -12,6 +12,7 @@ class datasetPreparation(Dataset):
     self.datafolderPath = Path(self.datafolder);
     self.FCMatricesFilePath = "";
     self.TimeSeriesFilePath = "";
+    self.subjectList = [];
     self.conditionNames = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]
     self.DataList = self.execute();
   def organizeNodes(self):
@@ -47,6 +48,7 @@ class datasetPreparation(Dataset):
         for i in range(0,7):
           self.FCMatricesFilePath = self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_FCMatrixCondition" + self.conditionNames[i].replace(" ", "") + ".npy";
           self.TimeSeriesFilePath = self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_ROITimeSeries" + self.conditionNames[i].replace(" ", "") + ".npy";
+          self.subjectList.append(subfolder.name);
           unpackage = self.edgeIndexAttr();
           data = Data(x=self.organizeNodes(), edge_index = unpackage[0], edge_attr = unpackage[1]);
           data.subjectID = subfolder.name;
