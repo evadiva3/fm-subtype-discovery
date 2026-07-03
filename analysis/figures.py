@@ -20,7 +20,7 @@ class figure_gen():
         plt.show()
         plt.close()
     def plot_clinical_violins(self,df,subtypes):
-        sns.violinplot(x=df,y=subtypes,color='pink')
+        sns.violinplot(data=df,x=subtypes,color='pink')  
         plt.savefig(os.path.join(self.dire, 'subtype_violin_plot.png'), dpi=300, bbox_inches='tight')
         plt.show()
         plt.close()
