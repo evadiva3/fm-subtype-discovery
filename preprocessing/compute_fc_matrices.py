@@ -10,8 +10,7 @@ import os
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from nilearn.input_data import NiftiLabelsMasker
-from nilearn import NiftiLabelsMasker
+from nilearn.maskers import NiftiLabelsMasker
 from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import LedoitWolf
 import torch
@@ -26,6 +25,9 @@ class preprocessBOLD:
     self.pathToBOLDFile = "";
     self.pathToConfoundsFile = "";
     self.eventsListPath = ""
+    self.saveTimeSeries = None
+    self.conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]
+
   def buildTimeSeries(self):
     try:
       confound = pd.read_csv(self.pathToConfoundsFile, sep="\t");
@@ -51,11 +53,12 @@ class preprocessBOLD:
     TSVData = pd.read_csv(self.eventsListPath,sep="\t");
     CTR = [[] for _ in range(0,7)];
     CTRF = [[] for _ in range(0,7)];
-    self.conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]
     for row in TSVData.itertuples():
-      for i in range(0,len(self.conditions)):
-        if row[3] == self.conditions[i]:
-          CTR[i].append(timeSeries[row[1]//2-1:(row[1]+row[2])//2,:]);
+        for i in range(len(self.conditions)):
+            if row.trial_type == self.conditions[i]:
+                start_tr = int(row.onset / 2)
+                end_tr = int((row.onset + row.duration) / 2)
+                CTR[i].append(timeSeries[start_tr:end_tr, :])
     for condition in range(0,len(CTR)):
       CTRF[condition] = pd.DataFrame(np.concatenate(CTR[condition]));
     self.saveTimeSeries = [df.to_numpy() for df in CTRF]
@@ -74,45 +77,55 @@ class preprocessBOLD:
         np.fill_diagonal(z_matrix, 0)
         z_matrix[np.isinf(z_matrix)]=0  
         CFCM[i]=z_matrix    
-        return CFCM
+      return CFCM
       
   #this is a new mehtod that converts the matrix objects into pytorch geo graph topologies
   def build_sparse(self,fc_matrix,top_k):
-    num_nodes=fc_matrix.shape[0]
-    sources=[]
-    targets=[]
-    edge_w=[]
+    num_nodes = fc_matrix.shape[0]
+    mean_conn = fc_matrix.mean(axis=1)
+    var_conn = fc_matrix.var(axis=1)
+    degree = (np.abs(fc_matrix) > 0).sum(axis=1).astype(float)
+    spectral = np.linalg.norm(fc_matrix, axis=1)
+    clust = np.array([
+      fc_matrix[i, np.argsort(np.abs(fc_matrix[i]))[-top_k:]].mean()
+      for i in range(num_nodes)
+    ])
+    x = torch.tensor(
+      np.stack([mean_conn, var_conn, degree, clust, spectral], axis=1),
+      dtype=torch.float
+    )
+    sources, targets, edge_w = [], [], []
     for node_idx in range(num_nodes):
-      row=fc_matrix[node_idx]
-      top_indices=np.argsort(np.abs(row))[-top_k:]
+      row = fc_matrix[node_idx]
+      top_indices = np.argsort(np.abs(row))[-top_k:]
       for target_idx in top_indices:
         sources.append(node_idx)
         targets.append(target_idx)
         edge_w.append(row[target_idx])
-      edge_index=torch.tensor([sources, targets], dtype=torch.long)
-      edge_attr=torch.tensor(edge_w, dtype=torch.float).unsqueeze(-1)
-      x=torch.ones((num_nodes, 5), dtype=torch.float) 
-      return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
+    edge_index = torch.tensor([sources, targets], dtype=torch.long)
+    edge_attr = torch.tensor(edge_w, dtype=torch.float).unsqueeze(-1)
+    return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
 
     # method iterate and arrange by iterpolated adge density
-    def execute(self):
-      try:
-        top_k_list=[20, 30, 40, 50] 
-        for subfolder in self.datafolderPath.iterdir():
-          if subfolder.is_dir() and not subfolder.name.startswith("top_"):
-            self.pathToBOLDFile=os.path.join(self.datafolder, subfolder.name, f"{subfolder.name}_BOLD.nii.gz")
-            self.pathToConfoundsFile=os.path.join(self.datafolder, subfolder.name, f"{subfolder.name}_Confounds.tsv")
-            self.eventsListPath=os.path.join(self.datafolder, subfolder.name, f"{subfolder.name}_events.tsv")
-            c_matrices=self.buildFCMatrices()
-            for top_k in top_k_list:
-              output_dir=os.path.join(self.datafolder, f"top_{top_k}", subfolder.name)
-              os.makedirs(output_dir, exist_ok=True)
-              for i in range(len(c_matrices)):
-                cond_name=self.conditions[i].replace(" ", "").replace("-", "")
-                np.save(os.path.join(output_dir, f"{subfolder.name}_FCMatrix_Cond_{cond_name}.npy"), c_matrices[i])
+  def execute(self):
+    try:
+      top_k_list=[20, 30, 40, 50]
+      for subfolder in self.datafolderPath.iterdir():
+        if subfolder.is_dir() and not subfolder.name.startswith("top_"):
+          self.pathToBOLDFile=os.path.join(self.datafolder, subfolder.name, f"{subfolder.name}_BOLD.nii.gz")
+          self.pathToConfoundsFile=os.path.join(self.datafolder, subfolder.name, f"{subfolder.name}_Confounds.tsv")
+          self.eventsListPath=os.path.join(self.datafolder, subfolder.name, f"{subfolder.name}_events.tsv")
+          c_matrices=self.buildFCMatrices()
+          for top_k in top_k_list:
+            output_dir=os.path.join(self.datafolder, f"top_{top_k}", subfolder.name)
+            os.makedirs(output_dir, exist_ok=True)
+            for i in range(len(c_matrices)):
+              cond_name=self.conditions[i].replace(" ", "").replace("-", "")
+              np.save(os.path.join(output_dir, f"{subfolder.name}_FCMatrix_Cond_{cond_name}.npy"), c_matrices[i])
+              if self.saveTimeSeries is not None:
                 np.save(os.path.join(output_dir, f"{subfolder.name}_ROITimeSeries_Cond_{cond_name}.npy"), self.saveTimeSeries[i])
-                graph_data=self.buildSparseGraph(c_matrices[i], top_k)
-                torch.save(graph_data, os.path.join(output_dir, f"{subfolder.name}_PyGGraph_Cond_{cond_name}.pt"))              
-      except Exception as error:
-        raise RuntimeError("Check Pathname/Pipeline Parameters") from error  
+              graph_data=self.build_sparse(c_matrices[i], top_k)
+              torch.save(graph_data, os.path.join(output_dir, f"{subfolder.name}_PyGGraph_Cond_{cond_name}.pt"))              
+    except Exception as error:
+      raise RuntimeError("Check Pathname/Pipeline Parameters") from error  
       
