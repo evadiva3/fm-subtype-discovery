@@ -93,7 +93,7 @@ class preprocessBOLD:
       edge_attr=torch.tensor(edge_w, dtype=torch.float).unsqueeze(-1)
       x=torch.ones((num_nodes, 5), dtype=torch.float) 
       return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
-
+   
     # method iterate and arrange by iterpolated adge density
     def execute(self):
       try:

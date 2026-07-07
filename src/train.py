@@ -90,7 +90,7 @@ if __name__ == "__main__":
     from torch.optim import AdamW;
     from transformers import get_cosine_schedule_with_warmup;
     dataset = datasetPreparation();
-    dataSetup = DataLoader(dataset, batch_size=8, shuffle = True);
+    dataSetup = DataLoader(dataset.DataList, batch_size=8, shuffle = True);
     stepSize = len(dataSetup);
     epochs = 200;
     totalSteps = stepSize * epochs;
