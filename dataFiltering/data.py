@@ -26,4 +26,4 @@ def getStatData():
     filteredList['subject_id'] =  "sub-"+filteredList['subject_id'].astype(str).str.zfill(3);
     filteredList.loc[filteredList['group']== 0,'group'] = "FM";
     filteredList.loc[filteredList['group']==1,'group'] = "HC";
-    data.to_csv(pathToCSV, index=False);
+    filteredList.to_csv(pathToCSV, index=False);
