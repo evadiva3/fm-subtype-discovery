@@ -1,9 +1,14 @@
+#changes made: joint replace two phase training bc per-grpah NTXENT 
+# with a seperate varance maxiumized poool produced unconstrained 
+# embeddings so joint makes it learns condition importance directly 
+# making thr temo meaninful and siholute scores defensible
+
 import torch
 import os
-
-
+from torch_geometric.data import Batch
 
 class trainer():
+
     def __init__(self,model,loss,optimize,schedule,device,dire):
         self.model=model
         self.loss=loss
@@ -13,6 +18,7 @@ class trainer():
         self.dire=dire
         self.best_val_loss=float('inf')
         os.makedirs(self.dire, exist_ok=True)
+
     def train_epoch(self, dataloader, augmentor):
         self.model.train()
         i=0
@@ -30,6 +36,7 @@ class trainer():
             i+=1
         self.schedule.step()
         return(total_loss/i)
+    
     def validate(self, dataloader, augmentor):
         self.model.eval()
         i=0
@@ -44,6 +51,7 @@ class trainer():
                 total_loss+=loss.item()
                 i+=1
         return(total_loss/i)
+    
     def fit(self, train_load, val_load, augmentor, epochs=200, patience=10):
         c=0
         path=os.path.join(self.dire, 'best_model.pt')
@@ -63,48 +71,133 @@ class trainer():
         self.load_best()
     def load_best(self):
         path=os.path.join(self.dire, 'best_model.pt')
-        self.model.load_state_dict(torch.load(path, map_location=self.device))  # fix: map_location ensures checkpoint loads correctly regardless of device
-    def train_attention(self, attention_pool, dataloader, epochs=200):
-        self.model.eval()
-        pool_opt=torch.optim.AdamW(attention_pool.parameters(), lr=1e-4)
+        self.model.load_state_dict(torch.load(path, map_location=self.device))  
+
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=200,patience=10,lr=1e-4,weight_decay=1e-2):
+    os.makedirs(save_dir, exist_ok=True)
+    checkpoint_path=os.path.join(save_dir, 'best_joint_model.pt')
+    optimizer=torch.optim.AdamW(
+        list(model.parameters())+list(attention_pool.parameters()),
+        lr=lr,
+        weight_decay=weight_decay
+    )
+    scheduler=torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+    best_val_loss=float('inf')
+    patience_counter=0
+    train_losses=[]
+    val_losses=[]
+    for epoch in range(epochs):
+        model.train()
         attention_pool.train()
-        for i in range(epochs):
-            total_loss=0
-            for k in dataloader:
-                k=k.to(self.device)
-                pool_opt.zero_grad()
-                with torch.no_grad():
-                    a=self.model(k)
-                pooled,weights=attention_pool(a)
-                loss=-pooled.var()
-                loss.backward()
-                pool_opt.step()
-                total_loss+=loss.item()
-            print(f"Epoch {i}: train={total_loss/len(dataloader):.4f}")
+        epoch_loss=0
+        n_batches=0
+        for subject_batch in dataloader:
+            Z_i_list=[]
+            Z_j_list=[]
+            for subject in subject_batch:
+                graphs=subject['graphs'] 
+                view1=[]
+                view2=[]
+                for g in graphs:
+                    g=g.to(device)
+                    v1, v2=augmentor.augment(g)
+                    view1.append(v1)
+                    view2.append(v2)
+                batch1=Batch.from_data_list(view1).to(device)
+                batch2=Batch.from_data_list(view2).to(device)
+
+                z1=model(batch1)
+                z2=model(batch2)
+                pooled_i, _, _ =attention_pool(z1)
+                pooled_j, _, _ =attention_pool(z2)
+                Z_i_list.append(pooled_i)
+                Z_j_list.append(pooled_j)
+            Z_i=torch.stack(Z_i_list)
+            Z_j=torch.stack(Z_j_list)
+            optimizer.zero_grad()
+            loss=loss_fn(Z_i, Z_j)
+            loss.backward()
+            optimizer.step()
+            epoch_loss+=loss.item()
+            n_batches+=1
+        scheduler.step()
+        avg_train_loss=epoch_loss/max(n_batches, 1)
+        train_losses.append(avg_train_loss)
+        model.eval()
+        attention_pool.eval()
+        val_loss=0
+        batches=0
+        with torch.no_grad():
+            for subject_batch in val_dataloader:
+                Z_i_list=[]
+                Z_j_list=[]
+                for subject in subject_batch:
+                    graphs=subject['graphs']
+                    view1=[]
+                    view2=[]
+                    for g in graphs:
+                        g=g.to(device)
+                        v1, v2=augmentor.augment(g)
+                        view1.append(v1)
+                        view2.append(v2)
+                    batch1=Batch.from_data_list(view1).to(device)
+                    batch2=Batch.from_data_list(view2).to(device)
+                    z1=model(batch1)
+                    z2=model(batch2)
+                    pooled_i, _, _=attention_pool(z1)
+                    pooled_j, _, _=attention_pool(z2)
+                    Z_i_list.append(pooled_i)
+                    Z_j_list.append(pooled_j)
+                Z_i=torch.stack(Z_i_list)
+                Z_j=torch.stack(Z_j_list)
+                loss=loss_fn(Z_i, Z_j)
+                val_loss+=loss.item()
+                batches+=1
+
+        avg_val_loss=val_loss/max(batches, 1)
+        val_losses.append(avg_val_loss)
+        print(f"Epoch {epoch}: train={avg_train_loss:.4f} val={avg_val_loss:.4f} tau={attention_pool.tau.item():.4f}")
+        if avg_val_loss<best_val_loss:
+            best_val_loss=avg_val_loss
+            torch.save({
+                'model': model.state_dict(),
+                'pool': attention_pool.state_dict()
+            }, checkpoint_path)
+            patience_counter=0
+        else:
+            patience_counter+=1
+            if patience_counter >= patience:
+                print(f"Early stopping at epoch {epoch}")
+                break
+    checkpoint=torch.load(checkpoint_path, map_location=device)
+    model.load_state_dict(checkpoint['model'])
+    attention_pool.load_state_dict(checkpoint['pool'])
+    return model, attention_pool, train_losses, val_losses
+
 
 if __name__ == "__main__":
-    from gnn_encoder import GNNEncoder;
-    from contrastive_loss import NTXentLoss;
-    from torch_geometric.data import DataLoader;
-    from dataset import datasetPreparation;
-    from torch.optim import AdamW;
-    from transformers import get_cosine_schedule_with_warmup;
-    dataset = datasetPreparation();
-    dataSetup = DataLoader(dataset.DataList, batch_size=8, shuffle = True);
-    stepSize = len(dataSetup);
-    epochs = 200;
-    totalSteps = stepSize * epochs;
-    partitionWarmupSteps = int(totalSteps * .10);
-    encoder = GNNEncoder();
-    lossing = NTXentLoss(temperature = 0.5);
-    optimizer = AdamW(encoder.parameters(), lr=1e-4,weight_decay=1e-4);
-    scheduler = get_cosine_schedule_with_warmup(optimizer, num_warmup_steps = partitionWarmupSteps, num_training_steps=totalSteps);
-    deviceChoice = torch.device('cpu');
+    from gnn_encoder import GNNEncoder
+    from contrastive_loss import NTXentLoss
+    from torch_geometric.data import DataLoader
+    from dataset import datasetPreparation
+    from torch.optim import AdamW
+    from transformers import get_cosine_schedule_with_warmup
+
+    dataset = datasetPreparation()
+    dataSetup = DataLoader(dataset.DataList, batch_size=8, shuffle=True)
+    stepSize = len(dataSetup)
+    epochs = 200
+    totalSteps = stepSize * epochs
+    partitionWarmupSteps = int(totalSteps * 0.10)
+    encoder = GNNEncoder()
+    lossing = NTXentLoss(temperature=0.5)
+    optimizer = AdamW(encoder.parameters(), lr=1e-4, weight_decay=1e-4)
+    scheduler = get_cosine_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=partitionWarmupSteps,
+        num_training_steps=totalSteps,
+    )
+    deviceChoice = torch.device("cpu")
     if torch.cuda.is_available():
-            deviceChoice = torch.device('cuda');
-    training = trainer(encoder,lossing,optimizer,scheduler,deviceChoice,"results/checkpoints");
-
-
-            
-    
-
+        deviceChoice = torch.device("cuda")
+    training = trainer(encoder, lossing, optimizer, scheduler, deviceChoice, "results/checkpoints")

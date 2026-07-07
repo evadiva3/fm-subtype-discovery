@@ -1,4 +1,11 @@
+#changes made: no index-based sequential matrix tracking and instead graph batch dicionary mapping
+#automaticed division of fm and hc
+#intro orthogonal subspace projection so can isolate the patient variance from contol base
+#no more raw numpy paths!!
+
+
 import os;
+import json
 import torch;
 import pandas as pd;
 import numpy as np;
@@ -7,7 +14,9 @@ from sklearn.metrics import silhouette_score;
 import umap
 from pathlib import Path;
 from torch.utils.data import Dataset
-from dataset import datasetPreparation;
+from torch_geometric.data import Batch
+from dataset import datasetPreparation
+
 class cluster():
     def __init__(self, GNNEncoder, Directory, checkpointName, conditionList, subjectList):
         self.GNNEncoder = GNNEncoder;
@@ -15,31 +24,79 @@ class cluster():
         self.subjectDList = [[None for _ in range(0, len(conditionList))] for _ in range (0, len(subjectList))];
         self.conditionList = conditionList;
         self.subjectList = subjectList;
-    def deploy(self,dataset):
-        self.GNNEncoder.load_state_dict(torch.load(self.PTPath));
+    def deploy(self,dataloader):
+        self.subject_embeddings={}
+        self.group_labels={}
         self.GNNEncoder.eval();
         with torch.no_grad():
-            for batch in dataset:
+            for subject in dataloader:
+                batch=Batch.from_data_list(subject['graphs'])
+                # nikhil: GNNEncoder.forward does data.edge_attr.unsqueeze(-1) internally so
+                # if edge_attr arrives as [E, 1] from preprocessBOLD, this will make it [E, 1, 1] and it will crash
+                # we need to verify edge_attr shape before running so could u either remove unsqueeze in encoder or ensure
+                # preprocessBOLD saves edge_attr as [E] not [E, 1].
                 embeddings = self.GNNEncoder(batch);
-                self.organizeEmbeddings(embeddings, batch);
-    def organizeEmbeddings(self,batchTense, batch):
-        for i in range(len(batchTense)):
-            self.subjectDList[self.subjectList.index(batch.subjectID[i])][self.conditionList.index(batch.condition[i])] = batchTense[i];
+                subject_id=subject['subject_id']
+                self.subject_embeddings[subject_id]=embeddings
+                self.group_labels[subject_id]=int(subject['group_label'].view(-1)[0].item())
+
     def setAttention(self,attentionModel):
-        masterAttList = [];
-        masterWeightList = [];
+        self.attention_embeddings={}
+        self.attention_weights={}
         attentionModel.eval();
         with torch.no_grad():
-            for subject in self.subjectDList:
-                tensorMatrix = torch.stack(subject);
-                output, weights = attentionModel(tensorMatrix);
-                masterAttList.append(output);
-                masterWeightList.append(weights);
-        masterAttList = torch.stack(masterAttList);
-        masterWeightList = torch.stack(masterWeightList);
-        return (masterAttList, masterWeightList);
-    def KMeansUse(self,takeTensor):
-        takeTensor = takeTensor.numpy();
+            for subject_id, embeddings in self.subject_embeddings.items():  
+                output,weights,tau=attentionModel(embeddings)
+                self.attention_embeddings[subject_id]=output
+                self.attention_weights[subject_id]=weights
+        self.tau=tau.item()
+        return self.attention_embeddings
+
+    def _stack(self, emb_dict):
+        ids=list(emb_dict.keys())
+        tensor=torch.stack([emb_dict[i] for i in ids])
+        return tensor, ids
+    
+    def _split_fm_hc(self):
+        self.fm_embed={}
+        self.hc_embed={}
+        for subject_id, embedding in self.attention_embeddings.items():
+            if self.group_labels[subject_id] == 0:
+                self.fm_embed[subject_id]=embedding
+            elif self.group_labels[subject_id] == 1:
+                self.hc_embed[subject_id]=embedding
+
+    def validate_hc_sep(self):
+        ids=list(self.attention_embeddings.keys())
+        embeddings=torch.stack([self.attention_embeddings[i] for i in ids]).detach().cpu().numpy() 
+        labels=np.array([self.group_labels[i] for i in ids])
+        self.hc_sep_silh=silhouette_score(embeddings, labels)
+        return self.hc_sep_silh
+    
+    def project_ortho(self, fm_embeddings, hc_embeddings):
+        fm_centroid=fm_embeddings.mean(dim=0)
+        hc_centroid=hc_embeddings.mean(dim=0)
+        v_sep=fm_centroid-hc_centroid
+        v_sep=v_sep/v_sep.norm()
+        proj_coeff=fm_embeddings @ v_sep
+        z_perp=fm_embeddings-torch.outer(proj_coeff, v_sep)
+        self.hc_c=hc_centroid
+        return z_perp
+    
+    def compute_centroid_distances(self, fm_embeddings, labels, hc_centroid):
+        distances=[]
+        for subtype in sorted(set(labels)):
+            mask=torch.tensor(labels==subtype)
+            subtype_centroid=fm_embeddings[mask].mean(dim=0)
+            distances.append((subtype_centroid-hc_centroid).norm().item())
+        self.centroid_distances=np.array(distances)
+        return self.centroid_distances
+    
+    def KMeansUse(self,takeTensor=None, subjectIds=None): 
+        if takeTensor is None:
+            self._split_fm_hc()
+            takeTensor, subjectIds=self._stack(self.fm_embed)
+        takeTensor=takeTensor.detach().cpu().numpy()
         trialSave = [];
         labelSave = [];
         k=2;
@@ -50,42 +107,61 @@ class cluster():
             trialSave.append(score);
             labelSave.append(labels);
             k+=1;
-        labelSave = labelSave[trialSave.index(max(trialSave))];
-        trialFrame = pd.DataFrame({"Subject_Id": self.subjectList, "Label":labelSave});
+        bestLabels = labelSave[trialSave.index(max(trialSave))]; 
+        trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label":bestLabels});
         trialSave = pd.DataFrame({"k": [2, 3, 4], "silhouette_score": trialSave});
-        return [trialSave, trialFrame];
+        return [trialSave, trialFrame, bestLabels];
+
     def UMAPPING(self,array):
-        array = array.numpy();
+        array=array.detach().cpu().numpy()
         coords = umap.UMAP(n_neighbors=10, min_dist=0.1, random_state=42);
         return coords.fit_transform(array);
-    def saveAll(self,CWeights, embeddingsAtt, KScore, labelfK, coords):
+
+    def saveAll(self,CWeights, embeddingsAtt, KScore, labelfK, coords, orthoLabels, orthoScores):
         path = Path("../ClusterResults");
         path.mkdir(parents=True, exist_ok=True);
         labelfK.to_csv(path/"K-Means-Labeling.csv", index=False);
-        np.save(path/"Embeddings.npy",embeddingsAtt.numpy());
+        np.save(path/"Embeddings.npy",embeddingsAtt.detach().cpu().numpy())
         KScore.to_csv(path/"silhouette-scores.csv");
         np.save(path/"UMAP-COORDS.npy",coords);
-        np.save(path/"attentionWeights.npy",CWeights.numpy());
+        np.save(path/"attentionWeights.npy",CWeights.detach().cpu().numpy())
+        with open(path/"hc_separation_silhouette.json", "w") as f:
+            json.dump({"hc_separation_silhouette": float(self.hc_sep_silh)}, f)
+        orthoLabels.to_csv(path/"orthogonal_labels.csv", index=False)
+        orthoScores.to_csv(path/"orthogonal_silhouette_scores.csv")
+        np.save(path/"centroid_distances.npy", self.centroid_distances)
+        with open(path/"tau_value.txt", "w") as f:
+            f.write(str(self.tau))
 
     def clusterEX(self,dataloader, attentionPooler):
         self.deploy(dataloader);
-        attentionList, weightList = self.setAttention(attentionPooler);
-        bestTrial = self.KMeansUse(attentionList);
-        coordinateVisuals = self.UMAPPING(attentionList);
-        self.saveAll(weightList, attentionList, bestTrial[0], bestTrial[1],coordinateVisuals);
+        self.setAttention(attentionPooler); 
+        self._split_fm_hc()
+        self.validate_hc_sep()
+        bestTrial = self.KMeansUse();  
+        fmTensor, fmIds=self._stack(self.fm_embed)
+        hcTensor, hcIds=self._stack(self.hc_embed)
+        fmProjected=self.project_ortho(fmTensor, hcTensor)
+        orthoTrial=self.KMeansUse(fmProjected, fmIds)
+        self.compute_centroid_distances(fmProjected, orthoTrial[2], self.hc_c)
+        coordinateVisuals = self.UMAPPING(fmTensor); 
+        weightMatrix=torch.stack([self.attention_weights[i] for i in fmIds])
+        self.saveAll(weightMatrix, fmTensor, bestTrial[0], bestTrial[1], coordinateVisuals, orthoTrial[1], orthoTrial[0]);
+
 if __name__ == "__main__":
     from gnn_encoder import GNNEncoder
     from models.attention_pool import condition_attention_pool
-    from torch_geometric.data import DataLoader
-
-    conditionList = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", 
-                     "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR", 
+    from torch.utils.data import DataLoader
+    conditionList = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR",
+                     "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR",
                      "Happy - INCREMENTAR"]
-    
-    dataset = datasetPreparation()
+    dataset=datasetPreparation(fm_only=False)
     dataList = dataset.subjectList;
-    data = DataLoader(dataset, batch_size=8, shuffle=False)
+    data=DataLoader(dataset, batch_size=1, shuffle=False, collate_fn=lambda b: b[0])
     attention = condition_attention_pool(d_model=64, num_cons=7);
     encoder = GNNEncoder();
-    runCluster = cluster(encoder, "results/checkpoints", "best_model.pt", conditionList, dataList);
+    checkpoint=torch.load("results/checkpoints/best_joint_model.pt", map_location='cpu')
+    encoder.load_state_dict(checkpoint['model'])
+    attention.load_state_dict(checkpoint['pool'])
+    runCluster = cluster(encoder, "results/checkpoints", "best_joint_model.pt", conditionList, dataList); 
     runCluster.clusterEX(data, attention);
