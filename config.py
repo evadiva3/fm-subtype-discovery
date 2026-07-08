@@ -40,8 +40,6 @@ class Config:
     N_CONDITIONS=7
     N_NODES=200
     TR=2.0
-    #  edge-density value.
-    TOP_K_SENSITIVITY=[20, 30, 40, 50]
 
     # Model hyperparameters
     D_MODEL=64
