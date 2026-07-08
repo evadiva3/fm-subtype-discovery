@@ -7,7 +7,7 @@ import torch;
 from torch.utils.data import Dataset;
 from config import config;
 class datasetPreparation(Dataset):
-    def __init__(self, avgCond=False, fm_only=False, checkOnes = False;):
+    def __init__(self, avgCond=False, fm_only=False, checkOnes = False):
         super().__init__();
         self.datafolder = config.SUBJECTDATAFOLDER;
         self.datafolderPath = Path(self.datafolder);

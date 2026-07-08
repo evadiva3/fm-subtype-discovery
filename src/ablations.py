@@ -1,8 +1,51 @@
 import torch;
+import torch.nn as nn;
 import pandas as pd;
 import numpy as np;
 import os;
-class ablate(trainer):
+from train import trainer;
+from config import config;
+
+ #new ablations
+def run_no_contrastive_pretraining(dataloader, subjectList, conditionList):
+    # nO contrastive pretraining
+    # Skip the NT-Xent step use a random-init encoder
+    from gnn_encoder import GNNEncoder
+    from models.attention_pool import condition_attention_pool
+    from clustering import cluster
+    encoder=GNNEncoder() # random weights, no pretraining
+    pool=condition_attention_pool() # untrained attention pool
+    runner=cluster(encoder, "results/checkpoints", "best_joint_model.pt", conditionList, subjectList)
+    runner.deploy(dataloader)
+    runner.setAttention(pool)
+    return runner.KMeansUse()                            
+
+def run_resting_state_fc(*args, **kwargs):
+    # resting state FC instead of task-condition FC
+    raise NotImplementedError(
+        "resting-state FC ablation is blocked: no resting-state FC matrices or upstream "
+        "computation exist in this repo (see preprocessing/compute_fc_matrices.py and "
+        "config.CONDITIONS, which are all task conditions).")
+
+def run_no_attention_pooling(encoder, dataloader, subjectList, conditionList):
+    # no attention pooling
+    from clustering import cluster
+    runner=cluster(encoder, "results/checkpoints", "best_joint_model.pt", conditionList, subjectList)
+    runner.deploy(dataloader)
+    runner.attentionEmbeddings={sid: emb.mean(dim=0) for sid, emb in runner.subjectEmbeddings.items()}
+    return runner.KMeansUse()
+
+def run_mean_pooling(encoder, dataloader, subjectList, conditionList):
+    # mean pooling
+    return run_no_attention_pooling(encoder, dataloader, subjectList, conditionList)
+
+
+#nikhils ablations
+
+
+class SupervisedGnnCeling(trainer):
+    #this is a supervised classification baseline
+    # (linear head on the encoder output), not an ablation of the contrastive/pooling pipeline.
     def __init__(self, model, loss, optimize, schedule, device, dire):
         super().__init__(model, loss, optimize, schedule, device, dire);
         self.classificationHead = nn.Linear(64,2);
@@ -24,12 +67,16 @@ class ablate(trainer):
             i+=1;
         self.schedule.step();
         return(total_loss/i);
-def ablate2(encoder, trainSplit, testSplit, loss, optimizer, device, direct, augmentor):
-    from train import trainer;
-    run = trainer(encoder, loss, optimizer, scheduler, device, direct);
-    run.fit(trainSplit, testSplit, augmentor);
+
+
+#not used
+#def ablate2(encoder, trainSplit, testSplit, loss, optimizer, device, direct, augmentor):
+   # from train import trainer;
+   # run = trainer(encoder, loss, optimizer, scheduler, device, direct);
+  #  run.fit(trainSplit, testSplit, augmentor);
     #run clustering that skips attention pooling and outputs to kmeans directly
-def ablate3(encoder, loss, device, augmentor, direct):
+
+def runConditionSpecialist(encoder, loss, device, augmentor, direct):
     from train import trainer;
     from dataset import datasetPreparation;
     from torch_geometric.data import DataLoader;
@@ -59,8 +106,12 @@ def ablate3(encoder, loss, device, augmentor, direct):
         run.fit(trainLoad, testLoad, augmentor);
         # needs to run clustering
     os.remove("tempModelState.pt");
-def ablate4(FCMatrix, folder : str, conditionList, saveFolder, checkpointName):
-    import pathlib as Path;
+
+
+
+#i dont know where this would be used; this is the same as baselines PCA
+def legacyFlatTriangle(FCMatrix, folder : str, conditionList, saveFolder, checkpointName):
+    from pathlib import Path;
     from sklearn.decomposition import PCA;
     from clustering import cluster;
     dataFolderPath = Path(folder);
@@ -70,8 +121,8 @@ def ablate4(FCMatrix, folder : str, conditionList, saveFolder, checkpointName):
     for sublist in dataFolderPath.iterdir():
         cFCL = [];
         subjectList.append(sublist.name);
-        for i in range(0,7)
-            cFCL.append(np.load(self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_FCMatrixCondition" + conditionList[i].replace(" ", "") + ".npy"));
+        for i in range(0,7):
+            cFCL.append(np.load(str(sublist / (sublist.name + "_FCMatrixCondition" + conditionList[i].replace(" ", "") + ".npy"))));
         cFCL = np.array(cFCL);
         cFCL = np.mean(cFCL, axis=0);
         rowInd, colInd = np.triu_indices(200, k=1);
@@ -82,5 +133,3 @@ def ablate4(FCMatrix, folder : str, conditionList, saveFolder, checkpointName):
     kTrials = kmeans.KMeansUse(output, subjectList);
     kTrials[0].to_csv(dataFolderPath/saveFolder/"silhouette-scores.csv");
     kTrials[1].to_csv(dataFolderPath/saveFolder/"K-Means-Labeling.csv");
-def 
-        

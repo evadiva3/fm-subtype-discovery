@@ -31,6 +31,18 @@ class Config:
     @property
     def JOINT_CHECKPOINT_PATH(self): return self.CHECKPOINT_DIR / "best_joint_model.pt"
 
+    @property
+    def CLINICALXLSX(self): return self.DATA_ROOT / "Clinical_fm_66.xlsx"
+
+    @property
+    def CLINICALCSV(self): return self.DATA_ROOT / "clinical_clean.csv"
+
+    @property
+    def SUBJECTDATAFOLDER(self): return self.DATA_ROOT / "Subjects"
+
+    @property
+    def MASKER(self): return str(self.DATA_ROOT / "schaefer200MNI.nii.gz")
+
     # Pipeline constants
     CONDITIONS = [
         "Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR",
@@ -40,8 +52,6 @@ class Config:
     N_CONDITIONS=7
     N_NODES=200
     TR=2.0
-    #  edge-density value.
-    TOP_K_SENSITIVITY=[20, 30, 40, 50]
 
     # Model hyperparameters
     D_MODEL=64
@@ -66,12 +76,6 @@ class Config:
         if torch.cuda.is_available(): return torch.device("cuda")
         if torch.backends.mps.is_available(): return torch.device("mps")
         return torch.device("cpu")
-    #Nikhil's stuff
-    FCDATAFOLDER = "../data/FCData";
-    SUBJECTDATAFOLDER = "../data/Subjects";
-    MASKER = "../data/schaefer200MNI.nii.gz"
-    CLINICALXLSX = "../data/Clinical_fm_66.xlsx";
-    CLINICALCSV = "../data/Clinical_fm_66.csv";
 
 
 config=Config()
