@@ -6,6 +6,7 @@
 import torch
 import os
 from torch_geometric.data import Batch
+from config import config 
 
 class trainer():
 
@@ -52,7 +53,10 @@ class trainer():
                 i+=1
         return(total_loss/i)
     
-    def fit(self, train_load, val_load, augmentor, epochs=200, patience=10):
+    def fit(self, train_load, val_load, augmentor, epochs=None, patience=None):
+        # remeber no hardcoding
+        epochs=config.EPOCHS if epochs is None else epochs
+        patience=config.PATIENCE if patience is None else patience
         c=0
         path=os.path.join(self.dire, 'best_model.pt')
         for i in range(epochs):
@@ -73,7 +77,11 @@ class trainer():
         path=os.path.join(self.dire, 'best_model.pt')
         self.model.load_state_dict(torch.load(path, map_location=self.device))  
 
-def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=200,patience=10,lr=1e-4,weight_decay=1e-2):
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None):
+    epochs=config.EPOCHS if epochs is None else epochs
+    patience=config.PATIENCE if patience is None else patience
+    lr=config.LR if lr is None else lr
+    weight_decay=config.WEIGHT_DECAY if weight_decay is None else weight_decay
     os.makedirs(save_dir, exist_ok=True)
     checkpoint_path=os.path.join(save_dir, 'best_joint_model.pt')
     optimizer=torch.optim.AdamW(
@@ -178,26 +186,37 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
 if __name__ == "__main__":
     from gnn_encoder import GNNEncoder
     from contrastive_loss import NTXentLoss
-    from torch_geometric.data import DataLoader
+    from attention_pool import condition_attention_pool
+    from augmentations import GraphAugmentor
     from dataset import datasetPreparation
-    from torch.optim import AdamW
-    from transformers import get_cosine_schedule_with_warmup
+    from torch.utils.data import DataLoader, random_split
+    dataset=datasetPreparation()
+    class GroupedWrapper(torch.utils.data.Dataset):
+        def __init__(self, subject_data):
+            self.subject_data=subject_data
+        def __len__(self):
+            return len(self.subject_data)
+        def __getitem__(self, idx):
+            return self.subject_data[idx]
 
-    dataset = datasetPreparation()
-    dataSetup = DataLoader(dataset.DataList, batch_size=8, shuffle=True)
-    stepSize = len(dataSetup)
-    epochs = 200
-    totalSteps = stepSize * epochs
-    partitionWarmupSteps = int(totalSteps * 0.10)
-    encoder = GNNEncoder()
-    lossing = NTXentLoss(temperature=0.5)
-    optimizer = AdamW(encoder.parameters(), lr=1e-4, weight_decay=1e-4)
-    scheduler = get_cosine_schedule_with_warmup(
-        optimizer,
-        num_warmup_steps=partitionWarmupSteps,
-        num_training_steps=totalSteps,
+    grouped_dataset=GroupedWrapper(dataset.subjectData)
+
+    n_total=len(grouped_dataset)
+    n_val=int(n_total*0.15)
+    n_train=n_total-n_val
+    train_split, val_split=random_split(grouped_dataset, [n_train, n_val])
+
+    train_loader=DataLoader(train_split, batch_size=8, shuffle=True, collate_fn=lambda b: b)
+    val_loader=DataLoader(val_split, batch_size=8, shuffle=False, collate_fn=lambda b: b)
+
+    encoder=GNNEncoder()
+    attention=condition_attention_pool()           
+    loss_fn=NTXentLoss()                            
+    augmentor=GraphAugmentor()                     
+
+    device=config.DEVICE                            
+
+    model, attention, train_losses, val_losses=joint_train(
+        encoder, attention, loss_fn, train_loader, val_loader,
+        augmentor, device, config.CHECKPOINT_DIR    
     )
-    deviceChoice = torch.device("cpu")
-    if torch.cuda.is_available():
-        deviceChoice = torch.device("cuda")
-    training = trainer(encoder, lossing, optimizer, scheduler, deviceChoice, "results/checkpoints")
