@@ -1,14 +1,17 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from config import config  
 
 class condition_attention_pool(nn.Module):
-    def __init__(self,d_model=64,num_cons=7):
+
+    def __init__(self,d_model=None,num_cons=None):
         super().__init__()
-        self.d_model=d_model
-        self.num_cons=num_cons
+        self.d_model=d_model if d_model is not None else config.D_MODEL
+        self.num_cons=num_cons if num_cons is not None else config.N_CONDITIONS
         self.tau=nn.Parameter(torch.ones(1))
-        self.attention = nn.Linear(d_model, 1)
+        self.attention=nn.Linear(self.d_model, 1) 
+
     def forward(self, embed):
         a=self.attention(embed)
         b=a.squeeze(-1)

@@ -1,11 +1,14 @@
-import torch  
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from config import config  
 
 class NTXentLoss(nn.Module):
-    def __init__(self,temperature=0.5):
+    
+    def __init__(self,temperature=None):
         super().__init__()
-        self.temperature=temperature
+        self.temperature=temperature if temperature is not None else config.NT_XENT_TEMP
+
     def forward(self,ag1,ag2):
         a=F.normalize(ag1,dim=1)
         b=F.normalize(ag2,dim=1)
