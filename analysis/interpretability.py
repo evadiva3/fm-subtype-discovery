@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import torch
 from nilearn import datasets
+from scipy.stats import entropy  
+from config import config 
 
 class attention_interpreter():
     def __init__ (self,model,attention_pool,dataloader,device):
@@ -16,7 +18,7 @@ class attention_interpreter():
         results={}
         with torch.no_grad():
             for i in self.dataloader:
-                i = i.to(self.device) 
+                i=i.to(self.device) 
                 output=self.model(i)
                 for sub in range(len(i.subject_id)):              
                     a=i.subject_id[sub]
@@ -37,7 +39,7 @@ class attention_interpreter():
         return group
     
     def map_to_net(self, importance):
-        a=datasets.fetch_atlas_schaefer_2018(n_rois=200)
+        a=datasets.fetch_atlas_schaefer_2018(n_rois=config.N_NODES)  
         label=a['labels']
         networks={}
         for idx, label_str in enumerate(label):
@@ -52,13 +54,18 @@ class attention_interpreter():
     def get_condition_weights(self):
         self.model.eval()
         aw=[]
+        taus=[] 
         with torch.no_grad():
             for i in self.dataloader:
                 i=i.to(self.device)
                 embedd=self.model(i)
-                pooled, weights=self.attention_pool(embedd)
+                pooled, weights, tau=self.attention_pool(embedd)  
                 aw.append(weights)
-        return torch.cat(aw).mean(dim=0)
+                taus.append(tau)  
+        mean_weights=torch.cat(aw).mean(dim=0) 
+        weight_entropy=float(entropy(mean_weights.detach().cpu().numpy(), base=2))
+        mean_tau=float(torch.stack(taus).mean().item())
+        return {"mean_weights": mean_weights, "entropy": weight_entropy, "tau_attn": mean_tau}
 
         
 
