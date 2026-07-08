@@ -178,26 +178,38 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
 if __name__ == "__main__":
     from gnn_encoder import GNNEncoder
     from contrastive_loss import NTXentLoss
-    from torch_geometric.data import DataLoader
+    from attention_pool import condition_attention_pool
+    from augmentations import GraphAugmentor
     from dataset import datasetPreparation
-    from torch.optim import AdamW
-    from transformers import get_cosine_schedule_with_warmup
+    from torch.utils.data import DataLoader, random_split
+    dataset=datasetPreparation()
+    class GroupedWrapper(torch.utils.data.Dataset):
+        def __init__(self, subject_data):
+            self.subject_data=subject_data
+        def __len__(self):
+            return len(self.subject_data)
+        def __getitem__(self, idx):
+            return self.subject_data[idx]
 
-    dataset = datasetPreparation()
-    dataSetup = DataLoader(dataset.DataList, batch_size=8, shuffle=True)
-    stepSize = len(dataSetup)
-    epochs = 200
-    totalSteps = stepSize * epochs
-    partitionWarmupSteps = int(totalSteps * 0.10)
-    encoder = GNNEncoder()
-    lossing = NTXentLoss(temperature=0.5)
-    optimizer = AdamW(encoder.parameters(), lr=1e-4, weight_decay=1e-4)
-    scheduler = get_cosine_schedule_with_warmup(
-        optimizer,
-        num_warmup_steps=partitionWarmupSteps,
-        num_training_steps=totalSteps,
+    grouped_dataset=GroupedWrapper(dataset.subjectData)
+
+    n_total=len(grouped_dataset)
+    n_val=int(n_total*0.15)
+    n_train=n_total-n_val
+    train_split, val_split=random_split(grouped_dataset, [n_train, n_val])
+
+    train_loader=DataLoader(train_split, batch_size=8, shuffle=True, collate_fn=lambda b: b)
+    val_loader=DataLoader(val_split, batch_size=8, shuffle=False, collate_fn=lambda b: b)
+
+    encoder=GNNEncoder()
+    attention=condition_attention_pool(d_model=64, num_cons=7)
+    loss_fn=NTXentLoss(temperature=0.5)
+    augmentor=GraphAugmentor(mask_rate=0.1, noise_std=0.1)
+
+    device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    model, attention, train_losses, val_losses=joint_train(
+        encoder, attention, loss_fn, train_loader, val_loader,
+        augmentor, device, "results/checkpoints",
+        epochs=200, patience=10, lr=1e-4, weight_decay=1e-2
     )
-    deviceChoice = torch.device("cpu")
-    if torch.cuda.is_available():
-        deviceChoice = torch.device("cuda")
-    training = trainer(encoder, lossing, optimizer, scheduler, deviceChoice, "results/checkpoints")
