@@ -82,4 +82,5 @@ def ablate4(FCMatrix, folder : str, conditionList, saveFolder, checkpointName):
     kTrials = kmeans.KMeansUse(output, subjectList);
     kTrials[0].to_csv(dataFolderPath/saveFolder/"silhouette-scores.csv");
     kTrials[1].to_csv(dataFolderPath/saveFolder/"K-Means-Labeling.csv");
+def 
         
