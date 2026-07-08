@@ -1,7 +1,5 @@
-#changes made: no index-based sequential matrix tracking and instead graph batch dicionary mapping
-#automaticed division of fm and hc
-#intro orthogonal subspace projection so can isolate the patient variance from contol base
-#no more raw numpy paths!!
+#changes made: 
+#wiring evaluate py
 
 
 import os;
@@ -16,6 +14,7 @@ from pathlib import Path;
 from torch.utils.data import Dataset;
 from torch_geometric.data import Batch;
 from dataset import datasetPreparation;
+from analysis.evaluate import cluster_evaluate;
 
 class cluster():
     def __init__(self, GNNEncoder, Directory, checkpointName, conditionList, subjectList):
@@ -72,6 +71,7 @@ class cluster():
         embeddings = torch.stack([self.attentionEmbeddings[i] for i in ids]).detach().cpu().numpy();
         labels = np.array([self.groupLabels[i] for i in ids]);
         self.hcSepSilh = silhouette_score(embeddings, labels);
+        self.hcSepPermP = cluster_evaluate().perm(embeddings, labels);  #permutation p-value for FM-vs-HC separation
         return self.hcSepSilh;
 
     def project_ortho(self, fmEmbeddings, hcEmbeddings):
@@ -108,10 +108,16 @@ class cluster():
             trialSave.append(score);
             labelSave.append(labels);
             k += 1;
-        bestLabels = labelSave[trialSave.index(max(trialSave))];
+        bestIdx = trialSave.index(max(trialSave));  # nothing changed besdies wiring
+        bestLabels = labelSave[bestIdx];
+        evaluator = cluster_evaluate(); 
+        gapDict = evaluator.gap_stat(takeTensor, k=[2, 3, 4]);  # gap statistic per k
+        permP = evaluator.perm(takeTensor, bestLabels);  
+        permColumn = [np.nan, np.nan, np.nan]
+        permColumn[bestIdx] = permP; 
         trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label": bestLabels});
-        trialSave = pd.DataFrame({"k": [2, 3, 4], "silhouette_score": trialSave});
-        return [trialSave, trialFrame, bestLabels];
+        trialSave = pd.DataFrame({"k": [2, 3, 4], "silhouette_score": trialSave, "gap_stat": [gapDict[2], gapDict[3], gapDict[4]], "permutation_p": permColumn});
+        return [trialSave, trialFrame, bestLabels, permP] #append scalar permP as [3] unchanged for saveAll()
 
     def UMAPPING(self, array):
         array = array.detach().cpu().numpy();
@@ -127,7 +133,7 @@ class cluster():
         np.save(path / "UMAP-COORDS.npy", coords);
         np.save(path / "attentionWeights.npy", cWeights.detach().cpu().numpy());
         with open(path / "hc_separation_silhouette.json", "w") as f:
-            json.dump({"hc_separation_silhouette": float(self.hcSepSilh)}, f);
+            json.dump({"hc_separation_silhouette": float(self.hcSepSilh), "permutation_p": float(self.hcSepPermP)}, f);  
         orthoLabels.to_csv(path / "orthogonal_labels.csv", index=False);
         orthoScores.to_csv(path / "orthogonal_silhouette_scores.csv");
         np.save(path / "centroid_distances.npy", self.centroidDistances);
@@ -140,10 +146,12 @@ class cluster():
         self._split_fm_hc();
         self.validate_hc_sep();
         bestTrial = self.KMeansUse();
+        self.fmClusterPermP=bestTrial[3]  # perm p for ORIGINAL FM-only
         fmTensor, fmIds = self._stack(self.fmEmbed);
         hcTensor, hcIds = self._stack(self.hcEmbed);
         fmProjected = self.project_ortho(fmTensor, hcTensor);
         orthoTrial = self.KMeansUse(fmProjected, fmIds);
+        self.orthoClusterPermP=orthoTrial[3]  # perm p for ORTHOGONAL-PROJECTED
         self.compute_centroid_distances(fmProjected, orthoTrial[2], self.hcC);
         coordinateVisuals = self.UMAPPING(fmTensor);
         weightMatrix = torch.stack([self.attentionWeights[i] for i in fmIds]);
