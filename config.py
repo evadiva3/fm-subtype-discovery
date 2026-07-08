@@ -46,6 +46,7 @@ class Config:
     # Model hyperparameters
     D_MODEL=64
     HEADS=4
+    OUTPUT = 32;
     LAYERS=3
     DROPOUT=0.1
     LR=1e-4
