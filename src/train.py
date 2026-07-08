@@ -6,6 +6,7 @@
 import torch
 import os
 from torch_geometric.data import Batch
+from config import config 
 
 class trainer():
 
@@ -52,7 +53,10 @@ class trainer():
                 i+=1
         return(total_loss/i)
     
-    def fit(self, train_load, val_load, augmentor, epochs=200, patience=10):
+    def fit(self, train_load, val_load, augmentor, epochs=None, patience=None):
+        # remeber no hardcoding
+        epochs=config.EPOCHS if epochs is None else epochs
+        patience=config.PATIENCE if patience is None else patience
         c=0
         path=os.path.join(self.dire, 'best_model.pt')
         for i in range(epochs):
@@ -73,7 +77,11 @@ class trainer():
         path=os.path.join(self.dire, 'best_model.pt')
         self.model.load_state_dict(torch.load(path, map_location=self.device))  
 
-def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=200,patience=10,lr=1e-4,weight_decay=1e-2):
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None):
+    epochs=config.EPOCHS if epochs is None else epochs
+    patience=config.PATIENCE if patience is None else patience
+    lr=config.LR if lr is None else lr
+    weight_decay=config.WEIGHT_DECAY if weight_decay is None else weight_decay
     os.makedirs(save_dir, exist_ok=True)
     checkpoint_path=os.path.join(save_dir, 'best_joint_model.pt')
     optimizer=torch.optim.AdamW(
@@ -202,14 +210,13 @@ if __name__ == "__main__":
     val_loader=DataLoader(val_split, batch_size=8, shuffle=False, collate_fn=lambda b: b)
 
     encoder=GNNEncoder()
-    attention=condition_attention_pool(d_model=64, num_cons=7)
-    loss_fn=NTXentLoss(temperature=0.5)
-    augmentor=GraphAugmentor(mask_rate=0.1, noise_std=0.1)
+    attention=condition_attention_pool()           
+    loss_fn=NTXentLoss()                            
+    augmentor=GraphAugmentor()                     
 
-    device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device=config.DEVICE                            
 
     model, attention, train_losses, val_losses=joint_train(
         encoder, attention, loss_fn, train_loader, val_loader,
-        augmentor, device, "results/checkpoints",
-        epochs=200, patience=10, lr=1e-4, weight_decay=1e-2
+        augmentor, device, config.CHECKPOINT_DIR    
     )

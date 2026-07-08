@@ -3,11 +3,13 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 import os
+from config import config  
 
 class figure_gen():
-    def __init__(self,dire):
-        self.dire=dire
-        os.makedirs(dire,exist_ok=True)
+    def __init__(self,dire=None):
+        #no hardcoding just config
+        self.dire=config.FIGURES_DIR if dire is None else dire
+        os.makedirs(self.dire,exist_ok=True)
     def plot_loss(self,train_loss,val_loss):
         plt.plot(range(len(train_loss)), train_loss, label='train')
         plt.plot(range(len(val_loss)), val_loss, label='val')
@@ -30,7 +32,7 @@ class figure_gen():
         plt.show()
         plt.close()
     def plot_con_contri(self,attention_weight):
-        conditions = ['Neutral-OBSERVAR', 'Neg-OBSERVAR', 'Neg-REDUCIR', 'Neg-SUPRIMIR', 'Happy-OBSERVAR', 'Happy-SUPRIMIR', 'Happy-INCREMENTAR']
+        conditions=config.CONDITIONS
         sns.barplot(x=(conditions),y=attention_weight,color='pink')
         plt.xticks(rotation=45)
         plt.savefig(os.path.join(self.dire, 'condition_contributions_plot.png'), dpi=300, bbox_inches='tight')
