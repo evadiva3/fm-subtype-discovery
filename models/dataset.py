@@ -56,7 +56,6 @@ class datasetPreparation(Dataset):
             candidates = [self.datafolderPath / subjectId / f"{subjectId}_FCMatrix_Cond_{condName}.npy", self.datafolderPath / subjectId / f"{subjectId}_FCMatrixCondition{condName}.npy", self.datafolderPath / subjectId / f"{subjectId}_FCMatrixCondition{conditionName.replace(' ', '')}.npy"];
         else:
             candidates = [self.datafolderPath / subjectId / f"{subjectId}_ROITimeSeries_Cond_{condName}.npy", self.datafolderPath / subjectId / f"{subjectId}_ROITimeSeries{condName}.npy", self.datafolderPath / subjectId / f"{subjectId}_ROITimeSeries{conditionName.replace(' ', '')}.npy"];
-
         for candidate in candidates:
             if candidate.exists():
                 return str(candidate);
@@ -82,7 +81,6 @@ class datasetPreparation(Dataset):
             return 1;
         else:
             return -1;
-
     def cleanCondName(self, cond):
         return cond.replace(" ", "").replace("-", "");
 

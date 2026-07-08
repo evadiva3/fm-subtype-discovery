@@ -59,3 +59,27 @@ def ablate3(encoder, loss, device, augmentor, direct):
         run.fit(trainLoad, testLoad, augmentor);
         # needs to run clustering
     os.remove("tempModelState.pt");
+def ablate4(FCMatrix, folder : str, conditionList, saveFolder, checkpointName):
+    import pathlib as Path;
+    from sklearn.decomposition import PCA;
+    from clustering import cluster;
+    dataFolderPath = Path(folder);
+    stackFCVec = [];
+    subjectList = [];
+    pca = PCA(n_components=64);
+    for sublist in dataFolderPath.iterdir():
+        cFCL = [];
+        subjectList.append(sublist.name);
+        for i in range(0,7)
+            cFCL.append(np.load(self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_FCMatrixCondition" + conditionList[i].replace(" ", "") + ".npy"));
+        cFCL = np.array(cFCL);
+        cFCL = np.mean(cFCL, axis=0);
+        rowInd, colInd = np.triu_indices(200, k=1);
+        stackFCVec.append(cFCL[rowInd, colInd]);
+    vecAVGCON = np.stack(stackFCVec, axis = 0);
+    output = pca.fit_transform(vecAVGCON);
+    kmeans = cluster(None, folder, checkpointName, conditionList, None);
+    kTrials = kmeans.KMeansUse(output, subjectList);
+    kTrials[0].to_csv(dataFolderPath/saveFolder/"silhouette-scores.csv");
+    kTrials[1].to_csv(dataFolderPath/saveFolder/"K-Means-Labeling.csv");
+        
