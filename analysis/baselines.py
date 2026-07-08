@@ -1,4 +1,3 @@
-#simple model to prove complexity=good *supervised*
 import numpy as np 
 from pathlib import Path 
 from sklearn.cluster import KMeans
@@ -49,15 +48,20 @@ class baselines():
         score=silhouette_score(flat,label)  
         return(label,score)
 
-    def _discover_subject_niftis(self, base, sid): 
-        candidates=sorted(base.glob(f"{sid}/*.nii*"))  
-        if not candidates:  
-            candidates=sorted(base.glob(f"{sid}*.nii*"))  
-        return candidates 
+    def _discover_subject_niftis(self, base, sid):
+        space="space-MNI152NLin2009cAsym"
+        patterns=[
+            f"{sid}/func/*{space}*desc-preproc_bold.nii*",      
+            f"{sid}/ses-*/func/*{space}*desc-preproc_bold.nii*",
+            f"{sid}/**/*{space}*desc-preproc_bold.nii*",     
+        ]
+        for pat in patterns: 
+            candidates=sorted(base.glob(pat))
+            if candidates:
+                return candidates
+        return [] 
 
     def group_ica_kmeans(self): 
-        #Group ICA implemented via nilearn CanICA on voxel space preprocessed 4D fMRI data (not ROI
-        #time series) methodogly: Varoquaux et al., 2010
         if self.preprocessed_fmri_dir is None:
             raise ValueError("group_ica_kmeans requires preprocessed_fmri_dir (dir of 4D BOLD niftis) at init")  
         if self._fm_subject_ids is None:  
