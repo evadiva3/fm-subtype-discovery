@@ -106,14 +106,14 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
                 batch1=Batch.from_data_list(view1).to(device)
                 batch2=Batch.from_data_list(view2).to(device)
 
-                z1=model(batch1)  
-                z2=model(batch2)  
-                pooled_i, _, _ =attention_pool(z1)  
-                pooled_j, _, _ =attention_pool(z2)  
+                z1=model(batch1)
+                z2=model(batch2)
+                pooled_i, _, _ =attention_pool(z1)
+                pooled_j, _, _ =attention_pool(z2)
                 Z_i_list.append(pooled_i)
                 Z_j_list.append(pooled_j)
-            Z_i=torch.stack(Z_i_list)  
-            Z_j=torch.stack(Z_j_list)  
+            Z_i=torch.stack(Z_i_list)
+            Z_j=torch.stack(Z_j_list)
             optimizer.zero_grad()
             loss=loss_fn(Z_i, Z_j)
             loss.backward()
@@ -173,3 +173,31 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     model.load_state_dict(checkpoint['model'])
     attention_pool.load_state_dict(checkpoint['pool'])
     return model, attention_pool, train_losses, val_losses
+
+
+if __name__ == "__main__":
+    from gnn_encoder import GNNEncoder
+    from contrastive_loss import NTXentLoss
+    from torch_geometric.data import DataLoader
+    from dataset import datasetPreparation
+    from torch.optim import AdamW
+    from transformers import get_cosine_schedule_with_warmup
+
+    dataset = datasetPreparation()
+    dataSetup = DataLoader(dataset.DataList, batch_size=8, shuffle=True)
+    stepSize = len(dataSetup)
+    epochs = 200
+    totalSteps = stepSize * epochs
+    partitionWarmupSteps = int(totalSteps * 0.10)
+    encoder = GNNEncoder()
+    lossing = NTXentLoss(temperature=0.5)
+    optimizer = AdamW(encoder.parameters(), lr=1e-4, weight_decay=1e-4)
+    scheduler = get_cosine_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=partitionWarmupSteps,
+        num_training_steps=totalSteps,
+    )
+    deviceChoice = torch.device("cpu")
+    if torch.cuda.is_available():
+        deviceChoice = torch.device("cuda")
+    training = trainer(encoder, lossing, optimizer, scheduler, deviceChoice, "results/checkpoints")
