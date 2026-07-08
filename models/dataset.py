@@ -27,8 +27,9 @@ class datasetPreparation(Dataset):
             self.clinicalLookup = self.clinicalDataFrame.set_index("subject_id").to_dict();
         else:
             print("clinical_clean.csv not found in the data folder. Please ensure it is present for proper dataset preparation.");
-        self.DataList = self.execute();
         self.subjectData = [];
+        self.DataList = self.execute();
+     
 
     def organizeNodes(self):
         if self.checkOnes == False:
@@ -138,7 +139,6 @@ class datasetPreparation(Dataset):
                     if data is not None:
                         dataList.append(data);
                         subjectData.append({"subject_id": subfolder.name, "graphs": [data], "group_label": torch.tensor([self.getGroupLabel(subfolder.name)], dtype=torch.long)});
-
         self.DataList = dataList;
         self.subjectData = subjectData;
         return dataList;
