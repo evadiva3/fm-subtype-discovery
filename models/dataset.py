@@ -29,8 +29,6 @@ class datasetPreparation(Dataset):
             print("clinical_clean.csv not found in the data folder. Please ensure it is present for proper dataset preparation.");
         self.subjectData = [];
         self.DataList = self.execute();
-     
-
     def organizeNodes(self):
         if self.checkOnes == False:
             originalData = np.load(self.TimeSeriesFilePath);
