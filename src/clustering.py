@@ -32,7 +32,7 @@ class cluster():
         with torch.no_grad():
             for subject in dataloader:
                 batch = Batch.from_data_list(subject['graphs']);
-                # From Eva, to Nikhil: GNNEncoder.forward does data.edge_attr.unsqueeze(-1) internally so
+                # GNNEncoder.forward does data.edge_attr.unsqueeze(-1) internally so
                 # if edge_attr arrives as [E, 1] from preprocessBOLD, this will make it [E, 1, 1] and it will crash
                 # we need to verify edge_attr shape before running so could u either remove unsqueeze in encoder or ensure
                 # preprocessBOLD saves edge_attr as [E] not [E, 1].
