@@ -7,7 +7,7 @@ import torch;
 from torch.utils.data import Dataset;
 
 class datasetPreparation(Dataset):
-    def __init__(self, avgCond=False, fm_only=False):
+    def __init__(self, avgCond=False, fm_only=False, checkOnes = False;):
         super().__init__();
         self.datafolder = "../pathname";
         self.datafolderPath = Path(self.datafolder);
@@ -17,6 +17,7 @@ class datasetPreparation(Dataset):
         self.subjectList = [];
         self.avgCond = avgCond;
         self.fm_only = bool(fm_only);
+        self.checkOnes = False;
         self.conditionNames = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"];
         self.clinicalDataFrame = None;
         self.clinicalLookup = {};
@@ -26,21 +27,23 @@ class datasetPreparation(Dataset):
             self.clinicalLookup = self.clinicalDataFrame.set_index("subject_id").to_dict();
         else:
             print("clinical_clean.csv not found in the data folder. Please ensure it is present for proper dataset preparation.");
-
         self.DataList = self.execute();
         self.subjectData = [];
 
     def organizeNodes(self):
-        originalData = np.load(self.TimeSeriesFilePath);
-        data = pd.DataFrame(originalData);
-        dataset = [];
-        for i in range(0, len(data.columns)):
-            mean = data.iloc[:, i].mean();
-            var = data.iloc[:, i].var(ddof=1);
-            freq = self.calculateFrequencies(data.iloc[:, i]);
-            dataset.append([mean, var, freq[0], freq[1], freq[2]]);
-        dataset = pd.DataFrame(dataset);
-        return torch.tensor(dataset.values, dtype=torch.float32);
+        if self.checkOnes == False:
+            originalData = np.load(self.TimeSeriesFilePath);
+            data = pd.DataFrame(originalData);
+            dataset = [];
+            for i in range(0, len(data.columns)):
+                mean = data.iloc[:, i].mean();
+                var = data.iloc[:, i].var(ddof=1);
+                freq = self.calculateFrequencies(data.iloc[:, i]);
+                dataset.append([mean, var, freq[0], freq[1], freq[2]]);
+            dataset = pd.DataFrame(dataset);
+            return torch.tensor(dataset.values, dtype=torch.float32);
+        else:
+            return torch.ones((200,5), dtype= torch.float32);
 
     def calculateFrequencies(self, data):
         freq = np.fft.rfft(data, axis=0, norm="forward");
