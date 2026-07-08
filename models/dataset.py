@@ -5,20 +5,20 @@ import pandas as pd;
 from torch_geometric.data import Data;
 import torch;
 from torch.utils.data import Dataset;
-
+from config import config;
 class datasetPreparation(Dataset):
     def __init__(self, avgCond=False, fm_only=False, checkOnes = False;):
         super().__init__();
-        self.datafolder = "../pathname";
+        self.datafolder = config.SUBJECTDATAFOLDER;
         self.datafolderPath = Path(self.datafolder);
         self.FCMatricesFilePath = "";
         self.TimeSeriesFilePath = "";
-        self.clinicalCleanFilePath = str(self.datafolderPath / "clinical_clean.csv");
+        self.clinicalCleanFilePath = str(config.CLINICALCSV);
         self.subjectList = [];
         self.avgCond = avgCond;
         self.fm_only = bool(fm_only);
         self.checkOnes = False;
-        self.conditionNames = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"];
+        self.conditionNames = config.CONDITIONS;
         self.clinicalDataFrame = None;
         self.clinicalLookup = {};
         if Path(self.clinicalCleanFilePath).exists():

@@ -69,6 +69,8 @@ class Config:
     FCDATAFOLDER = "../data/FCData";
     SUBJECTDATAFOLDER = "../data/Subjects";
     MASKER = "../data/schaefer200MNI.nii.gz"
+    CLINICALXLSX = "../data/Clinical_fm_66.xlsx";
+    CLINICALCSV = "../data/Clinical_fm_66.csv";
 
 
 config=Config()
