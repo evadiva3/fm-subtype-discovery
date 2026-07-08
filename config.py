@@ -65,6 +65,10 @@ class Config:
         if torch.cuda.is_available(): return torch.device("cuda")
         if torch.backends.mps.is_available(): return torch.device("mps")
         return torch.device("cpu")
+    #Nikhil's stuff
+    FCDATAFOLDER = "../data/FCData";
+    SUBJECTDATAFOLDER = "../data/Subjects";
+    MASKER = "../data/schaefer200MNI.nii.gz"
 
 
 config=Config()

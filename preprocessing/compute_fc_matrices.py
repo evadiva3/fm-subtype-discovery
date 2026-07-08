@@ -14,19 +14,18 @@ from nilearn.connectome import ConnectivityMeasure;
 from sklearn.covariance import LedoitWolf;
 import torch;
 from torch_geometric.data import Data;
-
+from config import config;
 
 class preprocessBOLD:
     def __init__(self):
-        self.dataFolder = "../pathname";
+        self.dataFolder = config.SUBJECTDATAFOLDER;
         self.dataFolderPath = Path(self.dataFolder);
-        self.masker = NiftiLabelsMasker(labels_img="PATHNAMEPLACEHOLDER/schaefer200MNI.nii.gz");
+        self.masker = NiftiLabelsMasker(labels_img=config.MASKER);
         self.pathToBOLDFile = "";
         self.pathToConfoundsFile = "";
         self.eventsListPath = "";
         self.saveTimeSeries = None;
-        self.conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]; 
-
+        self.conditions = config.CONDITIONS;
     def buildTimeSeries(self):
         try:
             confound = pd.read_csv(self.pathToConfoundsFile, sep="\t");
