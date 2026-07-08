@@ -31,6 +31,18 @@ class Config:
     @property
     def JOINT_CHECKPOINT_PATH(self): return self.CHECKPOINT_DIR / "best_joint_model.pt"
 
+    @property
+    def CLINICALXLSX(self): return self.DATA_ROOT / "Clinical_fm_66.xlsx"
+
+    @property
+    def CLINICALCSV(self): return self.DATA_ROOT / "clinical_clean.csv"
+
+    @property
+    def SUBJECTDATAFOLDER(self): return self.DATA_ROOT / "Subjects"
+
+    @property
+    def MASKER(self): return str(self.DATA_ROOT / "schaefer200MNI.nii.gz")
+
     # Pipeline constants
     CONDITIONS = [
         "Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR",
