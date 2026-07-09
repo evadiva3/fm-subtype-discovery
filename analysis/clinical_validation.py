@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 from statsmodels.stats.multitest import multipletests
+from statsmodels.stats.power import TTestIndPower
 import os
 from config import config  
 
@@ -56,10 +57,31 @@ class clinical_validator:
 
 
 
+    def project_sample_size(self,results_df,target_power=0.80,alpha=0.05):
+        # given each variables already computed Cohen's d, this estimates the n per group a
+        # follow up study would need to reach target_power. This plans a future study it does
+        # not judge whether the current results are significant.
+        # statsmodels has no direct nonparametric (Mann-Whitney U) power solver, so TTestIndPower
+        # is used as the closest parametric approximation of the required sample size
+        solver=TTestIndPower()
+        projected_n=[]
+        for d in results_df['cohens_d']:
+            effect=abs(d)
+            if effect==0 or np.isnan(effect):
+                projected_n.append(np.nan)
+                continue
+            n=solver.solve_power(effect_size=effect,alpha=alpha,power=target_power,ratio=1.0,alternative='two-sided')
+            projected_n.append(np.ceil(n))
+        results_df=results_df.copy()
+        results_df['required_n_for_80_power']=projected_n
+        return results_df
+
+
     def run_all(self,subtype,save_dir=None):
         save_dir=config.resultsRoot if save_dir is None else save_dir
         os.makedirs(save_dir, exist_ok=True)
         df=self.compare_groups(subtype)
+        df=self.project_sample_size(df)
         effect_sizes=self.compute_effect_sizes(subtype)
         df.to_csv(os.path.join(save_dir, 'clinical_validation_results.csv'), index=False)
         print(effect_sizes)
