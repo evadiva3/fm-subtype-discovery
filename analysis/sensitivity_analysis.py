@@ -95,12 +95,22 @@ def evaluate_clustering(encoder, attention, dataset, conditionList):
     runner.setAttention(attention)
     return compute_original_orthogonal(runner)
 
-#build the real subject dataset at the current percentile
+#build true subject dataset at the current percentile
 def _default_dataset_builder():
     return datasetPreparation(fm_only=False)
 
-#train a fresh encoder+pool from scratch on one dataset via train.joint_train
+# tuneParams gives np scalars, GATv2Conv+DataLoader reject them, coerce native
+def _norm_hparams():
+    config.dModel=int(config.dModel)
+    config.heads=int(config.heads)
+    config.output=int(config.output)
+    config.layers=int(config.layers)
+    config.dropout=float(config.dropout)
+    config.batchSize=int(config.batchSize)
+
+#train encoder+pool from scratch on one dataset via train.joint_train
 def _train_encoder(dataset, epochs, patience, pct, device):
+    _norm_hparams()
     subjects=dataset.subjectData
     n_val=max(1, int(len(subjects)*config.valFraction))
     n_train=len(subjects)-n_val
@@ -173,8 +183,7 @@ def _checkpoint_for_config(cfg):
         return config.jointCheckpointPath
     return config.checkpointDir / f"best_joint_model_{cfg['name']}.pt"
 
-#test each hyperparameter config (each needs its own trained checkpoint),
-#  save results, or report whats missing
+#test each hyperparameter config (each needs its own trained checkpoint), save results, or report whats missing
 def run_hyperparameter_sweep(conditionList):
     set_edge_percentile(config.edgePercentile)
 
@@ -193,7 +202,7 @@ def run_hyperparameter_sweep(conditionList):
 
     rows = []
     for cfg in all_configs:
-        # Encoder/pool read config.* at construction, so apply the config first.
+        #encoder/pool read config.* at construction, so apply the config first.
         _apply_config(cfg)
         model=load_trained_model(_checkpoint_for_config(cfg))
         encoder, attention=model
@@ -224,7 +233,7 @@ def _apply_config(cfg):
     config.lr = cfg["LR"]
 
 def structural_self_test():
-   # Proves the pipeline is structurally sound without real checkpoints
+   #proves the pipeline is structurally sound without real checkpoints
     print("[self-test] edge-percentile graph construction ...")
     fake_fc=np.random.randn(config.nNodes, config.nNodes).astype(np.float32)
     for pct in config.edgePercentileSensitivity:
@@ -258,14 +267,14 @@ def structural_self_test():
     return True
 
 
-#one tiny random graph: [n_nodes,5] features + a few random edges (matches encoder in_channels=5)
+#one random graph: [n_nodes,5] features + random edges
 def _tiny_graph(n_nodes=8):
     x=torch.randn(n_nodes, 5)
     ei=torch.randint(0, n_nodes, (2, n_nodes*2))
     ea=torch.randn(ei.shape[1])
     return Data(x=x, edge_index=ei, edge_attr=ea)
 
-#fake dataset with .subjectData/.subjectList shaped exactly like datasetPreparation output
+#fake dataset shaped exactly like datasetPreparation output
 def _synthetic_dataset(n_fm=14, n_hc=6, n_cons=7, n_nodes=8):
     ds=type("S", (), {})()
     ds.subjectData=[]
@@ -278,7 +287,7 @@ def _synthetic_dataset(n_fm=14, n_hc=6, n_cons=7, n_nodes=8):
             ds.subjectList.append(sid)
     return ds
 
-#fast proof the retrain-per-threshold loop runs end to end on synthetic graphs (no real data)
+# proof the retrain-per-threshold loop runs end to end on synthetic graphs (no real data)
 def retrain_sweep_self_test():
     print("[self-test] retrain-per-threshold sweep on synthetic graphs (2 epochs each, cpu) ...")
     torch.manual_seed(config.randomSeed)
@@ -312,7 +321,6 @@ def main():
 
     # percentile
     pct_df, pct_blocker=run_percentile_sweep(conditionList)
-    pct_df, pct_blocker=run_percentile_sweep(conditionList, config.jointCheckpointPath)
     if pct_df is not None:
         out=results_dir / "sensitivity_percentile_sweep.csv"
         pct_df.to_csv(out, index=False)
