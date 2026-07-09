@@ -59,6 +59,9 @@ class Config:
     noiseStd=tuneParams.at[0, "NOISE_STD"];
     ntXentTemp=tuneParams.at[0,"NT_XENT_TEMP"];
     batchSize=tuneParams.at[0, "BATCH_SIZE"];
+    # Augmentation apply probs (per view, independent of strength)
+    maskApplyProb=0.5
+    noiseApplyProb=0.5
     # Training
     epochs=200
     patience=10
@@ -85,6 +88,9 @@ class Config:
     # Graph construction
     edgePercentile=80
     edgePercentileSensitivity=[75,80,85,90]
+    
+    #gap
+    gapB=10
 
     # Device
     @property
