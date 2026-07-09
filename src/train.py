@@ -202,12 +202,13 @@ if __name__ == "__main__":
     grouped_dataset=GroupedWrapper(dataset.subjectData)
 
     n_total=len(grouped_dataset)
-    n_val=int(n_total*0.15)
+    n_val=int(n_total*config.VAL_FRACTION)
     n_train=n_total-n_val
-    train_split, val_split=random_split(grouped_dataset, [n_train, n_val])
+    split_generator=torch.Generator().manual_seed(config.RANDOM_SEED)
+    train_split, val_split=random_split(grouped_dataset, [n_train, n_val], generator=split_generator)
 
-    train_loader=DataLoader(train_split, batch_size=8, shuffle=True, collate_fn=lambda b: b)
-    val_loader=DataLoader(val_split, batch_size=8, shuffle=False, collate_fn=lambda b: b)
+    train_loader=DataLoader(train_split, batch_size=config.BATCH_SIZE, shuffle=True, collate_fn=lambda b: b)
+    val_loader=DataLoader(val_split, batch_size=config.BATCH_SIZE, shuffle=False, collate_fn=lambda b: b)
 
     encoder=GNNEncoder()
     attention=condition_attention_pool()           

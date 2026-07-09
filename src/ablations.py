@@ -15,7 +15,7 @@ def run_no_contrastive_pretraining(dataloader, subjectList, conditionList):
     from clustering import cluster
     encoder=GNNEncoder() # random weights, no pretraining
     pool=condition_attention_pool() # untrained attention pool
-    runner=cluster(encoder, "results/checkpoints", "best_joint_model.pt", conditionList, subjectList)
+    runner=cluster(encoder, str(config.CHECKPOINT_DIR), config.JOINT_CHECKPOINT_PATH.name, conditionList, subjectList)
     runner.deploy(dataloader)
     runner.setAttention(pool)
     return runner.KMeansUse()                            
@@ -30,7 +30,7 @@ def run_resting_state_fc(*args, **kwargs):
 def run_no_attention_pooling(encoder, dataloader, subjectList, conditionList):
     # no attention pooling
     from clustering import cluster
-    runner=cluster(encoder, "results/checkpoints", "best_joint_model.pt", conditionList, subjectList)
+    runner=cluster(encoder, str(config.CHECKPOINT_DIR), config.JOINT_CHECKPOINT_PATH.name, conditionList, subjectList)
     runner.deploy(dataloader)
     runner.attentionEmbeddings={sid: emb.mean(dim=0) for sid, emb in runner.subjectEmbeddings.items()}
     return runner.KMeansUse()
@@ -45,7 +45,7 @@ def run_mean_pooling(encoder, dataloader, subjectList, conditionList):
 
 class SupervisedGnnCeling(trainer):
     #this is a supervised classification baseline
-    # (linear head on the encoder output), not an ablation of the contrastive/pooling pipeline.
+    # (linear head on the encoder output), not an ablation of the contrastive/pooling pipeline
     def __init__(self, model, loss, optimize, schedule, device, dire):
         super().__init__(model, loss, optimize, schedule, device, dire);
         self.classificationHead = nn.Linear(64,2);

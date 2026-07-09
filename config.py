@@ -53,6 +53,17 @@ class Config:
     N_NODES=200
     TR=2.0
 
+    # Confound regressors 
+    CONFOUND_COLUMNS = [
+        "global_signal", "white_matter", "csf",
+        "trans_x", "trans_x_derivative1", "trans_x_derivative1_power2", "trans_x_power2",
+        "trans_y", "trans_y_derivative1", "trans_y_power2", "trans_y_derivative1_power2",
+        "trans_z", "trans_z_derivative1", "trans_z_derivative1_power2", "trans_z_power2",
+        "rot_x", "rot_x_derivative1", "rot_x_power2", "rot_x_derivative1_power2",
+        "rot_y", "rot_y_derivative1", "rot_y_power2", "rot_y_derivative1_power2",
+        "rot_z", "rot_z_derivative1", "rot_z_power2", "rot_z_derivative1_power2"
+    ]
+
     # Model hyperparameters
     D_MODEL=64
     HEADS=4
@@ -69,8 +80,31 @@ class Config:
     EPOCHS=200
     PATIENCE=10
     N_PERMUTATIONS=1000
+    RANDOM_SEED=42
+    BATCH_SIZE=8
+    VAL_FRACTION=0.15
 
-    # Device 
+    # Clustering
+    KMEANS_K_RANGE=[2,3,4]
+    KMEANS_N_INIT=20
+
+    # Motion / QC (verify_setup.py)
+    FD_THRESHOLD=0.5
+    FD_FRACTION_THRESHOLD=0.25
+
+    # Statistics
+    FDR_ALPHA=0.05
+
+    # Baselines
+    PCA_COMPONENTS=50
+    GROUP_ICA_COMPONENTS=20
+    SVM_CV_FOLDS=5
+
+    # Graph construction 
+    EDGE_PERCENTILE=80
+    EDGE_PERCENTILE_SENSITIVITY=[75,80,85,90]
+
+    # Device
     @property
     def DEVICE(self):
         if torch.cuda.is_available(): return torch.device("cuda")

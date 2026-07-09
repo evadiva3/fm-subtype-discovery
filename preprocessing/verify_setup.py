@@ -9,8 +9,8 @@ from config import config;
 DATA_FOLDER=config.DATA_ROOT;
 
 TR=config.TR;
-FD_THRESHOLD=0.5;
-FRACTION_THRESHOLD=0.25;
+FD_THRESHOLD=config.FD_THRESHOLD;
+FRACTION_THRESHOLD=config.FD_FRACTION_THRESHOLD;
 FD_COLUMN="framewise_displacement";
 
 CONDITIONS=config.CONDITIONS;

@@ -15,6 +15,7 @@ from torch.utils.data import Dataset;
 from torch_geometric.data import Batch;
 from dataset import datasetPreparation;
 from analysis.evaluate import cluster_evaluate;
+from config import config;
 
 class cluster():
     def __init__(self, GNNEncoder, Directory, checkpointName, conditionList, subjectList):
@@ -100,28 +101,26 @@ class cluster():
         takeTensor = takeTensor.detach().cpu().numpy();
         trialSave = [];
         labelSave = [];
-        k = 2;
-        for _ in range(0, 3):
-            meaner = KMeans(n_clusters = k, n_init = 20, random_state = 42);
+        for k in config.KMEANS_K_RANGE:
+            meaner = KMeans(n_clusters = k, n_init = config.KMEANS_N_INIT, random_state = config.RANDOM_SEED);
             labels = meaner.fit_predict(takeTensor);
             score = silhouette_score(takeTensor, labels);
             trialSave.append(score);
             labelSave.append(labels);
-            k += 1;
         bestIdx = trialSave.index(max(trialSave));  # nothing changed besdies wiring
         bestLabels = labelSave[bestIdx];
-        evaluator = cluster_evaluate(); 
-        gapDict = evaluator.gap_stat(takeTensor, k=[2, 3, 4]);  # gap statistic per k
-        permP = evaluator.perm(takeTensor, bestLabels);  
-        permColumn = [np.nan, np.nan, np.nan]
-        permColumn[bestIdx] = permP; 
+        evaluator = cluster_evaluate();
+        gapDict = evaluator.gap_stat(takeTensor, k=config.KMEANS_K_RANGE);  # gap statistic per k
+        permP = evaluator.perm(takeTensor, bestLabels);
+        permColumn = [np.nan for _ in config.KMEANS_K_RANGE]
+        permColumn[bestIdx] = permP;
         trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label": bestLabels});
-        trialSave = pd.DataFrame({"k": [2, 3, 4], "silhouette_score": trialSave, "gap_stat": [gapDict[2], gapDict[3], gapDict[4]], "permutation_p": permColumn});
+        trialSave = pd.DataFrame({"k": config.KMEANS_K_RANGE, "silhouette_score": trialSave, "gap_stat": [gapDict[kk] for kk in config.KMEANS_K_RANGE], "permutation_p": permColumn});
         return [trialSave, trialFrame, bestLabels, permP] #append scalar permP as [3] unchanged for saveAll()
 
     def UMAPPING(self, array):
         array = array.detach().cpu().numpy();
-        coords = umap.UMAP(n_neighbors = 10, min_dist = 0.1, random_state = 42);
+        coords = umap.UMAP(n_neighbors = 10, min_dist = 0.1, random_state = config.RANDOM_SEED);
         return coords.fit_transform(array);
 
     def saveAll(self, cWeights, embeddingsAtt, kScore, labelFK, coords, orthoLabels, orthoScores):

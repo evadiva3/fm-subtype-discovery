@@ -37,7 +37,7 @@ class clinical_validator:
         results_df=pd.DataFrame(results)
         _,corrected_p, _, _=multipletests(results_df['p_value'], method='fdr_bh')
         results_df['p_corrected']=corrected_p
-        results_df['significant']=corrected_p < 0.05
+        results_df['significant']=corrected_p < config.FDR_ALPHA
         return results_df
     
     def compute_effect_sizes(self,subtype):

@@ -67,12 +67,12 @@ class preprocessBOLD:
                     self.pathToConfoundsFile = os.path.join(self.dataFolder, subfolder.name, f"{subfolder.name}_Confounds.tsv");
                     self.eventsListPath = os.path.join(self.dataFolder, subfolder.name, f"{subfolder.name}_events.tsv");
                     fcMatrices = self.buildFCMatrices();
-                    outputDir = os.path.join(self.dataFolder, "fc_matrices", subfolder.name);
+                    outputDir = os.path.join(self.dataFolder, subfolder.name);
                     os.makedirs(outputDir, exist_ok=True);
                     for i in range(len(fcMatrices)):
-                        condName = self.conditions[i].replace(" ", "").replace("-", "");
-                        np.save(os.path.join(outputDir, f"{subfolder.name}_FCMatrix_Cond_{condName}.npy"), fcMatrices[i]);
+                        condName = self.conditions[i].replace(" ", "");
+                        np.save(os.path.join(outputDir, f"{subfolder.name}_FCMatrixCondition{condName}.npy"), fcMatrices[i]);
                         if self.saveTimeSeries is not None:
-                            np.save(os.path.join(outputDir, f"{subfolder.name}_ROITimeSeries_Cond_{condName}.npy"), self.saveTimeSeries[i]);
+                            np.save(os.path.join(outputDir, f"{subfolder.name}_ROITimeSeries{condName}.npy"), self.saveTimeSeries[i]);
         except Exception as error:
             raise RuntimeError("Check Pathname/Pipeline Parameters") from error;
