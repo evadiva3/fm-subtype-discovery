@@ -85,6 +85,9 @@ class Config:
     # Graph construction
     edgePercentile=80
     edgePercentileSensitivity=[75,80,85,90]
+    
+    #gap
+    gapB=10
 
     # Device
     @property
