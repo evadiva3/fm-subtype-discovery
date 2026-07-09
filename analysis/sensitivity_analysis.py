@@ -29,7 +29,7 @@ from torch.utils.data import DataLoader, random_split
 
 
 
-_EDGE_PERCENTILE={"value": config.EDGE_PERCENTILE}
+_EDGE_PERCENTILE={"value": config.edgePercentile}
 
 #rebuild edge_index/edge_attr at a given percentilex
 def _patched_edgeIndexAttr(self, loadFile, FCMatrix):
@@ -87,8 +87,8 @@ def load_trained_model(checkpoint_path):
 def evaluate_clustering(encoder, attention, dataset, conditionList):
     runner=cluster(
         encoder,
-        str(config.CHECKPOINT_DIR),
-        config.JOINT_CHECKPOINT_PATH.name,
+        str(config.checkpointDir),
+        config.jointCheckpointPath.name,
         conditionList,
         dataset.subjectList,
     )
@@ -149,16 +149,16 @@ def run_percentile_sweep(conditionList, epochs=None, patience=None, dataset_buil
 def _primary_config():
     return {
         "name": "primary",
-        "D_MODEL": config.D_MODEL,
-        "HEADS": config.HEADS,
-        "LAYERS": config.LAYERS,
-        "DROPOUT": config.DROPOUT,
-        "LR": config.LR,
+        "D_MODEL": config.dModel,
+        "HEADS": config.heads,
+        "LAYERS": config.layers,
+        "DROPOUT": config.dropout,
+        "LR": config.lr,
     }
 
 #read the 3 alternate hyperparameter configs from a JSON file, or report they're missing
 def load_alternate_configs():
-    path=config.RESULTS_ROOT / "sensitivity_configs.json"
+    path=config.resultsRoot / "sensitivity_configs.json"
     if not path.exists():
         return None, (
             f"no alternate hyperparameter configs found (expected {path}); "
@@ -171,13 +171,13 @@ def load_alternate_configs():
 #figure out which checkpoint file belongs to a given hyperparameter config
 def _checkpoint_for_config(cfg):
     if cfg["name"]=="primary":
-        return config.JOINT_CHECKPOINT_PATH
-    return config.CHECKPOINT_DIR / f"best_joint_model_{cfg['name']}.pt"
+        return config.jointCheckpointPath
+    return config.checkpointDir / f"best_joint_model_{cfg['name']}.pt"
 
 #test each hyperparameter config (each needs its own trained checkpoint),
 #  save results, or report whats missing
 def run_hyperparameter_sweep(conditionList):
-    set_edge_percentile(config.EDGE_PERCENTILE)
+    set_edge_percentile(config.edgePercentile)
 
     alternates, blocker=load_alternate_configs()
     if alternates is None:
@@ -218,31 +218,31 @@ def run_hyperparameter_sweep(conditionList):
 def _apply_config(cfg):
     # GNNEncoder / attention pool read these off the shared config instance at
     # construction time, so mutate them before building a model for `cfg`
-    config.D_MODEL=cfg["D_MODEL"]
-    config.HEADS=cfg["HEADS"]
-    config.LAYERS=cfg["LAYERS"]
-    config.DROPOUT=cfg["DROPOUT"]
-    config.LR = cfg["LR"]
+    config.dModel=cfg["D_MODEL"]
+    config.heads=cfg["HEADS"]
+    config.layers=cfg["LAYERS"]
+    config.dropout=cfg["DROPOUT"]
+    config.lr = cfg["LR"]
 
 def structural_self_test():
    # Proves the pipeline is structurally sound without real checkpoints
     print("[self-test] edge-percentile graph construction ...")
-    fake_fc=np.random.randn(config.N_NODES, config.N_NODES).astype(np.float32)
-    for pct in config.EDGE_PERCENTILE_SENSITIVITY:
+    fake_fc=np.random.randn(config.nNodes, config.nNodes).astype(np.float32)
+    for pct in config.edgePercentileSensitivity:
         set_edge_percentile(pct)
         packaged=_patched_edgeIndexAttr(type("S", (), {})(), False, fake_fc)
         edge_index, edge_attr=packaged[0], packaged[1]
         assert edge_index.shape[0]==2, "edge_index must be [2, E]"
         assert edge_index.shape[1]==edge_attr.shape[0], "edge count must match"
         print(f"  pct={pct}: edges={edge_attr.shape[0]}")
-    set_edge_percentile(config.EDGE_PERCENTILE)
+    set_edge_percentile(config.edgePercentile)
 
     print("[self-test] clustering silhouette computation ...")
-    conditionList=list(config.CONDITIONS)
-    n_fm, n_hc, d=12, 8, config.D_MODEL
+    conditionList=list(config.conditions)
+    n_fm, n_hc, d=12, 8, config.dModel
     subjectList=[f"sub-fm{i:03d}" for i in range(n_fm)] + [f"sub-hc{i:03d}" for i in range(n_hc)]
-    runner=cluster(None, str(config.CHECKPOINT_DIR), config.JOINT_CHECKPOINT_PATH.name, conditionList, subjectList)
-    torch.manual_seed(config.RANDOM_SEED)
+    runner=cluster(None, str(config.checkpointDir), config.jointCheckpointPath.name, conditionList, subjectList)
+    torch.manual_seed(config.randomSeed)
     runner.attentionEmbeddings={}
     runner.groupLabels={}
     for i in range(n_fm):
@@ -299,20 +299,21 @@ def retrain_sweep_self_test():
 
 
 def main():
-    conditionList=list(config.CONDITIONS)
-    results_dir=config.RESULTS_ROOT
+    conditionList=list(config.conditions)
+    results_dir=config.resultsRoot
     os.makedirs(results_dir, exist_ok=True)
     blockers=[]
 
     print("=" * 70)
     print("Sensitivity analysis (paper Section 4.5)")
-    print(f"  EDGE_PERCENTILE_SENSITIVITY = {config.EDGE_PERCENTILE_SENSITIVITY}")
-    print(f"  primary edge percentile     = {config.EDGE_PERCENTILE}")
+    print(f"  EDGE_PERCENTILE_SENSITIVITY = {config.edgePercentileSensitivity}")
+    print(f"  primary edge percentile     = {config.edgePercentile}")
     print("  paper/draft_v1.md is empty -> using two-separate-tables layout (flagged)")
     print("=" * 70)
 
     # percentile
     pct_df, pct_blocker=run_percentile_sweep(conditionList)
+    pct_df, pct_blocker=run_percentile_sweep(conditionList, config.jointCheckpointPath)
     if pct_df is not None:
         out=results_dir / "sensitivity_percentile_sweep.csv"
         pct_df.to_csv(out, index=False)

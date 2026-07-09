@@ -9,16 +9,16 @@ from config import config;
 class datasetPreparation(Dataset):
     def __init__(self, avgCond=False, fm_only=False, checkOnes = False):
         super().__init__();
-        self.datafolder = config.SUBJECTDATAFOLDER;
+        self.datafolder = str(config.subjectDataFolder);
         self.datafolderPath = Path(self.datafolder);
         self.FCMatricesFilePath = "";
         self.TimeSeriesFilePath = "";
-        self.clinicalCleanFilePath = str(config.CLINICALCSV);
+        self.clinicalCleanFilePath = str(config.clinicalCsv);
         self.subjectList = [];
         self.avgCond = avgCond;
         self.fm_only = bool(fm_only);
         self.checkOnes = False;
-        self.conditionNames = config.CONDITIONS;
+        self.conditionNames = config.conditions;
         self.clinicalDataFrame = None;
         self.clinicalLookup = {};
         if Path(self.clinicalCleanFilePath).exists():
@@ -68,7 +68,7 @@ class datasetPreparation(Dataset):
             data = np.load(self.FCMatricesFilePath);
         else:
             data = FCMatrix;
-        indexing = np.where(np.abs(data) >= np.percentile(np.abs(data), 80));
+        indexing = np.where(np.abs(data) >= np.percentile(np.abs(data), config.edgePercentile));
         indexList = np.array([indexing[0], indexing[1]]);
         indexList = np.concatenate((indexList, indexList[::-1]), axis=1);
         edgeAttr = data[indexList[0], indexList[1]];

@@ -6,14 +6,14 @@ from pathlib import Path;
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent));
 from config import config;
 
-DATA_FOLDER=config.DATA_ROOT;
+DATA_FOLDER=config.dataRoot;
 
-TR=config.TR;
-FD_THRESHOLD=config.FD_THRESHOLD;
-FRACTION_THRESHOLD=config.FD_FRACTION_THRESHOLD;
+TR=config.tr;
+FD_THRESHOLD=config.fdThreshold;
+FRACTION_THRESHOLD=config.fdFractionThreshold;
 FD_COLUMN="framewise_displacement";
 
-CONDITIONS=config.CONDITIONS;
+CONDITIONS=config.conditions;
 
 
 def _clean(name):

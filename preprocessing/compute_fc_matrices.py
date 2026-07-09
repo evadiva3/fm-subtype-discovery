@@ -12,14 +12,14 @@ from config import config;
 
 class preprocessBOLD:
     def __init__(self):
-        self.dataFolder = config.SUBJECTDATAFOLDER;
+        self.dataFolder = config.subjectDataFolder;
         self.dataFolderPath = Path(self.dataFolder);
-        self.masker = NiftiLabelsMasker(labels_img=config.MASKER);
+        self.masker = NiftiLabelsMasker(labels_img=config.masker);
         self.pathToBOLDFile = "";
         self.pathToConfoundsFile = "";
         self.eventsListPath = "";
         self.saveTimeSeries = None;
-        self.conditions = config.CONDITIONS;
+        self.conditions = config.conditions;
 
     def buildTimeSeries(self):
         try:

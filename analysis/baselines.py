@@ -26,13 +26,13 @@ class baselines():
         else:
             self._fm_subject_ids=None 
 
-    def pca_kmeans(self,k,n_comp=config.PCA_COMPONENTS):
+    def pca_kmeans(self,k,n_comp=config.pcaComponents):
         flat=self.fc_matrices.reshape(len(self.fc_matrices),-1)
         n_samples, n_features=flat.shape
         effective_components=min(n_comp, n_samples, n_features)
         pca=PCA(n_components=effective_components)
         reduce=pca.fit_transform(flat)
-        km=KMeans(n_clusters=k, random_state=config.RANDOM_SEED)
+        km=KMeans(n_clusters=k, random_state=config.randomSeed)
         a=km.fit(reduce)
         label=a.labels_
         score=silhouette_score(reduce,label)
@@ -45,7 +45,7 @@ class baselines():
         flat=np.array([m[rows, cols] for m in self.fc_matrices])  
         expected_dim=n*(n-1)//2  
         assert flat.shape[1]==expected_dim, f"expected {expected_dim}-dim vectors, got {flat.shape[1]}"
-        km=KMeans(n_clusters=k, random_state=config.RANDOM_SEED)
+        km=KMeans(n_clusters=k, random_state=config.randomSeed)
         a=km.fit(flat)
         label=a.labels_
         score=silhouette_score(flat,label)  
@@ -82,7 +82,7 @@ class baselines():
             kept_ids.append(sid) 
         if len(subject_imgs)<2: 
             raise ValueError(f"group_ica_kmeans: only {len(subject_imgs)} FM subject had usable niftis; need >=2 to cluster")  
-        canica=CanICA(n_components=config.GROUP_ICA_COMPONENTS, mask_strategy='whole-brain-template', random_state=config.RANDOM_SEED)
+        canica=CanICA(n_components=config.groupIcaComponents, mask_strategy='whole-brain-template', random_state=config.randomSeed)
         canica.fit(subject_imgs)
         features=[] 
         for img in subject_imgs: 
@@ -91,7 +91,7 @@ class baselines():
         features=np.array(features)
         best_label, best_score, best_k=None, -1.0, None 
         for k in (2, 3, 4):
-            km=KMeans(n_clusters=k, random_state=config.RANDOM_SEED)
+            km=KMeans(n_clusters=k, random_state=config.randomSeed)
             label=km.fit_predict(features)
             score=silhouette_score(features, label) 
             if score>best_score: 
@@ -101,5 +101,5 @@ class baselines():
     def svm_classification(self):
         flat=self._fc_matrices_all.reshape(len(self._fc_matrices_all),-1) 
         svm=SVC()
-        cv=cross_val_score(svm,flat,self._labels_all,cv=config.SVM_CV_FOLDS)
+        cv=cross_val_score(svm,flat,self._labels_all,cv=config.svmCvFolds)
         return cv.mean()

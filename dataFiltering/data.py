@@ -1,7 +1,7 @@
 import pandas as pd;
 from config import config;
-pathToXML = config.CLINICALXLSX;
-pathToCSV = config.CLINICALCSV;
+pathToXML = config.clinicalXlsx;
+pathToCSV = config.clinicalCsv;
 def getStatData():
     data = pd.read_excel(pathToXML, sheet_name="data_66", engine ="openpyxl");
     data = data.drop(data[data['rid'].isin([5, 12, 32])].index);

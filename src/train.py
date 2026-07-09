@@ -55,8 +55,8 @@ class trainer():
     
     def fit(self, train_load, val_load, augmentor, epochs=None, patience=None):
         # remeber no hardcoding
-        epochs=config.EPOCHS if epochs is None else epochs
-        patience=config.PATIENCE if patience is None else patience
+        epochs=config.epochs if epochs is None else epochs
+        patience=config.patience if patience is None else patience
         c=0
         path=os.path.join(self.dire, 'best_model.pt')
         for i in range(epochs):
@@ -78,10 +78,10 @@ class trainer():
         self.model.load_state_dict(torch.load(path, map_location=self.device))  
 
 def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None):
-    epochs=config.EPOCHS if epochs is None else epochs
-    patience=config.PATIENCE if patience is None else patience
-    lr=config.LR if lr is None else lr
-    weight_decay=config.WEIGHT_DECAY if weight_decay is None else weight_decay
+    epochs=config.epochs if epochs is None else epochs
+    patience=config.patience if patience is None else patience
+    lr=config.lr if lr is None else lr
+    weight_decay=config.weightDecay if weight_decay is None else weight_decay
     os.makedirs(save_dir, exist_ok=True)
     checkpoint_path=os.path.join(save_dir, 'best_joint_model.pt')
     optimizer=torch.optim.AdamW(
@@ -202,22 +202,22 @@ if __name__ == "__main__":
     grouped_dataset=GroupedWrapper(dataset.subjectData)
 
     n_total=len(grouped_dataset)
-    n_val=int(n_total*config.VAL_FRACTION)
+    n_val=int(n_total*config.valFraction)
     n_train=n_total-n_val
-    split_generator=torch.Generator().manual_seed(config.RANDOM_SEED)
+    split_generator=torch.Generator().manual_seed(config.randomSeed)
     train_split, val_split=random_split(grouped_dataset, [n_train, n_val], generator=split_generator)
 
-    train_loader=DataLoader(train_split, batch_size=config.BATCH_SIZE, shuffle=True, collate_fn=lambda b: b)
-    val_loader=DataLoader(val_split, batch_size=config.BATCH_SIZE, shuffle=False, collate_fn=lambda b: b)
+    train_loader=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b)
+    val_loader=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
 
     encoder=GNNEncoder()
     attention=condition_attention_pool()           
     loss_fn=NTXentLoss()                            
     augmentor=GraphAugmentor()                     
 
-    device=config.DEVICE                            
+    device=config.device                            
 
     model, attention, train_losses, val_losses=joint_train(
         encoder, attention, loss_fn, train_loader, val_loader,
-        augmentor, device, config.CHECKPOINT_DIR    
+        augmentor, device, config.checkpointDir
     )
