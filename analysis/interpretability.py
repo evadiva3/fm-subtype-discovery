@@ -47,7 +47,7 @@ class attention_interpreter():
     
     def map_to_net(self, importance):
         from nilearn import datasets
-        a=datasets.fetch_atlas_schaefer_2018(n_rois=config.N_NODES)
+        a=datasets.fetch_atlas_schaefer_2018(n_rois=config.nNodes)
         label=a['labels']
         networks={}
         parcel_idx=0
@@ -61,8 +61,8 @@ class attention_interpreter():
                 networks[network]=[]
             networks[network].append(importance[parcel_idx])
             parcel_idx+=1
-        if parcel_idx!=config.N_NODES:
-            return None,f"expected {config.N_NODES} Schaefer parcels after dropping non-parcel labels, got {parcel_idx}"
+        if parcel_idx!=config.nNodes:
+            return None,f"expected {config.nNodes} Schaefer parcels after dropping non-parcel labels, got {parcel_idx}"
         for i in networks:
             networks[i]=np.mean(networks[i],axis=0)
         return networks,None
@@ -107,7 +107,7 @@ SCHAEFER_TOKEN_TO_YEO7={
 
 def load_schaefer_yeo7_lookup(n_rois=None):
     #build the Schaefer-200 to Yeo-7 lookup: one network name per parcel
-    n_rois=config.N_NODES if n_rois is None else n_rois
+    n_rois=config.nNodes if n_rois is None else n_rois
     try:
         from nilearn import datasets
     except Exception as error:
@@ -182,30 +182,30 @@ def load_subtype_labels(csv_path=None):
 
 def structural_self_test():
     #prove the mapping and aggregation are structurally sound against synthetic per-region attention
-    rng=np.random.default_rng(config.RANDOM_SEED)
+    rng=np.random.default_rng(config.randomSeed)
 
     print("[self-test] synthetic Schaefer-200 -> Yeo-7 lookup ...")
     #placehold for the nilearn lookup
-    region_networks=np.array([YEO7_NETWORKS[i % len(YEO7_NETWORKS)] for i in range(config.N_NODES)])
-    assert region_networks.shape[0]==config.N_NODES, "lookup must cover every parcel"
+    region_networks=np.array([YEO7_NETWORKS[i % len(YEO7_NETWORKS)] for i in range(config.nNodes)])
+    assert region_networks.shape[0]==config.nNodes, "lookup must cover every parcel"
     assert set(region_networks)==set(YEO7_NETWORKS), "lookup must span all 7 Yeo networks"
     print(f"  parcels={region_networks.shape[0]} networks={len(set(region_networks))}")
 
     print("[self-test] single-subject aggregation ([N_NODES] -> 7) ...")
-    one_subject=rng.random(config.N_NODES)
+    one_subject=rng.random(config.nNodes)
     per_network=aggregate_by_network(one_subject,region_networks)
     assert len(per_network)==7, "expected 7 Yeo networks"
     print(f"  networks={list(per_network)}")
 
     print("[self-test] batched aggregation ([n_subjects, N_NODES] -> 7) ...")
-    batched=rng.random((5,config.N_NODES))
+    batched=rng.random((5,config.nNodes))
     per_network_batched=aggregate_by_network(batched,region_networks)
     assert len(per_network_batched)==7, "batched aggregation must still yield 7 networks"
     print(f"  batched networks={len(per_network_batched)}")
 
     print("[self-test] per-subtype grouping (fake K-Means labels) ...")
     n_subjects=12
-    subject_attention={f"sub-{i:03d}":rng.random(config.N_NODES) for i in range(n_subjects)}
+    subject_attention={f"sub-{i:03d}":rng.random(config.nNodes) for i in range(n_subjects)}
     subtype_labels={f"sub-{i:03d}":(i % 2) for i in range(n_subjects)}
     frame=network_attention_by_subtype(subject_attention,subtype_labels,region_networks)
     assert frame.shape==(2,7), f"expected 2 subtypes x 7 networks, got {frame.shape}"
