@@ -40,7 +40,6 @@ def _patched_edgeIndexAttr(self, loadFile, FCMatrix):
     pct=_EDGE_PERCENTILE["value"]
     indexing=np.where(np.abs(data) >= np.percentile(np.abs(data), pct))
     indexList=np.array([indexing[0], indexing[1]])
-    indexList=np.concatenate((indexList, indexList[::-1]), axis=1)
     edgeAttr=data[indexList[0], indexList[1]]
     return [torch.tensor(indexList, dtype=torch.long), torch.tensor(edgeAttr, dtype=torch.float32)]
 
