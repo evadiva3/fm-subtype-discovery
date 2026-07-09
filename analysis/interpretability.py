@@ -39,7 +39,7 @@ class attention_interpreter():
         return group
     
     def map_to_net(self, importance):
-        a=datasets.fetch_atlas_schaefer_2018(n_rois=config.N_NODES)  
+        a=datasets.fetch_atlas_schaefer_2018(n_rois=config.nNodes)  
         label=a['labels']
         networks={}
         for idx, label_str in enumerate(label):

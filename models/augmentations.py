@@ -5,8 +5,8 @@ from config import config
 
 class graph_augmentor:
     def __init__(self, mask_rate=None, noise_std=None):
-        self.mask_rate=mask_rate if mask_rate is not None else config.MASK_RATE
-        self.noise_std=noise_std if noise_std is not None else config.NOISE_STD
+        self.mask_rate=mask_rate if mask_rate is not None else config.maskRate
+        self.noise_std=noise_std if noise_std is not None else config.noiseStd
 
     def node_masking(self, data):
         data=data.clone()

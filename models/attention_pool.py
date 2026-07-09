@@ -7,8 +7,8 @@ class condition_attention_pool(nn.Module):
 
     def __init__(self,d_model=None,num_cons=None):
         super().__init__()
-        self.d_model=d_model if d_model is not None else config.D_MODEL
-        self.num_cons=num_cons if num_cons is not None else config.N_CONDITIONS
+        self.d_model=d_model if d_model is not None else config.dModel
+        self.num_cons=num_cons if num_cons is not None else config.nConditions
         self.tau=nn.Parameter(torch.ones(1))
         self.attention=nn.Linear(self.d_model, 1) 
 

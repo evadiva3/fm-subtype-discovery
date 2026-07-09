@@ -15,7 +15,7 @@ def run_no_contrastive_pretraining(dataloader, subjectList, conditionList):
     from clustering import cluster
     encoder=GNNEncoder() # random weights, no pretraining
     pool=condition_attention_pool() # untrained attention pool
-    runner=cluster(encoder, str(config.CHECKPOINT_DIR), config.JOINT_CHECKPOINT_PATH.name, conditionList, subjectList)
+    runner=cluster(encoder, str(config.checkpointDir), config.jointCheckpointPath.name, conditionList, subjectList)
     runner.deploy(dataloader)
     runner.setAttention(pool)
     return runner.KMeansUse()                            
@@ -25,12 +25,12 @@ def run_resting_state_fc(*args, **kwargs):
     raise NotImplementedError(
         "resting-state FC ablation is blocked: no resting-state FC matrices or upstream "
         "computation exist in this repo (see preprocessing/compute_fc_matrices.py and "
-        "config.CONDITIONS, which are all task conditions).")
+        "config.conditions, which are all task conditions).")
 
 def run_no_attention_pooling(encoder, dataloader, subjectList, conditionList):
     # no attention pooling
     from clustering import cluster
-    runner=cluster(encoder, str(config.CHECKPOINT_DIR), config.JOINT_CHECKPOINT_PATH.name, conditionList, subjectList)
+    runner=cluster(encoder, str(config.checkpointDir), config.jointCheckpointPath.name, conditionList, subjectList)
     runner.deploy(dataloader)
     runner.attentionEmbeddings={sid: emb.mean(dim=0) for sid, emb in runner.subjectEmbeddings.items()}
     return runner.KMeansUse()

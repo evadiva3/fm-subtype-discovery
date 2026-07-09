@@ -12,7 +12,7 @@ class cluster_evaluate():
         return silhouette_score(embed,label)
     
     def perm(self,embed,label,n_permutations=None):
-        n_permutations=config.N_PERMUTATIONS if n_permutations is None else n_permutations
+        n_permutations=config.nPermutations if n_permutations is None else n_permutations
         real=self.silhouette(embed,label)
         c=0
         for i in range(0,n_permutations):  

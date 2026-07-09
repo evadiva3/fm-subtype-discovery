@@ -7,7 +7,7 @@ class NTXentLoss(nn.Module):
     
     def __init__(self,temperature=None):
         super().__init__()
-        self.temperature=temperature if temperature is not None else config.NT_XENT_TEMP
+        self.temperature=temperature if temperature is not None else config.ntXentTemp
 
     def forward(self,ag1,ag2):
         a=F.normalize(ag1,dim=1)

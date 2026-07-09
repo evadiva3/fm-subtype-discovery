@@ -101,8 +101,8 @@ class cluster():
         takeTensor = takeTensor.detach().cpu().numpy();
         trialSave = [];
         labelSave = [];
-        for k in config.KMEANS_K_RANGE:
-            meaner = KMeans(n_clusters = k, n_init = config.KMEANS_N_INIT, random_state = config.RANDOM_SEED);
+        for k in config.kmeansKRange:
+            meaner = KMeans(n_clusters = k, n_init = config.kmeansNInit, random_state = config.randomSeed);
             labels = meaner.fit_predict(takeTensor);
             score = silhouette_score(takeTensor, labels);
             trialSave.append(score);
@@ -110,17 +110,17 @@ class cluster():
         bestIdx = trialSave.index(max(trialSave));  # nothing changed besdies wiring
         bestLabels = labelSave[bestIdx];
         evaluator = cluster_evaluate();
-        gapDict = evaluator.gap_stat(takeTensor, k=config.KMEANS_K_RANGE);  # gap statistic per k
+        gapDict = evaluator.gap_stat(takeTensor, k=config.kmeansKRange);  # gap statistic per k
         permP = evaluator.perm(takeTensor, bestLabels);
-        permColumn = [np.nan for _ in config.KMEANS_K_RANGE]
+        permColumn = [np.nan for _ in config.kmeansKRange]
         permColumn[bestIdx] = permP;
         trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label": bestLabels});
-        trialSave = pd.DataFrame({"k": config.KMEANS_K_RANGE, "silhouette_score": trialSave, "gap_stat": [gapDict[kk] for kk in config.KMEANS_K_RANGE], "permutation_p": permColumn});
+        trialSave = pd.DataFrame({"k": config.kmeansKRange, "silhouette_score": trialSave, "gap_stat": [gapDict[kk] for kk in config.kmeansKRange], "permutation_p": permColumn});
         return [trialSave, trialFrame, bestLabels, permP] #append scalar permP as [3] unchanged for saveAll()
 
     def UMAPPING(self, array):
         array = array.detach().cpu().numpy();
-        coords = umap.UMAP(n_neighbors = 10, min_dist = 0.1, random_state = config.RANDOM_SEED);
+        coords = umap.UMAP(n_neighbors = 10, min_dist = 0.1, random_state = config.randomSeed);
         return coords.fit_transform(array);
 
     def saveAll(self, cWeights, embeddingsAtt, kScore, labelFK, coords, orthoLabels, orthoScores):

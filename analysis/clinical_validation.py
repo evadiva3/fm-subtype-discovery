@@ -8,7 +8,7 @@ from config import config
 
 class clinical_validator:
     def __init__(self,clinical_csv_path=None):
-        clinical_csv_path=config.CLINICAL_CSV_PATH if clinical_csv_path is None else clinical_csv_path
+        clinical_csv_path=config.clinicalCsv if clinical_csv_path is None else clinical_csv_path
         self.df=pd.read_csv(clinical_csv_path)
         self.count_vars=['age', 'vas_pain', 'hamd_total', 'hama_total', 'tas_total', 
         'tas_dif', 'tas_ddf', 'tas_eot', 'erq_reappraisal', 'erq_suppression']
@@ -37,7 +37,7 @@ class clinical_validator:
         results_df=pd.DataFrame(results)
         _,corrected_p, _, _=multipletests(results_df['p_value'], method='fdr_bh')
         results_df['p_corrected']=corrected_p
-        results_df['significant']=corrected_p < config.FDR_ALPHA
+        results_df['significant']=corrected_p < config.fdrAlpha
         return results_df
     
     def compute_effect_sizes(self,subtype):
@@ -57,7 +57,7 @@ class clinical_validator:
 
 
     def run_all(self,subtype,save_dir=None):
-        save_dir=config.RESULTS_ROOT if save_dir is None else save_dir
+        save_dir=config.resultsRoot if save_dir is None else save_dir
         os.makedirs(save_dir, exist_ok=True)
         df=self.compare_groups(subtype)
         effect_sizes=self.compute_effect_sizes(subtype)
