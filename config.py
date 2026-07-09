@@ -63,6 +63,7 @@ class Config:
     epochs=200
     patience=10
     nPermutations=1000
+    bootstrapNResamples=1000
     randomSeed=42
     valFraction=0.15
     # Clustering

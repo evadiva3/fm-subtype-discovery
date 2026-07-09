@@ -103,17 +103,17 @@ def _default_dataset_builder():
 #train a fresh encoder+pool from scratch on one dataset via train.joint_train
 def _train_encoder(dataset, epochs, patience, pct, device):
     subjects=dataset.subjectData
-    n_val=max(1, int(len(subjects)*config.VAL_FRACTION))
+    n_val=max(1, int(len(subjects)*config.valFraction))
     n_train=len(subjects)-n_val
-    gen=torch.Generator().manual_seed(config.RANDOM_SEED)
+    gen=torch.Generator().manual_seed(config.randomSeed)
     train_split, val_split=random_split(subjects, [n_train, n_val], generator=gen)
-    train_load=DataLoader(train_split, batch_size=config.BATCH_SIZE, shuffle=True, collate_fn=lambda b: b)
-    val_load=DataLoader(val_split, batch_size=config.BATCH_SIZE, shuffle=False, collate_fn=lambda b: b)
+    train_load=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b)
+    val_load=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
     encoder=GNNEncoder().to(device)
     attention=condition_attention_pool().to(device)
     loss_fn=NTXentLoss()
     augmentor=graph_augmentor()
-    save_dir=config.CHECKPOINT_DIR / f"sensitivity_pct_{pct}"
+    save_dir=config.checkpointDir / f"sensitivity_pct_{pct}"
     encoder, attention, _, _=joint_train(encoder, attention, loss_fn, train_load, val_load, augmentor, device, str(save_dir), epochs=epochs, patience=patience)
     encoder.to("cpu").eval()
     attention.to("cpu").eval()
@@ -123,12 +123,12 @@ def _train_encoder(dataset, epochs, patience, pct, device):
 #this measures threshold robustness of the full train+cluster method, not a fixed
 #model tolerating a graph density shift one full training run per percentile (slow, on purpose)
 def run_percentile_sweep(conditionList, epochs=None, patience=None, dataset_builder=None, device=None):
-    epochs=config.EPOCHS if epochs is None else epochs
-    patience=config.PATIENCE if patience is None else patience
+    epochs=config.epochs if epochs is None else epochs
+    patience=config.patience if patience is None else patience
     dataset_builder=_default_dataset_builder if dataset_builder is None else dataset_builder
-    device=config.DEVICE if device is None else device
+    device=config.device if device is None else device
     rows=[]
-    for pct in config.EDGE_PERCENTILE_SENSITIVITY:
+    for pct in config.edgePercentileSensitivity:
         print(f"[percentile sweep] pct={pct}: retraining from scratch (expensive) ...")
         set_edge_percentile(pct)
         try:
@@ -136,12 +136,12 @@ def run_percentile_sweep(conditionList, epochs=None, patience=None, dataset_buil
             encoder, attention=_train_encoder(dataset, epochs, patience, pct, device)
             orig, ortho=evaluate_clustering(encoder, attention, dataset, conditionList)
         except Exception as error:
-            set_edge_percentile(config.EDGE_PERCENTILE)
+            set_edge_percentile(config.edgePercentile)
             return None, f"retrain/cluster failed at percentile {pct}: {type(error).__name__}: {error}"
         rows.append(
             {"percentile": pct, "silhouette_original": orig, "silhouette_orthogonal": ortho}
         )
-    set_edge_percentile(config.EDGE_PERCENTILE)
+    set_edge_percentile(config.edgePercentile)
     return pd.DataFrame(rows), None
 
 
@@ -282,8 +282,8 @@ def _synthetic_dataset(n_fm=14, n_hc=6, n_cons=7, n_nodes=8):
 #fast proof the retrain-per-threshold loop runs end to end on synthetic graphs (no real data)
 def retrain_sweep_self_test():
     print("[self-test] retrain-per-threshold sweep on synthetic graphs (2 epochs each, cpu) ...")
-    torch.manual_seed(config.RANDOM_SEED)
-    conditionList=list(config.CONDITIONS)
+    torch.manual_seed(config.randomSeed)
+    conditionList=list(config.conditions)
     df, blocker=run_percentile_sweep(
         conditionList,
         epochs=2,
@@ -292,7 +292,7 @@ def retrain_sweep_self_test():
         device=torch.device("cpu"),
     )
     assert blocker is None, f"retrain sweep blocked: {blocker}"
-    assert len(df)==len(config.EDGE_PERCENTILE_SENSITIVITY), "one row per percentile"
+    assert len(df)==len(config.edgePercentileSensitivity), "one row per percentile"
     print(df.to_string(index=False))
     return True
 

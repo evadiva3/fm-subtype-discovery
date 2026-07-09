@@ -26,8 +26,8 @@ def _t(m):
 
 # resample ids w/ replacement, cluster, ARI v full-sample labels on shared subjects
 def run_bootstrap(runner, emb, ids, n_res=None, seed=None):
-    n_res=config.BOOTSTRAP_N_RESAMPLES if n_res is None else n_res
-    seed=config.RANDOM_SEED if seed is None else seed
+    n_res=config.bootstrapNResamples if n_res is None else n_res
+    seed=config.randomSeed if seed is None else seed
     orig=runner.KMeansUse(_t(emb), list(ids))
     omap=dict(zip(ids, orig[2]))
     rng=np.random.default_rng(seed)
@@ -61,13 +61,13 @@ def _summary_frame(aris):
 
 # load model, build FM embeddings, bootstrap, or return blocker
 def run_real(conds):
-    model=load_trained_model(config.JOINT_CHECKPOINT_PATH)
+    model=load_trained_model(config.jointCheckpointPath)
     if model is None:
-        return None, None, f"missing trained checkpoint ({config.JOINT_CHECKPOINT_PATH})"
+        return None, None, f"missing trained checkpoint ({config.jointCheckpointPath})"
     enc, att=model
     try:
         ds=datasetPreparation(fm_only=False)
-        runner=cluster(enc, str(config.CHECKPOINT_DIR), config.JOINT_CHECKPOINT_PATH.name, conds, ds.subjectList)
+        runner=cluster(enc, str(config.checkpointDir), config.jointCheckpointPath.name, conds, ds.subjectList)
         runner.deploy(ds.subjectData)
         runner.setAttention(att)
         runner._split_fm_hc()
@@ -75,13 +75,13 @@ def run_real(conds):
     except Exception as e:
         return None, None, f"could not build FM embeddings: {type(e).__name__}: {e}"
     emb=fmT.detach().cpu().numpy()
-    aris=run_bootstrap(runner, emb, fmIds, config.BOOTSTRAP_N_RESAMPLES)
+    aris=run_bootstrap(runner, emb, fmIds, config.bootstrapNResamples)
     rows, summ=_summary_frame(aris)
     return rows, summ, None
 
 
 # synthetic FM embeddings: k well-separated blobs, noise
-def _synthetic_embeddings(n=30, k=3, d=config.D_MODEL, spread=8.0, noise=1.0, seed=0):
+def _synthetic_embeddings(n=30, k=3, d=config.dModel, spread=8.0, noise=1.0, seed=0):
     rng=np.random.default_rng(seed)
     cen=rng.normal(0, spread, (k, d))
     m=np.empty((n, d), dtype=np.float32)
@@ -93,27 +93,27 @@ def _synthetic_embeddings(n=30, k=3, d=config.D_MODEL, spread=8.0, noise=1.0, se
 
 # bare runner just to borrow KMeansUse, no real model
 def _bare_runner(conds, ids):
-    return cluster(None, str(config.CHECKPOINT_DIR), config.JOINT_CHECKPOINT_PATH.name, conds, ids)
+    return cluster(None, str(config.checkpointDir), config.jointCheckpointPath.name, conds, ids)
 
 
 def structural_self_test():
     # proves resampling+ARI logic w/o real data
-    conds=list(config.CONDITIONS)
+    conds=list(config.conditions)
     n_res=25
 
     print("[self-test] well-separated clusters -> ARI should be near 1.0 ...")
     m, ids=_synthetic_embeddings(noise=0.5, seed=1)
     runner=_bare_runner(conds, ids)
-    aris=run_bootstrap(runner, m, ids, n_res=n_res, seed=config.RANDOM_SEED)
+    aris=run_bootstrap(runner, m, ids, n_res=n_res, seed=config.randomSeed)
     print(f"  clean: mean={aris.mean():.4f} range=[{aris.min():.4f},{aris.max():.4f}]")
     assert aris.mean()>0.8, "well-separated clusters must be stable"
 
     print("[self-test] pure-noise embeddings -> ARI should be lower/scattered ...")
     rng=np.random.default_rng(7)
-    noisy=rng.normal(0, 1, (30, config.D_MODEL)).astype(np.float32)
+    noisy=rng.normal(0, 1, (30, config.dModel)).astype(np.float32)
     nids=[f"sub-fm{i:03d}" for i in range(30)]
     nrunner=_bare_runner(conds, nids)
-    naris=run_bootstrap(nrunner, noisy, nids, n_res=n_res, seed=config.RANDOM_SEED)
+    naris=run_bootstrap(nrunner, noisy, nids, n_res=n_res, seed=config.randomSeed)
     print(f"  noise: mean={naris.mean():.4f} range=[{naris.min():.4f},{naris.max():.4f}]")
     assert naris.mean()<aris.mean(), "noise must be less stable than clean clusters"
 
@@ -125,14 +125,14 @@ def structural_self_test():
 
 
 def main():
-    conds=list(config.CONDITIONS)
-    rdir=config.RESULTS_ROOT
+    conds=list(config.conditions)
+    rdir=config.resultsRoot
     os.makedirs(rdir, exist_ok=True)
     blks=[]
 
     print("=" * 70)
     print("Bootstrap stability analysis (subtype reproducibility under resampling)")
-    print(f"  BOOTSTRAP_N_RESAMPLES = {config.BOOTSTRAP_N_RESAMPLES}")
+    print(f"  BOOTSTRAP_N_RESAMPLES = {config.bootstrapNResamples}")
     print("=" * 70)
 
     rows, summ, blk=run_real(conds)
