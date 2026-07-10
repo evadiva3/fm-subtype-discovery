@@ -187,7 +187,7 @@ if __name__ == "__main__":
     from gnn_encoder import GNNEncoder
     from contrastive_loss import NTXentLoss
     from attention_pool import condition_attention_pool
-    from augmentations import GraphAugmentor
+    from augmentations import graph_augmentor
     from dataset import datasetPreparation
     from torch.utils.data import DataLoader, random_split
     dataset=datasetPreparation()
@@ -213,7 +213,7 @@ if __name__ == "__main__":
     encoder=GNNEncoder()
     attention=condition_attention_pool()           
     loss_fn=NTXentLoss()                            
-    augmentor=GraphAugmentor()                     
+    augmentor=graph_augmentor()                     
 
     device=config.device                            
 
