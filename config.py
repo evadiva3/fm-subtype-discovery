@@ -52,17 +52,17 @@ class Config:
     # Confound regressors
     confoundColumns = ["global_signal", "white_matter", "csf", "trans_x", "trans_x_derivative1", "trans_x_derivative1_power2", "trans_x_power2", "trans_y", "trans_y_derivative1", "trans_y_power2", "trans_y_derivative1_power2", "trans_z", "trans_z_derivative1", "trans_z_derivative1_power2", "trans_z_power2", "rot_x", "rot_x_derivative1", "rot_x_power2", "rot_x_derivative1_power2", "rot_y", "rot_y_derivative1", "rot_y_power2", "rot_y_derivative1_power2", "rot_z", "rot_z_derivative1", "rot_z_power2", "rot_z_derivative1_power2"]
     # Model hyperparameters
-    dModel=tuneParams.at[0,"D_MODEL"];
-    heads=tuneParams.at[0,"HEADS"];
-    output = tuneParams.at[0,"OUTPUT"];
-    layers=tuneParams.at[0,"LAYERS"];
-    dropout=tuneParams.at[0,"DROPOUT"];
-    lr=tuneParams.at[0,"LR"];
-    weightDecay=tuneParams.at[0,"WEIGHT_DECAY"];
-    maskRate=tuneParams.at[0,"MASK_RATE"];
-    noiseStd=tuneParams.at[0, "NOISE_STD"];
-    ntXentTemp=tuneParams.at[0,"NT_XENT_TEMP"];
-    batchSize=tuneParams.at[0, "BATCH_SIZE"];
+    dModel=int(tuneParams.at[0,"D_MODEL"])
+    heads=int(tuneParams.at[0,"HEADS"])
+    output=int(tuneParams.at[0,"OUTPUT"])
+    layers=int(tuneParams.at[0,"LAYERS"])
+    dropout=float(tuneParams.at[0,"DROPOUT"])
+    lr=float(tuneParams.at[0,"LR"])
+    weightDecay=float(tuneParams.at[0,"WEIGHT_DECAY"])
+    maskRate=float(tuneParams.at[0,"MASK_RATE"])
+    noiseStd=float(tuneParams.at[0,"NOISE_STD"])
+    ntXentTemp=float(tuneParams.at[0,"NT_XENT_TEMP"])
+    batchSize=int(tuneParams.at[0,"BATCH_SIZE"])
     # Augmentation apply probs (per view, independent of strength)
     maskApplyProb=0.5
     noiseApplyProb=0.5
