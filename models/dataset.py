@@ -6,6 +6,9 @@ from torch_geometric.data import Data;
 import torch;
 from torch.utils.data import Dataset;
 from config import config;
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "preprocessing"))
+from subject_filter import get_included_subjects
 class datasetPreparation(Dataset):
     def __init__(self, avgCond=False, fm_only=False, checkOnes = False):
         super().__init__();
@@ -69,8 +72,7 @@ class datasetPreparation(Dataset):
         else:
             data = FCMatrix;
         indexing = np.where(np.abs(data) >= np.percentile(np.abs(data), config.edgePercentile));
-        indexList = np.array([indexing[0], indexing[1]]);
-        indexList = np.concatenate((indexList, indexList[::-1]), axis=1);
+        indexList = np.array([indexing[0], indexing[1]]);  #where already sym
         edgeAttr = data[indexList[0], indexList[1]];
         packagedIndexAttr = [torch.tensor(indexList, dtype=torch.long), torch.tensor(edgeAttr, dtype=torch.float32)];
         return packagedIndexAttr;
@@ -113,8 +115,9 @@ class datasetPreparation(Dataset):
         clinical.loc[clinical["group"] == "HC", "group"] = 1;
         if self.avgCond is False:
             subjectGraphs = {};
+            inc = set(get_included_subjects())  #include set
             for subfolder in self.datafolderPath.iterdir():
-                if subfolder.is_dir():
+                if subfolder.is_dir() and subfolder.name in inc:
                     self.subjectList.append(subfolder.name);
                     subjectGraphs[subfolder.name] = [];
                     for i in range(0, 7):
@@ -130,8 +133,9 @@ class datasetPreparation(Dataset):
             for subjectId, graphs in subjectGraphs.items():
                 subjectData.append({"subject_id": subjectId, "graphs": graphs, "group_label": torch.tensor([self.getGroupLabel(subjectId)], dtype=torch.long)});
         else:
+            inc = set(get_included_subjects())  #include set
             for subfolder in self.datafolderPath.iterdir():
-                if subfolder.is_dir():
+                if subfolder.is_dir() and subfolder.name in inc:
                     self.subjectList.append(subfolder.name);
                     data = self.averageConditions(subfolder, clinical);
                     if data is not None:
