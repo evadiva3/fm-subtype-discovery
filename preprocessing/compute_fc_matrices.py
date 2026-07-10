@@ -1,5 +1,6 @@
 # changes made:
 # removed orphaned buildSparse graph-construction path
+#bandpass filter added
 
 import os;
 import numpy as np;
@@ -26,6 +27,8 @@ class preprocessBOLD:
             confound = pd.read_csv(self.pathToConfoundsFile, sep="\t");
             selectedConfounds = ["global_signal", "white_matter", "csf", "trans_x", "trans_x_derivative1", "trans_x_derivative1_power2", "trans_x_power2", "trans_y", "trans_y_derivative1", "trans_y_power2", "trans_y_derivative1_power2", "trans_z", "trans_z_derivative1", "trans_z_derivative1_power2", "trans_z_power2", "rot_x", "rot_x_derivative1", "rot_x_power2", "rot_x_derivative1_power2", "rot_y", "rot_y_derivative1", "rot_y_power2", "rot_y_derivative1_power2", "rot_z", "rot_z_derivative1", "rot_z_power2", "rot_z_derivative1_power2"];
             cleanedConfounds = confound[selectedConfounds].fillna(0);
+            self.masker.high_pass=config.highPassCutoff  #bandpass
+            self.masker.t_r=config.tr #bandpass
             return self.masker.fit_transform(self.pathToBOLDFile, confounds=cleanedConfounds);
         except Exception as error:
             raise RuntimeError("Check Pathname Hardcodes") from error;
