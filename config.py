@@ -66,6 +66,9 @@ class Config:
     # Augmentation apply probs (per view, independent of strength)
     maskApplyProb=0.5
     noiseApplyProb=0.5
+
+   #Tuning Hypers:
+    tuneEpochs = 100;
     # Training
     epochs=200
     patience=10
