@@ -99,13 +99,15 @@ def _load_labels(path=None):
     return pd.DataFrame({"sid": df["Subject_Id"], "lab": df["Label"]}), None
 
 def _load_fd(path=None):
-    path=config.dataRoot / "fd_check_results.csv" if path is None else Path(path)
+    path=config.exclusionManifestPath if path is None else Path(path)
     if not path.exists():
-        return None, f"missing FD results ({path})"
+        return None, f"missing FD manifest ({path})"
     df=pd.read_csv(path)
     cols=[c for c in df.columns if c.startswith("meanFD_")]
     if not cols:
         return None, f"no meanFD_* columns in {path}"
+    if "exclusion_reason" in df.columns:
+        df=df[df["exclusion_reason"].fillna("").astype(str)==""] 
     return pd.DataFrame({"sid": df["subject_id"], "fd": df[cols].mean(axis=1)}), None
 
 #MannWhitney FD across 2 subtypes
