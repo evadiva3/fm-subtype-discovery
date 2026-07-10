@@ -43,7 +43,7 @@ class Config:
     def masker(self): return str(self.dataRoot / "schaefer200MNI.nii.gz")
 
     # Pipeline constants
-    conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR","Happy - INCREMENTAR"]
+    conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]  # paper events.tsv order
     nConditions=7
     nNodes=200
     tr=2.0
