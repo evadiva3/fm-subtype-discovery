@@ -1,8 +1,10 @@
 # changes made:
 # removed orphaned buildSparse graph-construction path
 #bandpass filter added
+#fix hardcoding
 
 import os;
+import sys;
 import numpy as np;
 import pandas as pd;
 from pathlib import Path;
@@ -10,6 +12,8 @@ from nilearn.maskers import NiftiLabelsMasker;
 from nilearn.connectome import ConnectivityMeasure;
 from sklearn.covariance import LedoitWolf;
 from config import config;
+sys.path.insert(0, str(Path(__file__).resolve().parent));  #subject_filter sibling
+from subject_filter import get_included_subjects;
 
 class preprocessBOLD:
     def __init__(self):
@@ -63,9 +67,10 @@ class preprocessBOLD:
         return fcMatrices;
 
     def execute(self):
+        inc = set(get_included_subjects());  
         try:
             for subfolder in self.dataFolderPath.iterdir():
-                if subfolder.is_dir() and not subfolder.name.startswith("top_") and subfolder.name != "excluded":
+                if subfolder.is_dir() and not subfolder.name.startswith("top_") and subfolder.name != "excluded" and subfolder.name in inc:
                     self.pathToBOLDFile = os.path.join(self.dataFolder, subfolder.name, f"{subfolder.name}_BOLD.nii.gz");
                     self.pathToConfoundsFile = os.path.join(self.dataFolder, subfolder.name, f"{subfolder.name}_Confounds.tsv");
                     self.eventsListPath = os.path.join(self.dataFolder, subfolder.name, f"{subfolder.name}_events.tsv");
