@@ -2,6 +2,7 @@
 #wiring evaluate py
 #gap stat fix 
 #centriod distance
+#no hardcode
 
 
 import os;
@@ -169,7 +170,7 @@ if __name__ == "__main__":
     dataset = datasetPreparation(fm_only=False);
     dataList = dataset.subjectList;
     data = DataLoader(dataset, batch_size=1, shuffle=False, collate_fn=lambda b: b[0]);
-    attention = condition_attention_pool(d_model=64, num_cons=7);
+    attention = condition_attention_pool(d_model=config.dModel, num_cons=config.nConditions);  #no hardcode
     encoder = GNNEncoder();
     checkpoint = torch.load("results/checkpoints/best_joint_model.pt", map_location='cpu');
     encoder.load_state_dict(checkpoint['model']);

@@ -79,7 +79,7 @@ class SupervisedGnnCeling(trainer):
 def runConditionSpecialist(encoder, loss, device, augmentor, direct):
     from train import trainer;
     from dataset import datasetPreparation;
-    from torch_geometric.data import DataLoader;
+    from torch_geometric.loader import DataLoader; 
     from torch.utils.data import random_split;
     from torch.optim import AdamW;
     from transformers import get_cosine_schedule_with_warmup;
