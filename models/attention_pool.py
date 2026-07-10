@@ -15,7 +15,8 @@ class condition_attention_pool(nn.Module):
     def forward(self, embed):
         a=self.attention(embed)
         b=a.squeeze(-1)
-        c=F.softmax(b/self.tau, dim=0)
+        tau=F.softplus(self.tau)  # tau>0
+        c=F.softmax(b/tau, dim=0)
         weight_sum=torch.einsum('i,ij->j',c,embed)
-        return (weight_sum, c, self.tau)
+        return (weight_sum, c, tau)
 #addressed

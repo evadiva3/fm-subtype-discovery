@@ -25,6 +25,9 @@ class Config:
     def jointCheckpointPath(self): return self.checkpointDir / "best_joint_model.pt"
 
     @property
+    def exclusionManifestPath(self): return self.resultsRoot / "subject_exclusions.csv"
+
+    @property
     def fcDataFolder(self): return self.dataRoot / "FCData"
 
     @property
