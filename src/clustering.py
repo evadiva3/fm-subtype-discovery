@@ -1,5 +1,6 @@
 #changes made: 
 #wiring evaluate py
+#gap stat fix 
 
 
 import os;
@@ -107,16 +108,18 @@ class cluster():
             score = silhouette_score(takeTensor, labels);
             trialSave.append(score);
             labelSave.append(labels);
-        bestIdx = trialSave.index(max(trialSave));  # nothing changed besdies wiring
+        bestIdx = trialSave.index(max(trialSave));
         bestLabels = labelSave[bestIdx];
         evaluator = cluster_evaluate();
-        gapDict = evaluator.gap_stat(takeTensor, k=config.kmeansKRange);  # gap statistic per k
+        gapDict = evaluator.gap_stat(takeTensor, k=config.kmeansKRange);  #gap statistic per k
+        kSil = config.kmeansKRange[bestIdx];  #silhouette picks final k
+        kGap = evaluator.gap_k(gapDict, config.kmeansKRange);  #gap 1-SE k, reported not used
         permP = evaluator.perm(takeTensor, bestLabels);
         permColumn = [np.nan for _ in config.kmeansKRange]
         permColumn[bestIdx] = permP;
         trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label": bestLabels});
-        trialSave = pd.DataFrame({"k": config.kmeansKRange, "silhouette_score": trialSave, "gap_stat": [gapDict[kk] for kk in config.kmeansKRange], "permutation_p": permColumn});
-        return [trialSave, trialFrame, bestLabels, permP] #append scalar permP as [3] unchanged for saveAll()
+        trialSave = pd.DataFrame({"k": config.kmeansKRange, "silhouette_score": trialSave, "gap_stat": [gapDict[kk]["gap"] for kk in config.kmeansKRange], "gap_se": [gapDict[kk]["s"] for kk in config.kmeansKRange], "permutation_p": permColumn, "k_selected_silhouette": kSil, "k_selected_gap": kGap});
+        return [trialSave, trialFrame, bestLabels, permP]
 
     def UMAPPING(self, array):
         array = array.detach().cpu().numpy();

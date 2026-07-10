@@ -56,16 +56,20 @@ class Config:
     lr=tuneParams.at[0,"lr"];
     weightDecay=tuneParams.at[0,"weightDecay"];
     maskRate=tuneParams.at[0,"maskRate"];
-    noiseStd=0.1 #gonna be a pain but we gotta see FC Matrices to give good estimates on tuning it. 
+    noiseStd=0.1 #gonna be a pain but we gotta see FC Matrices to give good estimates on tuning it.
     ntXentTemp=tuneParams.at[0,"ntXentTemp"];
     batchSize=tuneParams.at[0, "batchSize"];
+    # Augmentation apply probs (per view, independent of strength)
+    maskApplyProb=0.5
+    noiseApplyProb=0.5
 
    #Tuning Hypers:
-    tuneEpochs = 100; 
+    tuneEpochs = 100;
     # Training
     epochs=200
     patience=10
     nPermutations=1000
+    bootstrapNResamples=1000
     randomSeed=42
     valFraction=0.15
     # Clustering
@@ -87,6 +91,9 @@ class Config:
     # Graph construction
     edgePercentile=80
     edgePercentileSensitivity=[75,80,85,90]
+    
+    #gap
+    gapB=10
 
     # Device
     @property

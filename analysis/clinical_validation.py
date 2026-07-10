@@ -4,7 +4,8 @@ from scipy import stats
 from statsmodels.stats.multitest import multipletests
 from statsmodels.stats.power import TTestIndPower
 import os
-from config import config  
+from pathlib import Path
+from config import config
 
 
 class clinical_validator:
@@ -86,6 +87,98 @@ class clinical_validator:
         df.to_csv(os.path.join(save_dir, 'clinical_validation_results.csv'), index=False)
         print(effect_sizes)
         return df
+
+
+#per-subtype FD (motion) check
+
+def _load_labels(path=None):
+    path=Path("../ClusterResults/K-Means-Labeling.csv") if path is None else Path(path)
+    if not path.exists():
+        return None, f"missing subtype labels ({path})"
+    df=pd.read_csv(path)
+    return pd.DataFrame({"sid": df["Subject_Id"], "lab": df["Label"]}), None
+
+def _load_fd(path=None):
+    path=config.dataRoot / "fd_check_results.csv" if path is None else Path(path)
+    if not path.exists():
+        return None, f"missing FD results ({path})"
+    df=pd.read_csv(path)
+    cols=[c for c in df.columns if c.startswith("meanFD_")]
+    if not cols:
+        return None, f"no meanFD_* columns in {path}"
+    return pd.DataFrame({"sid": df["subject_id"], "fd": df[cols].mean(axis=1)}), None
+
+#MannWhitney FD across 2 subtypes
+def subtype_fd_test(lab, fd):
+    m=lab.merge(fd, on="sid")
+    if len(m)==0:
+        return None, "no overlap between labeled subjects and FD subjects"
+    grps=sorted(m["lab"].unique())
+    if len(grps)!=2:
+        return None, f"MannWhitney needs 2 subtypes, got {len(grps)}"
+    a=m[m["lab"]==grps[0]]["fd"].dropna()
+    b=m[m["lab"]==grps[1]]["fd"].dropna()
+    u,p=stats.mannwhitneyu(a, b, alternative="two-sided")
+    return {"U": float(u), "p": float(p), "n0": int(len(a)), "n1": int(len(b))}, None
+
+def run_fd_comparison(labels_path=None, fd_path=None):
+    lab, blk=_load_labels(labels_path)
+    if lab is None:
+        return None, blk
+    fd, blk=_load_fd(fd_path)
+    if fd is None:
+        return None, blk
+    return subtype_fd_test(lab, fd)
+
+
+def structural_self_test():
+    #two fake subtypes
+    rng=np.random.default_rng(config.randomSeed)
+    n=20
+    lab=pd.DataFrame({"sid": [f"s{i}" for i in range(2*n)], "lab": [0]*n+[1]*n})
+
+    print("[self-test] FD differs between subtypes -> significant p ...")
+    fd=pd.DataFrame({"sid": [f"s{i}" for i in range(2*n)], "fd": np.concatenate([rng.normal(0.10, 0.02, n), rng.normal(0.30, 0.02, n)])})
+    res, blk=subtype_fd_test(lab, fd)
+    assert blk is None, blk
+    print(f"  U={res['U']:.1f} p={res['p']:.2e}")
+    assert res["p"]<0.05, "real FD diff must be significant"
+
+    print("[self-test] no FD difference -> non-significant p ...")
+    fd2=pd.DataFrame({"sid": [f"s{i}" for i in range(2*n)], "fd": rng.normal(0.20, 0.05, 2*n)})
+    res2, blk2=subtype_fd_test(lab, fd2)
+    assert blk2 is None, blk2
+    print(f"  U={res2['U']:.1f} p={res2['p']:.4f}")
+    assert res2["p"]>0.05, "no FD diff must be non-significant"
+    print("[self-test] Good! FD subtype test behaves.")
+    return True
+
+
+def main():
+    os.makedirs(config.resultsRoot, exist_ok=True)
+    print("=" * 70)
+    print("Per-subtype FD motion check (paper Section 4.1)")
+    print("=" * 70)
+    res, blk=run_fd_comparison()
+    if res is not None:
+        out=config.resultsRoot / "subtype_fd_comparison.csv"
+        pd.DataFrame([res]).to_csv(out, index=False)
+        print(f"[fd] wrote {out}")
+        print(f"  U={res['U']:.2f} p={res['p']:.4f} n0={res['n0']} n1={res['n1']}")
+        if res["p"]>=config.fdrAlpha:
+            print("  non-significant -> subtypes NOT explained by motion (desired)")
+        else:
+            print("  SIGNIFICANT -> motion may confound subtypes (flag)")
+    else:
+        print("-" * 70)
+        print(f"FD comparison BLOCKED: {blk}")
+        print("-" * 70)
+        print("Running structural self-test on synthetic FD instead ...")
+        structural_self_test()
+
+
+if __name__ == "__main__":
+    main()
     
 
         

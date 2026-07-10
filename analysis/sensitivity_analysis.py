@@ -1,6 +1,6 @@
 # sensitivity_analysis.py: rebuild graphs at different 
 # edge thresholds + retrain configs, 
-# check if clustering result stays stable.
+# check if clustering result stays stable
 
 
 import os
@@ -21,6 +21,11 @@ from clustering import cluster
 from gnn_encoder import GNNEncoder
 from models.attention_pool import condition_attention_pool
 from dataset import datasetPreparation
+from train import joint_train
+from contrastive_loss import NTXentLoss
+from augmentations import graph_augmentor
+from torch_geometric.data import Data
+from torch.utils.data import DataLoader, random_split
 
 
 
@@ -35,7 +40,6 @@ def _patched_edgeIndexAttr(self, loadFile, FCMatrix):
     pct=_EDGE_PERCENTILE["value"]
     indexing=np.where(np.abs(data) >= np.percentile(np.abs(data), pct))
     indexList=np.array([indexing[0], indexing[1]])
-    indexList=np.concatenate((indexList, indexList[::-1]), axis=1)
     edgeAttr=data[indexList[0], indexList[1]]
     return [torch.tensor(indexList, dtype=torch.long), torch.tensor(edgeAttr, dtype=torch.float32)]
 
@@ -91,25 +95,62 @@ def evaluate_clustering(encoder, attention, dataset, conditionList):
     runner.setAttention(attention)
     return compute_original_orthogonal(runner)
 
-#test all 4 edge thresholds on the same trained model, save results, or report why it cant
-def run_percentile_sweep(conditionList, checkpoint_path):
-    model=load_trained_model(checkpoint_path)
-    if model is None:
-        return None, f"no trained checkpoint at {checkpoint_path} (results/checkpoints/ is empty)"
-    encoder, attention=model
+#build true subject dataset at the current percentile
+def _default_dataset_builder():
+    return datasetPreparation(fm_only=False)
 
+# tuneParams gives np scalars, GATv2Conv+DataLoader reject them, coerce native
+def _norm_hparams():
+    config.dModel=int(config.dModel)
+    config.heads=int(config.heads)
+    config.output=int(config.output)
+    config.layers=int(config.layers)
+    config.dropout=float(config.dropout)
+    config.batchSize=int(config.batchSize)
+
+#train encoder+pool from scratch on one dataset via train.joint_train
+def _train_encoder(dataset, epochs, patience, pct, device):
+    _norm_hparams()
+    subjects=dataset.subjectData
+    n_val=max(1, int(len(subjects)*config.valFraction))
+    n_train=len(subjects)-n_val
+    gen=torch.Generator().manual_seed(config.randomSeed)
+    train_split, val_split=random_split(subjects, [n_train, n_val], generator=gen)
+    train_load=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b)
+    val_load=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
+    encoder=GNNEncoder().to(device)
+    attention=condition_attention_pool().to(device)
+    loss_fn=NTXentLoss()
+    augmentor=graph_augmentor()
+    save_dir=config.checkpointDir / f"sensitivity_pct_{pct}"
+    encoder, attention, _, _=joint_train(encoder, attention, loss_fn, train_load, val_load, augmentor, device, str(save_dir), epochs=epochs, patience=patience)
+    encoder.to("cpu").eval()
+    attention.to("cpu").eval()
+    return encoder, attention
+
+#retrains a model from strach at every percentile, then clusters
+#this measures threshold robustness of the full train+cluster method, not a fixed
+#model tolerating a graph density shift one full training run per percentile (slow, on purpose)
+def run_percentile_sweep(conditionList, epochs=None, patience=None, dataset_builder=None, device=None):
+    epochs=config.epochs if epochs is None else epochs
+    patience=config.patience if patience is None else patience
+    dataset_builder=_default_dataset_builder if dataset_builder is None else dataset_builder
+    device=config.device if device is None else device
     rows=[]
     for pct in config.edgePercentileSensitivity:
+        print(f"[percentile sweep] pct={pct}: retraining from scratch (expensive) ...")
         set_edge_percentile(pct)
         try:
-            dataset=datasetPreparation(fm_only=False)  
+            dataset=dataset_builder()
+            encoder, attention=_train_encoder(dataset, epochs, patience, pct, device)
+            orig, ortho=evaluate_clustering(encoder, attention, dataset, conditionList)
         except Exception as error:
-            return None, f"could not build dataset at percentile {pct}: {type(error).__name__}: {error}"
-        orig, ortho=evaluate_clustering(encoder, attention, dataset, conditionList)
+            set_edge_percentile(config.edgePercentile)
+            return None, f"retrain/cluster failed at percentile {pct}: {type(error).__name__}: {error}"
         rows.append(
             {"percentile": pct, "silhouette_original": orig, "silhouette_orthogonal": ortho}
         )
-    set_edge_percentile(config.edgePercentile)  
+    set_edge_percentile(config.edgePercentile)
     return pd.DataFrame(rows), None
 
 
@@ -142,8 +183,7 @@ def _checkpoint_for_config(cfg):
         return config.jointCheckpointPath
     return config.checkpointDir / f"best_joint_model_{cfg['name']}.pt"
 
-#test each hyperparameter config (each needs its own trained checkpoint),
-#  save results, or report whats missing
+#test each hyperparameter config (each needs its own trained checkpoint), save results, or report whats missing
 def run_hyperparameter_sweep(conditionList):
     set_edge_percentile(config.edgePercentile)
 
@@ -162,7 +202,7 @@ def run_hyperparameter_sweep(conditionList):
 
     rows = []
     for cfg in all_configs:
-        # Encoder/pool read config.* at construction, so apply the config first.
+        #encoder/pool read config.* at construction, so apply the config first.
         _apply_config(cfg)
         model=load_trained_model(_checkpoint_for_config(cfg))
         encoder, attention=model
@@ -193,7 +233,7 @@ def _apply_config(cfg):
     config.lr = cfg["LR"]
 
 def structural_self_test():
-   # Proves the pipeline is structurally sound without real checkpoints
+   #proves the pipeline is structurally sound without real checkpoints
     print("[self-test] edge-percentile graph construction ...")
     fake_fc=np.random.randn(config.nNodes, config.nNodes).astype(np.float32)
     for pct in config.edgePercentileSensitivity:
@@ -221,7 +261,47 @@ def structural_self_test():
         runner.groupLabels[f"sub-hc{i:03d}"]=1
     orig, ortho=compute_original_orthogonal(runner)
     print(f"  synthetic silhouette_original={orig:.4f} silhouette_orthogonal={ortho:.4f}")
+
+    retrain_sweep_self_test()
     print("[self-test] Good! The pipeline is structurally sound and ready to run.")
+    return True
+
+
+#one random graph: [n_nodes,5] features + random edges
+def _tiny_graph(n_nodes=8):
+    x=torch.randn(n_nodes, 5)
+    ei=torch.randint(0, n_nodes, (2, n_nodes*2))
+    ea=torch.randn(ei.shape[1])
+    return Data(x=x, edge_index=ei, edge_attr=ea)
+
+#fake dataset shaped exactly like datasetPreparation output
+def _synthetic_dataset(n_fm=14, n_hc=6, n_cons=7, n_nodes=8):
+    ds=type("S", (), {})()
+    ds.subjectData=[]
+    ds.subjectList=[]
+    for label, tmpl, count in ((0, "sub-fm%03d", n_fm), (1, "sub-hc%03d", n_hc)):
+        for i in range(count):
+            sid=tmpl % i
+            graphs=[_tiny_graph(n_nodes) for _ in range(n_cons)]
+            ds.subjectData.append({"subject_id": sid, "graphs": graphs, "group_label": torch.tensor([label])})
+            ds.subjectList.append(sid)
+    return ds
+
+# proof the retrain-per-threshold loop runs end to end on synthetic graphs (no real data)
+def retrain_sweep_self_test():
+    print("[self-test] retrain-per-threshold sweep on synthetic graphs (2 epochs each, cpu) ...")
+    torch.manual_seed(config.randomSeed)
+    conditionList=list(config.conditions)
+    df, blocker=run_percentile_sweep(
+        conditionList,
+        epochs=2,
+        patience=2,
+        dataset_builder=_synthetic_dataset,
+        device=torch.device("cpu"),
+    )
+    assert blocker is None, f"retrain sweep blocked: {blocker}"
+    assert len(df)==len(config.edgePercentileSensitivity), "one row per percentile"
+    print(df.to_string(index=False))
     return True
 
 
@@ -240,7 +320,7 @@ def main():
     print("=" * 70)
 
     # percentile
-    pct_df, pct_blocker=run_percentile_sweep(conditionList, config.jointCheckpointPath)
+    pct_df, pct_blocker=run_percentile_sweep(conditionList)
     if pct_df is not None:
         out=results_dir / "sensitivity_percentile_sweep.csv"
         pct_df.to_csv(out, index=False)

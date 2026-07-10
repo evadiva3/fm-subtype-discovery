@@ -22,8 +22,14 @@ class graph_augmentor:
         return data
 
     
+    #one view: independently maybe-mask, maybe-noise
+    def _one_view(self, data):
+        v=data.clone()
+        if torch.rand(1).item()<config.maskApplyProb:
+            v=self.node_masking(v)
+        if torch.rand(1).item()<config.noiseApplyProb:
+            v=self.edge_noise(v)
+        return v
+
     def augment(self, data):
-        data=data.clone()
-        data1=self.node_masking(data)
-        data2=self.edge_noise(data)
-        return (data1,data2)
+        return (self._one_view(data), self._one_view(data))
