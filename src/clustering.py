@@ -1,6 +1,7 @@
 #changes made: 
 #wiring evaluate py
 #gap stat fix 
+#centriod distance
 
 
 import os;
@@ -73,7 +74,7 @@ class cluster():
         embeddings = torch.stack([self.attentionEmbeddings[i] for i in ids]).detach().cpu().numpy();
         labels = np.array([self.groupLabels[i] for i in ids]);
         self.hcSepSilh = silhouette_score(embeddings, labels);
-        self.hcSepPermP = cluster_evaluate().perm(embeddings, labels);  #permutation p-value for FM-vs-HC separation
+        self.hcSepPermP = cluster_evaluate().perm(embeddings, labels);
         return self.hcSepSilh;
 
     def project_ortho(self, fmEmbeddings, hcEmbeddings):
@@ -83,7 +84,7 @@ class cluster():
         vSep = vSep / vSep.norm();
         projCoeff = fmEmbeddings @ vSep;
         zPerp = fmEmbeddings - torch.outer(projCoeff, vSep);
-        self.hcC = hcCentroid;
+        self.hcC = hcCentroid - (hcCentroid @ vSep) * vSep;
         return zPerp;
 
     def compute_centroid_distances(self, fmEmbeddings, labels, hcCentroid):
@@ -92,8 +93,7 @@ class cluster():
             mask = torch.tensor(labels == subtype);
             subtypeCentroid = fmEmbeddings[mask].mean(dim=0);
             distances.append((subtypeCentroid - hcCentroid).norm().item());
-        self.centroidDistances = np.array(distances);
-        return self.centroidDistances;
+        return np.array(distances);  #caller stores so it can be called per-space
 
     def KMeansUse(self, takeTensor = None, subjectIds = None):
         if takeTensor is None:
@@ -139,6 +139,7 @@ class cluster():
         orthoLabels.to_csv(path / "orthogonal_labels.csv", index=False);
         orthoScores.to_csv(path / "orthogonal_silhouette_scores.csv");
         np.save(path / "centroid_distances.npy", self.centroidDistances);
+        np.save(path / "centroid_distances_unprojected.npy", self.hcCUnprojDistances);
         with open(path / "tau_value.txt", "w") as f:
             f.write(str(self.tau));
 
@@ -154,7 +155,8 @@ class cluster():
         fmProjected = self.project_ortho(fmTensor, hcTensor);
         orthoTrial = self.KMeansUse(fmProjected, fmIds);
         self.orthoClusterPermP=orthoTrial[3]  # perm p for ORTHOGONAL-PROJECTED
-        self.compute_centroid_distances(fmProjected, orthoTrial[2], self.hcC);
+        self.centroidDistances = self.compute_centroid_distances(fmProjected, orthoTrial[2], self.hcC);  # projected
+        self.hcCUnprojDistances = self.compute_centroid_distances(fmTensor, bestTrial[2], hcTensor.mean(dim=0));  # unproj severity continuum
         coordinateVisuals = self.UMAPPING(fmTensor);
         weightMatrix = torch.stack([self.attentionWeights[i] for i in fmIds]);
         self.saveAll(weightMatrix, fmTensor, bestTrial[0], bestTrial[1], coordinateVisuals, orthoTrial[1], orthoTrial[0]);
@@ -163,7 +165,7 @@ if __name__ == "__main__":
     from gnn_encoder import GNNEncoder;
     from models.attention_pool import condition_attention_pool;
     from torch.utils.data import DataLoader;
-    conditionList = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Happy - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"];
+    conditionList = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"];  # paper events.tsv order
     dataset = datasetPreparation(fm_only=False);
     dataList = dataset.subjectList;
     data = DataLoader(dataset, batch_size=1, shuffle=False, collate_fn=lambda b: b[0]);
