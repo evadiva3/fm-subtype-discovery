@@ -142,7 +142,7 @@ class cluster():
         return coords.fit_transform(array);
 
     def saveAll(self, cWeights, embeddingsAtt, kScore, labelFK, coords, orthoLabels, orthoScores):
-        path = Path("../ClusterResults");
+        path = config.clusterOutput;
         path.mkdir(parents=True, exist_ok=True);
         labelFK.to_csv(path / "K-Means-Labeling.csv", index=False);
         np.save(path / "Embeddings.npy", embeddingsAtt.detach().cpu().numpy());

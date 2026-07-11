@@ -115,7 +115,7 @@ class datasetPreparation(Dataset):
         clinical.loc[clinical["group"] == "HC", "group"] = 1;
         if self.avgCond is False:
             subjectGraphs = {};
-            inc = set(get_included_subjects())  #include set
+            inc = set(get_included_subjects());  #include set
             for subfolder in self.datafolderPath.iterdir():
                 if subfolder.is_dir() and subfolder.name in inc:
                     self.subjectList.append(subfolder.name);

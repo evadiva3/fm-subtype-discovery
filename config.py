@@ -8,29 +8,16 @@ import torch
 from pathlib import Path
 import pandas as pd;
 
-# fallbacks so config imports before hyperparameter search ever runs
-_TUNE_DEFAULTS={"D_MODEL":64,"HEADS":4,"OUTPUT":32,"LAYERS":2,"DROPOUT":0.1,"LR":5e-4,"WEIGHT_DECAY":1e-3,"MASK_RATE":0.1,"NOISE_STD":0.05,"NT_XENT_TEMP":0.5,"BATCH_SIZE":8}
-
-def _readTune(path):
-    # missing json = use defaults so never crash on import
-    try:
-        df=pd.read_json(path)
-        return {k: df.at[0,k] for k in _TUNE_DEFAULTS}
-    except Exception:
-        return dict(_TUNE_DEFAULTS)
-
 class Config:
     repoRoot=Path(__file__).parent.resolve()
     dataRoot=Path(os.environ.get("FM_DATA_ROOT", repoRoot / "data"))
     resultsRoot=Path(os.environ.get("FM_RESULTS_ROOT", repoRoot / "results"))
-    loadBestParams=dataRoot / "tune" / "bestParamTune.json"
-    tuneParams=_readTune(loadBestParams)
 
     @property
-    def checkpointDir(self): return self.resultsRoot / "checkpoints"
+    def checkpointDir(self): return self.dataRoot / "checkpoints"
 
     @property
-    def figuresDir(self): return self.resultsRoot / "figures"
+    def figuresDir(self): return self.dataRoot / "figures"
 
     @property
     def jointCheckpointPath(self): return self.checkpointDir / "best_joint_model.pt"
@@ -52,8 +39,19 @@ class Config:
 
     @property
     def masker(self): return str(self.dataRoot / "schaefer200MNI.nii.gz")
-
+    @property
+    def clusterOutput(self): return (self.dataRoot/"outputs");
+    @property
+    def subjectList(self):
+        datafolder = Path(self.subjectDataFolder);
+        subjectList = [subfolder.name for subfolder in datafolder.iterdir() if subfolder.is_dir() and not subfolder.name.startswith("top_") and subfolder.name != "excluded"];
+        return subjectList;
+    @property
+    def rayStorage(self): return (self.dataRoot/"RayTune");
+    @property
+    def saveRayParams(self): return os.path.join(self.dataRoot, "tune", "bestParams.json");
     # Pipeline constants
+    raySavePath = Path(os.path.join(dataRoot,"tune","bestParams.json"));
     conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]  # paper events.tsv order
     nConditions=7
     nNodes=200
@@ -63,23 +61,39 @@ class Config:
     # Confound regressors
     confoundColumns = ["global_signal", "white_matter", "csf", "trans_x", "trans_x_derivative1", "trans_x_derivative1_power2", "trans_x_power2", "trans_y", "trans_y_derivative1", "trans_y_power2", "trans_y_derivative1_power2", "trans_z", "trans_z_derivative1", "trans_z_derivative1_power2", "trans_z_power2", "rot_x", "rot_x_derivative1", "rot_x_power2", "rot_x_derivative1_power2", "rot_y", "rot_y_derivative1", "rot_y_power2", "rot_y_derivative1_power2", "rot_z", "rot_z_derivative1", "rot_z_power2", "rot_z_derivative1_power2"]
     # Model hyperparameters
-    dModel=int(tuneParams["D_MODEL"])
-    heads=int(tuneParams["HEADS"])
-    output=int(tuneParams["OUTPUT"])
-    layers=int(tuneParams["LAYERS"])
-    dropout=float(tuneParams["DROPOUT"])
-    lr=float(tuneParams["LR"])
-    weightDecay=float(tuneParams["WEIGHT_DECAY"])
-    maskRate=float(tuneParams["MASK_RATE"])
-    noiseStd=float(tuneParams["NOISE_STD"])
-    ntXentTemp=float(tuneParams["NT_XENT_TEMP"])
-    batchSize=int(tuneParams["BATCH_SIZE"])
+    if raySavePath.exists():
+        tuneParams = pd.read_json(raySavePath);
+        dModel=int(tuneParams.at[0,"D_MODEL"]);
+        heads=int(tuneParams.at[0,"HEADS"]);
+        output=int(tuneParams.at[0,"OUTPUT"]);
+        layers=int(tuneParams.at[0,"LAYERS"]);
+        dropout=float(tuneParams.at[0,"DROPOUT"]);
+        lr=float(tuneParams.at[0,"LR"]);
+        weightDecay=float(tuneParams.at[0,"WEIGHT_DECAY"]);
+        maskRate=float(tuneParams.at[0,"MASK_RATE"]);
+        noiseStd=float(tuneParams.at[0,"NOISE_STD"]);
+        ntXentTemp=float(tuneParams.at[0,"NT_XENT_TEMP"]);
+        batchSize=int(tuneParams.at[0,"BATCH_SIZE"]);
+    else:
+        dModel=64;
+        heads=4;
+        output=32;
+        layers=3;
+        dropout=0.1;
+        lr=1e-4;
+        weightDecay=1e-2;
+        maskRate=0.1;
+        noiseStd=0.1;
+        ntXentTemp=0.5;
+        batchSize=8;
     # Augmentation apply probs (per view, independent of strength)
     maskApplyProb=0.5
     noiseApplyProb=0.5
 
    #Tuning Hypers:
     tuneEpochs = 100;
+    maxConcurrents = 40;
+    sampleNum = 100;
     # Training
     epochs=200
     patience=10

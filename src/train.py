@@ -7,7 +7,7 @@ import torch
 import os
 from torch_geometric.data import Batch
 from config import config 
-
+from ray import tune, train;
 class trainer():
 
     def __init__(self,model,loss,optimize,schedule,device,dire):
@@ -77,7 +77,7 @@ class trainer():
         path=os.path.join(self.dire, 'best_model.pt')
         self.model.load_state_dict(torch.load(path, map_location=self.device))  
 
-def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None):
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, realData = None):
     epochs=config.epochs if epochs is None else epochs
     patience=config.patience if patience is None else patience
     lr=config.lr if lr is None else lr
@@ -94,7 +94,9 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     patience_counter=0
     train_losses=[]
     val_losses=[]
+    i = 0;
     for epoch in range(epochs):
+        i+=1;
         model.train()
         attention_pool.train()
         epoch_loss=0
@@ -128,6 +130,11 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
             optimizer.step()
             epoch_loss+=loss.item()
             n_batches+=1
+        if i == 10 and realData is not None:
+            direct = train.get_context().get_trial_dir();
+            bestScore = intermedCluster(realData, model, attention_pool, direct);
+            tune.report({"silhouetteScore": bestScore});
+            i=-10;
         scheduler.step()
         avg_train_loss=epoch_loss/max(n_batches, 1)
         train_losses.append(avg_train_loss)
@@ -135,6 +142,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
         attention_pool.eval()
         val_loss=0
         batches=0
+     
         with torch.no_grad():
             for subject_batch in val_dataloader:
                 Z_i_list=[]
@@ -161,7 +169,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
                 loss=loss_fn(Z_i, Z_j)
                 val_loss+=loss.item()
                 batches+=1
-
+       
         avg_val_loss=val_loss/max(batches, 1)
         val_losses.append(avg_val_loss)
         print(f"Epoch {epoch}: train={avg_train_loss:.4f} val={avg_val_loss:.4f} tau={attention_pool.tau.item():.4f}")
@@ -181,8 +189,17 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     model.load_state_dict(checkpoint['model'])
     attention_pool.load_state_dict(checkpoint['pool'])
     return model, attention_pool, train_losses, val_losses
-
-
+def intermedCluster(data, encodeOut, attentionOut, direct):
+    from clustering import cluster;
+    from torch.utils.data import DataLoader
+    clusterData = DataLoader(data, batch_size = config.batchSize, shuffle = False, collate_fn= lambda b:b);
+    clustering = cluster(encodeOut, config.clusterOutput, direct, config.conditions, config.subjectList);
+    clustering.deploy(clusterData);
+    embeddings = clustering.setAttention(attentionOut);
+    clustering._split_fm_hc();
+    package = clustering.KMeansUse();
+    bestScore = max(package[0]["silhouette_score"]);
+    return bestScore;
 if __name__ == "__main__":
     from gnn_encoder import GNNEncoder
     from contrastive_loss import NTXentLoss

@@ -172,7 +172,7 @@ def elevated_networks_per_subtype(network_frame,top_n=2):
 
 def load_subtype_labels(csv_path=None):
     #read subject subtype assignments produced by src/clustering.py
-    csv_path=Path("../ClusterResults/K-Means-Labeling.csv") if csv_path is None else Path(csv_path)
+    csv_path=config.clusterOutput/"K-Means-Labeling.csv" if csv_path is None else Path(csv_path)
     if not csv_path.exists():
         return None,f"no subtype labels found (expected {csv_path}); run src/clustering.py first"
     frame=pd.read_csv(csv_path)
