@@ -4,7 +4,14 @@ from scipy import stats
 from statsmodels.stats.multitest import multipletests
 from statsmodels.stats.power import TTestIndPower
 import os
+import sys
 from pathlib import Path
+
+_ROOT=Path(__file__).resolve().parent.parent
+for _p in (_ROOT, _ROOT / "src", _ROOT / "models"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
 from config import config
 
 
@@ -16,10 +23,23 @@ class clinical_validator:
         'tas_dif', 'tas_ddf', 'tas_eot', 'erq_reappraisal', 'erq_suppression']
 
 
-    def compare_groups(self, subtype):
-        self.df['temp']=subtype
-        group=self.df[self.df['temp']==0]
-        group1=self.df[self.df['temp']==1]
+    def _label_df(self, labels_path=None):
+        labels_path=Path("../ClusterResults/K-Means-Labeling.csv") if labels_path is None else Path(labels_path)
+        lab=pd.read_csv(labels_path)
+        lab=pd.DataFrame({"subject_id": lab["Subject_Id"].astype(str), "temp": lab["Label"]})
+        df=self.df.copy()
+        df["subject_id"]=df["subject_id"].astype(str)
+        return df.merge(lab, on="subject_id", how="inner")
+
+    def compare_groups(self, subtype=None, labels_path=None):
+        merged=self._label_df(labels_path)
+        labs=sorted(merged['temp'].unique())
+        if len(labs)<2:
+            raise ValueError(f"compare_groups needs 2 subtypes, got {labs}")
+        if len(labs)>2:
+            print(f"[clinical_validation] WARNING: {len(labs)} subtypes present {labs}; comparing only {labs[0]} vs {labs[1]}, rest dropped")
+        group=merged[merged['temp']==labs[0]]
+        group1=merged[merged['temp']==labs[1]]
         results=[]
         for i in self.count_vars:
             stat, p=stats.mannwhitneyu(group[i], group1[i], alternative='two-sided')
@@ -42,10 +62,11 @@ class clinical_validator:
         results_df['significant']=corrected_p < config.fdrAlpha
         return results_df
     
-    def compute_effect_sizes(self,subtype):
-        self.df['temp']=subtype
-        group=self.df[self.df['temp']==0]
-        group1=self.df[self.df['temp']==1]
+    def compute_effect_sizes(self,subtype=None,labels_path=None):
+        # subtype arg kept for API compat, labels now joined by subject_id not position
+        merged=self._label_df(labels_path)
+        group=merged[merged['temp']==0]
+        group1=merged[merged['temp']==1]
         effect_sizes={}
         for i in self.count_vars:
             mean=group[i].mean()

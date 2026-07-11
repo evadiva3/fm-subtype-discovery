@@ -27,8 +27,8 @@ class attention_interpreter():
             for i in self.dataloader:
                 i=i.to(self.device) 
                 output=self.model(i)
-                for sub in range(len(i.subject_id)):              
-                    a=i.subject_id[sub]
+                for sub in range(len(i.subjectID)):
+                    a=i.subjectID[sub]
                     results[a]=output[sub].detach().cpu()
                 
         return results
@@ -79,7 +79,7 @@ class attention_interpreter():
                 pooled, weights, tau=self.attention_pool(embedd)  
                 aw.append(weights)
                 taus.append(tau)  
-        mean_weights=torch.cat(aw).mean(dim=0) 
+        mean_weights=torch.stack(aw).mean(dim=0) 
         weight_entropy=float(entropy(mean_weights.detach().cpu().numpy(), base=2))
         mean_tau=float(torch.stack(taus).mean().item())
         return {"mean_weights": mean_weights, "entropy": weight_entropy, "tau_attn": mean_tau}

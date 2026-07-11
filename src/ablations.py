@@ -48,7 +48,8 @@ class SupervisedGnnCeling(trainer):
     # (linear head on the encoder output), not an ablation of the contrastive/pooling pipeline
     def __init__(self, model, loss, optimize, schedule, device, dire):
         super().__init__(model, loss, optimize, schedule, device, dire);
-        self.classificationHead = nn.Linear(64,2);
+        self.classificationHead = nn.Linear(config.dModel,2).to(device);
+        self.optimize.add_param_group({"params": self.classificationHead.parameters()})
 
     def train_epoch(self, dataloader, augmentor = None):
         self.model.train();
@@ -60,7 +61,7 @@ class SupervisedGnnCeling(trainer):
             self.optimize.zero_grad();
             embedding=self.model(batch);
             predictions = self.classificationHead(embedding);
-            output = loss(predictions, batch.y.squeeze(1));
+            output = loss(predictions, batch.y)
             output.backward();
             self.optimize.step();
             total_loss+=output.item();

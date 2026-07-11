@@ -45,8 +45,8 @@ class preprocessBOLD:
         for row in tsvData.itertuples():
             for i in range(len(self.conditions)):
                 if row.trial_type == self.conditions[i]:
-                    startTr = int(row.onset / 2);
-                    endTr = int((row.onset + row.duration) / 2);
+                    startTr = int(row.onset / config.tr);
+                    endTr = int((row.onset + row.duration) / config.tr);
                     conditionTimeSeries[i].append(timeSeries[startTr:endTr, :]);
         for condition in range(0, len(conditionTimeSeries)):
             conditionFrames[condition] = pd.DataFrame(np.concatenate(conditionTimeSeries[condition]));
