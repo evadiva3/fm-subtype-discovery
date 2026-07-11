@@ -92,7 +92,7 @@ class clinical_validator:
 #per-subtype FD (motion) check
 
 def _load_labels(path=None):
-    path=Path("../ClusterResults/K-Means-Labeling.csv") if path is None else Path(path)
+    path=config.clusterOutput/"K-Means-Labeling.csv" if path is None else Path(path)
     if not path.exists():
         return None, f"missing subtype labels ({path})"
     df=pd.read_csv(path)
