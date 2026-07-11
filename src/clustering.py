@@ -14,6 +14,13 @@ from sklearn.cluster import KMeans;
 from sklearn.metrics import silhouette_score;
 import umap;
 from pathlib import Path;
+import sys;
+
+_ROOT=Path(__file__).resolve().parent.parent;
+for _p in (_ROOT, _ROOT / "src", _ROOT / "models"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p));
+
 from torch.utils.data import Dataset;
 from torch_geometric.data import Batch;
 from dataset import datasetPreparation;
@@ -96,7 +103,7 @@ class cluster():
             distances.append((subtypeCentroid - hcCentroid).norm().item());
         return np.array(distances);  #caller stores so it can be called per-space
 
-    def KMeansUse(self, takeTensor = None, subjectIds = None):
+    def KMeansUse(self, takeTensor = None, subjectIds = None, skip_perm = False, skip_gap = False):
         if takeTensor is None:
             self._split_fm_hc();
             takeTensor, subjectIds = self._stack(self.fmEmbed);
@@ -112,10 +119,17 @@ class cluster():
         bestIdx = trialSave.index(max(trialSave));
         bestLabels = labelSave[bestIdx];
         evaluator = cluster_evaluate();
-        gapDict = evaluator.gap_stat(takeTensor, k=config.kmeansKRange);  #gap statistic per k
         kSil = config.kmeansKRange[bestIdx];  #silhouette picks final k
-        kGap = evaluator.gap_k(gapDict, config.kmeansKRange);  #gap 1-SE k, reported not used
-        permP = evaluator.perm(takeTensor, bestLabels);
+        if skip_gap: 
+            gapDict = {kk: {"gap": np.nan, "s": np.nan} for kk in config.kmeansKRange};
+            kGap = np.nan;
+        else:
+            gapDict = evaluator.gap_stat(takeTensor, k=config.kmeansKRange);  
+            kGap = evaluator.gap_k(gapDict, config.kmeansKRange);  
+        if skip_perm: 
+            permP = np.nan;
+        else:
+            permP = evaluator.perm(takeTensor, bestLabels);
         permColumn = [np.nan for _ in config.kmeansKRange]
         permColumn[bestIdx] = permP;
         trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label": bestLabels});

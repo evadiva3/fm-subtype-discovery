@@ -28,7 +28,7 @@ def _t(m):
 def run_bootstrap(runner, emb, ids, n_res=None, seed=None):
     n_res=config.bootstrapNResamples if n_res is None else n_res
     seed=config.randomSeed if seed is None else seed
-    orig=runner.KMeansUse(_t(emb), list(ids))
+    orig=runner.KMeansUse(_t(emb), list(ids), skip_perm=True, skip_gap=True)
     omap=dict(zip(ids, orig[2]))
     rng=np.random.default_rng(seed)
     n=len(ids)
@@ -36,7 +36,7 @@ def run_bootstrap(runner, emb, ids, n_res=None, seed=None):
     for b in range(n_res):
         idx=rng.integers(0, n, n)
         bids=[ids[i] for i in idx]
-        res=runner.KMeansUse(_t(emb[idx]), bids)
+        res=runner.KMeansUse(_t(emb[idx]), bids, skip_perm=True, skip_gap=True)
         #collapse dups to one label per subject
         seen={}
         for sid, lab in zip(bids, res[2]):

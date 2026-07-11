@@ -4,7 +4,14 @@ from scipy import stats
 from statsmodels.stats.multitest import multipletests
 from statsmodels.stats.power import TTestIndPower
 import os
+import sys
 from pathlib import Path
+
+_ROOT=Path(__file__).resolve().parent.parent
+for _p in (_ROOT, _ROOT / "src", _ROOT / "models"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
 from config import config
 
 
@@ -26,8 +33,13 @@ class clinical_validator:
 
     def compare_groups(self, subtype=None, labels_path=None):
         merged=self._label_df(labels_path)
-        group=merged[merged['temp']==0]
-        group1=merged[merged['temp']==1]
+        labs=sorted(merged['temp'].unique())
+        if len(labs)<2:
+            raise ValueError(f"compare_groups needs 2 subtypes, got {labs}")
+        if len(labs)>2:
+            print(f"[clinical_validation] WARNING: {len(labs)} subtypes present {labs}; comparing only {labs[0]} vs {labs[1]}, rest dropped")
+        group=merged[merged['temp']==labs[0]]
+        group1=merged[merged['temp']==labs[1]]
         results=[]
         for i in self.count_vars:
             stat, p=stats.mannwhitneyu(group[i], group1[i], alternative='two-sided')
