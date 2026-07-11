@@ -169,7 +169,7 @@ if __name__ == "__main__":
     conditionList = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"];  # paper events.tsv order
     dataset = datasetPreparation(fm_only=False);
     dataList = dataset.subjectList;
-    data = DataLoader(dataset, batch_size=1, shuffle=False, collate_fn=lambda b: b[0]);
+    data = dataset.subjectData; 
     attention = condition_attention_pool(d_model=config.dModel, num_cons=config.nConditions);  #no hardcode
     encoder = GNNEncoder();
     checkpoint = torch.load("results/checkpoints/best_joint_model.pt", map_location='cpu');

@@ -16,10 +16,18 @@ class clinical_validator:
         'tas_dif', 'tas_ddf', 'tas_eot', 'erq_reappraisal', 'erq_suppression']
 
 
-    def compare_groups(self, subtype):
-        self.df['temp']=subtype
-        group=self.df[self.df['temp']==0]
-        group1=self.df[self.df['temp']==1]
+    def _label_df(self, labels_path=None):
+        labels_path=Path("../ClusterResults/K-Means-Labeling.csv") if labels_path is None else Path(labels_path)
+        lab=pd.read_csv(labels_path)
+        lab=pd.DataFrame({"subject_id": lab["Subject_Id"].astype(str), "temp": lab["Label"]})
+        df=self.df.copy()
+        df["subject_id"]=df["subject_id"].astype(str)
+        return df.merge(lab, on="subject_id", how="inner")
+
+    def compare_groups(self, subtype=None, labels_path=None):
+        merged=self._label_df(labels_path)
+        group=merged[merged['temp']==0]
+        group1=merged[merged['temp']==1]
         results=[]
         for i in self.count_vars:
             stat, p=stats.mannwhitneyu(group[i], group1[i], alternative='two-sided')
@@ -42,10 +50,11 @@ class clinical_validator:
         results_df['significant']=corrected_p < config.fdrAlpha
         return results_df
     
-    def compute_effect_sizes(self,subtype):
-        self.df['temp']=subtype
-        group=self.df[self.df['temp']==0]
-        group1=self.df[self.df['temp']==1]
+    def compute_effect_sizes(self,subtype=None,labels_path=None):
+        # subtype arg kept for API compat, labels now joined by subject_id not position
+        merged=self._label_df(labels_path)
+        group=merged[merged['temp']==0]
+        group1=merged[merged['temp']==1]
         effect_sizes={}
         for i in self.count_vars:
             mean=group[i].mean()
