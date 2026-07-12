@@ -76,13 +76,16 @@ class trainer():
         path=os.path.join(self.dire, 'best_model.pt')
         self.model.load_state_dict(torch.load(path, map_location=self.device))  
 
-def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, realData = None):
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, realData = None, tuneSave=None):
     epochs=config.epochs if epochs is None else epochs
     patience=config.patience if patience is None else patience
     lr=config.lr if lr is None else lr
     weight_decay=config.weightDecay if weight_decay is None else weight_decay
     os.makedirs(save_dir, exist_ok=True)
-    checkpoint_path=os.path.join(save_dir, 'best_joint_model.pt')
+    if tuneSave is not None:
+        checkpoint_path = os.path.join(config.tuneTrainSave,tuneSave+".pt");
+    else:
+        checkpoint_path=config.trainSave;
     optimizer=torch.optim.AdamW(
         list(model.parameters())+list(attention_pool.parameters()),
         lr=lr,
@@ -129,12 +132,12 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
             optimizer.step()
             epoch_loss+=loss.item()
             n_batches+=1
-        if i == 10 and realData is not None:
+        if i == 3 and realData is not None:
             from ray import tune, train as rayTrain;  # ray only needed under tune
             direct = rayTrain.get_context().get_trial_dir();
             bestScore = intermedCluster(realData, model, attention_pool, direct);
             tune.report({"silhouetteScore": bestScore});
-            i=-10;
+            i=-3;
         scheduler.step()
         avg_train_loss=epoch_loss/max(n_batches, 1)
         train_losses.append(avg_train_loss)
@@ -173,6 +176,8 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
         avg_val_loss=val_loss/max(batches, 1)
         val_losses.append(avg_val_loss)
         print(f"Epoch {epoch}: train={avg_train_loss:.4f} val={avg_val_loss:.4f} tau={attention_pool.tau.item():.4f}")
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         if avg_val_loss<best_val_loss:
             best_val_loss=avg_val_loss
             torch.save({
@@ -192,12 +197,11 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
 def intermedCluster(data, encodeOut, attentionOut, direct):
     from clustering import cluster;
     from torch.utils.data import DataLoader
-    clusterData = DataLoader(data, batch_size = config.batchSize, shuffle = False, collate_fn= lambda b:b);
-    clustering = cluster(encodeOut, config.clusterOutput, direct, config.conditions, config.subjectList);
-    clustering.deploy(clusterData);
+    clustering = cluster(encodeOut, config.clusterOutput, config.conditions, config.subjectList);
+    clustering.deploy(data);
     embeddings = clustering.setAttention(attentionOut);
     clustering._split_fm_hc();
-    package = clustering.KMeansUse();
+    package = clustering.KMeansUse(skip_perm=True, skip_gap=True);
     bestScore = max(package[0]["silhouette_score"]);
     return bestScore;
 if __name__ == "__main__":
@@ -227,8 +231,8 @@ if __name__ == "__main__":
     train_loader=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b)
     val_loader=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
 
-    encoder=GNNEncoder()
-    attention=condition_attention_pool()           
+    encoder=GNNEncoder().to(config.device)
+    attention=condition_attention_pool().to(config.device);           
     loss_fn=NTXentLoss()                            
     augmentor=graph_augmentor()                     
 

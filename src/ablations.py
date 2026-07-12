@@ -15,7 +15,7 @@ def run_no_contrastive_pretraining(dataloader, subjectList, conditionList):
     from clustering import cluster
     encoder=GNNEncoder() # random weights, no pretraining
     pool=condition_attention_pool() # untrained attention pool
-    runner=cluster(encoder, str(config.checkpointDir), config.jointCheckpointPath.name, conditionList, subjectList)
+    runner=cluster(encoder, str(config.checkpointDir), conditionList, subjectList)
     runner.deploy(dataloader)
     runner.setAttention(pool)
     return runner.KMeansUse()                            
@@ -30,7 +30,7 @@ def run_resting_state_fc(*args, **kwargs):
 def run_no_attention_pooling(encoder, dataloader, subjectList, conditionList):
     # no attention pooling
     from clustering import cluster
-    runner=cluster(encoder, str(config.checkpointDir), config.jointCheckpointPath.name, conditionList, subjectList)
+    runner=cluster(encoder, str(config.checkpointDir), conditionList, subjectList)
     runner.deploy(dataloader)
     runner.attentionEmbeddings={sid: emb.mean(dim=0) for sid, emb in runner.subjectEmbeddings.items()}
     return runner.KMeansUse()
@@ -130,7 +130,7 @@ def legacyFlatTriangle(FCMatrix, folder : str, conditionList, saveFolder, checkp
         stackFCVec.append(cFCL[rowInd, colInd]);
     vecAVGCON = np.stack(stackFCVec, axis = 0);
     output = pca.fit_transform(vecAVGCON);
-    kmeans = cluster(None, folder, checkpointName, conditionList, None);
+    kmeans = cluster(None, folder, conditionList, None);
     kTrials = kmeans.KMeansUse(output, subjectList);
     kTrials[0].to_csv(dataFolderPath/saveFolder/"silhouette-scores.csv");
     kTrials[1].to_csv(dataFolderPath/saveFolder/"K-Means-Labeling.csv");

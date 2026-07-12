@@ -67,7 +67,7 @@ def run_real(conds):
     enc, att=model
     try:
         ds=datasetPreparation(fm_only=False)
-        runner=cluster(enc, str(config.checkpointDir), config.jointCheckpointPath.name, conds, ds.subjectList)
+        runner=cluster(enc, str(config.checkpointDir), conds, ds.subjectList)
         runner.deploy(ds.subjectData)
         runner.setAttention(att)
         runner._split_fm_hc()
@@ -93,7 +93,7 @@ def _synthetic_embeddings(n=30, k=3, d=config.dModel, spread=8.0, noise=1.0, see
 
 # bare runner just to borrow KMeansUse, no real model
 def _bare_runner(conds, ids):
-    return cluster(None, str(config.checkpointDir), config.jointCheckpointPath.name, conds, ids)
+    return cluster(None, str(config.checkpointDir), conds, ids)
 
 
 def structural_self_test():
