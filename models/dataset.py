@@ -112,8 +112,7 @@ class datasetPreparation(Dataset):
         dataList = [];
         subjectData = [];
         clinical = pd.read_csv(self.clinicalCleanFilePath);
-        clinical.loc[clinical["group"] == "FM", "group"] = 0;
-        clinical.loc[clinical["group"] == "HC", "group"] = 1;
+        clinical["group"] = clinical["group"].map({"FM": 0, "HC": 1});  #pandas3: map instead of int-into-str-dtype assignment
         if self.avgCond is False:
             subjectGraphs = {};
             inc = set(get_included_subjects());  #include set

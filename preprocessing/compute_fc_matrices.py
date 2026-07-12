@@ -84,3 +84,7 @@ class preprocessBOLD:
                             np.save(os.path.join(outputDir, f"{subfolder.name}_ROITimeSeries{condName}.npy"), self.saveTimeSeries[i]);
         except Exception as error:
             raise RuntimeError("Check Pathname/Pipeline Parameters") from error;
+
+
+if __name__ == "__main__":
+    preprocessBOLD().execute();
