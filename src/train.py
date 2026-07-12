@@ -6,8 +6,7 @@
 import torch
 import os
 from torch_geometric.data import Batch
-from config import config 
-from ray import tune, train;
+from config import config
 class trainer():
 
     def __init__(self,model,loss,optimize,schedule,device,dire):
@@ -131,7 +130,8 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
             epoch_loss+=loss.item()
             n_batches+=1
         if i == 10 and realData is not None:
-            direct = train.get_context().get_trial_dir();
+            from ray import tune, train as rayTrain;  # ray only needed under tune
+            direct = rayTrain.get_context().get_trial_dir();
             bestScore = intermedCluster(realData, model, attention_pool, direct);
             tune.report({"silhouetteScore": bestScore});
             i=-10;
