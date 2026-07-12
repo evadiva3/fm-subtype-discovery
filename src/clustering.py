@@ -108,6 +108,7 @@ class cluster():
             self._split_fm_hc();
             takeTensor, subjectIds = self._stack(self.fmEmbed);
         takeTensor = takeTensor.detach().cpu().numpy();
+        takeTensor = takeTensor / (np.linalg.norm(takeTensor, axis=1, keepdims=True) + 1e-8);
         trialSave = [];
         labelSave = [];
         for k in config.kmeansKRange:
