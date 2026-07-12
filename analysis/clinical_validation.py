@@ -24,7 +24,7 @@ class clinical_validator:
 
 
     def _label_df(self, labels_path=None):
-        labels_path=Path("../ClusterResults/K-Means-Labeling.csv") if labels_path is None else Path(labels_path)
+        labels_path=config.clusterOutput/"K-Means-Labeling.csv" if labels_path is None else Path(labels_path)
         lab=pd.read_csv(labels_path)
         lab=pd.DataFrame({"subject_id": lab["Subject_Id"].astype(str), "temp": lab["Label"]})
         df=self.df.copy()

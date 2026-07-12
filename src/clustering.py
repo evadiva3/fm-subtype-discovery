@@ -28,9 +28,9 @@ from analysis.evaluate import cluster_evaluate;
 from config import config;
 
 class cluster():
-    def __init__(self, GNNEncoder, Directory, checkpointName, conditionList, subjectList):
+    def __init__(self, GNNEncoder, directory, conditionList, subjectList):
         self.GNNEncoder = GNNEncoder;
-        self.PTPath = os.path.join(Directory, checkpointName);
+        self.PTPath = directory;
         self.subjectDList = [[None for _ in range(0, len(conditionList))] for _ in range(0, len(subjectList))];
         self.conditionList = conditionList;
         self.subjectList = subjectList;
@@ -186,8 +186,8 @@ if __name__ == "__main__":
     data = dataset.subjectData; 
     attention = condition_attention_pool(d_model=config.dModel, num_cons=config.nConditions);  #no hardcode
     encoder = GNNEncoder();
-    checkpoint = torch.load("results/checkpoints/best_joint_model.pt", map_location='cpu');
+    checkpoint = torch.load(config.trainSave, map_location='cpu');
     encoder.load_state_dict(checkpoint['model']);
     attention.load_state_dict(checkpoint['pool']);
-    runCluster = cluster(encoder, "results/checkpoints", "best_joint_model.pt", conditionList, dataList);
+    runCluster = cluster(encoder, config.trainSave, conditionList, dataList);
     runCluster.clusterEX(data, attention);

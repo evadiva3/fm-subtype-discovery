@@ -20,11 +20,17 @@ class GNNEncoder(nn.Module):
         return LayerNorm(in_channels=head*out, mode=mode)
     def forward(self, data: Batch, boolWeights = False):
         data.edge_attr = data.edge_attr.unsqueeze(-1);
-        for i in range(0,max(0,config.layers-1)): 
-                data.x, (edge, weights) = self.convList[i](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
+        for i in range(0,max(0,config.layers-1)):
+                if(boolWeights): 
+                    data.x, (edge, weights) = self.convList[i](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
+                else:
+                     data.x= self.convList[i](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
                 data.x = self.layerNormalList[i](data.x, data.batch);
                 data.x = self.elu(data.x);
-        data.x, (edge,weights) = self.convList[config.layers-1](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
+        if(boolWeights):
+            data.x, (edge,weights) = self.convList[config.layers-1](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
+        else:
+            data.x = self.convList[config.layers-1](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
         out = global_mean_pool(data.x, data.batch);
         if(boolWeights):
             return weights;

@@ -12,16 +12,8 @@ class Config:
     repoRoot=Path(__file__).parent.resolve()
     dataRoot=Path(os.environ.get("FM_DATA_ROOT", repoRoot / "data"))
     resultsRoot=Path(os.environ.get("FM_RESULTS_ROOT", repoRoot / "results"))
-
-    @property
-    def checkpointDir(self): return self.dataRoot / "checkpoints"
-
     @property
     def figuresDir(self): return self.dataRoot / "figures"
-
-    @property
-    def jointCheckpointPath(self): return self.checkpointDir / "best_joint_model.pt"
-
     @property
     def exclusionManifestPath(self): return self.resultsRoot / "subject_exclusions.csv"
 
@@ -50,6 +42,14 @@ class Config:
     def rayStorage(self): return (self.dataRoot/"RayTune");
     @property
     def saveRayParams(self): return os.path.join(self.dataRoot, "tune", "bestParams.json");
+    @property
+    def trainSave(self): return os.path.join(self.dataRoot, "checkpoints", "results","bestJointModel.pt");
+    @property
+    def jointCheckpointPath(self): return Path(self.trainSave);
+    @property
+    def tuneTrainSave(self): return os.path.join(self.dataRoot, "checkpoints", "results");
+    @property
+    def checkpointDir(self): return Path(self.trainSave).parent;
     # Pipeline constants
     raySavePath = Path(os.path.join(dataRoot,"tune","bestParams.json"));
     conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]  # paper events.tsv order
@@ -63,17 +63,17 @@ class Config:
     # Model hyperparameters
     if raySavePath.exists():
         tuneParams = pd.read_json(raySavePath);
-        dModel=int(tuneParams.at[0,"D_MODEL"]);
-        heads=int(tuneParams.at[0,"HEADS"]);
-        output=int(tuneParams.at[0,"OUTPUT"]);
-        layers=int(tuneParams.at[0,"LAYERS"]);
-        dropout=float(tuneParams.at[0,"DROPOUT"]);
-        lr=float(tuneParams.at[0,"LR"]);
-        weightDecay=float(tuneParams.at[0,"WEIGHT_DECAY"]);
-        maskRate=float(tuneParams.at[0,"MASK_RATE"]);
-        noiseStd=float(tuneParams.at[0,"NOISE_STD"]);
-        ntXentTemp=float(tuneParams.at[0,"NT_XENT_TEMP"]);
-        batchSize=int(tuneParams.at[0,"BATCH_SIZE"]);
+        dModel=int(tuneParams.at[0,"dModel"]);
+        heads=int(tuneParams.at[0,"heads"]);
+        output=int(tuneParams.at[0,"output"]);
+        layers=int(tuneParams.at[0,"layers"]);
+        dropout=float(tuneParams.at[0,"dropout"]);
+        lr=float(tuneParams.at[0,"lr"]);
+        weightDecay=float(tuneParams.at[0,"weightDecay"]);
+        maskRate=float(tuneParams.at[0,"maskRate"]);
+        noiseStd=float(tuneParams.at[0,"noiseStd"]) if "noiseStd" in tuneParams.columns else 0.1;
+        ntXentTemp=float(tuneParams.at[0,"ntXentTemp"]);
+        batchSize=int(tuneParams.at[0,"batchSize"]);
     else:
         dModel=64;
         heads=4;

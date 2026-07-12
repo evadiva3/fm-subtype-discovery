@@ -87,7 +87,6 @@ def evaluate_clustering(encoder, attention, dataset, conditionList):
     runner=cluster(
         encoder,
         str(config.checkpointDir),
-        config.jointCheckpointPath.name,
         conditionList,
         dataset.subjectList,
     )
@@ -249,7 +248,7 @@ def structural_self_test():
     conditionList=list(config.conditions)
     n_fm, n_hc, d=12, 8, config.dModel
     subjectList=[f"sub-fm{i:03d}" for i in range(n_fm)] + [f"sub-hc{i:03d}" for i in range(n_hc)]
-    runner=cluster(None, str(config.checkpointDir), config.jointCheckpointPath.name, conditionList, subjectList)
+    runner=cluster(None, str(config.checkpointDir), conditionList, subjectList)
     torch.manual_seed(config.randomSeed)
     runner.attentionEmbeddings={}
     runner.groupLabels={}

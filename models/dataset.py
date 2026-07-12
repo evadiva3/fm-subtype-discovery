@@ -24,12 +24,12 @@ class datasetPreparation(Dataset):
         self.conditionNames = config.conditions;
         self.clinicalDataFrame = None;
         self.clinicalLookup = {};
-        if Path(self.clinicalCleanFilePath).exists():
+        try:
             self.clinicalDataFrame = pd.read_csv(self.clinicalCleanFilePath);
             self.clinicalDataFrame["subject_id"] = self.clinicalDataFrame["subject_id"].astype(str);
             self.clinicalLookup = self.clinicalDataFrame.set_index("subject_id").to_dict();
-        else:
-            print("clinical_clean.csv not found in the data folder. Please ensure it is present for proper dataset preparation.");
+        except Exception as error:
+            raise FileNotFoundError("clinical_clean.csv not found in the data folder. Please ensure it is present for proper dataset preparation.") from error;
         self.subjectData = [];
         self.DataList = self.execute();
     def organizeNodes(self):
@@ -43,6 +43,7 @@ class datasetPreparation(Dataset):
                 freq = self.calculateFrequencies(data.iloc[:, i]);
                 dataset.append([mean, var, freq[0], freq[1], freq[2]]);
             dataset = pd.DataFrame(dataset);
+            #node features [mean, var, 3 fft bands] unnormalized; z-score across subjects if subtype separation is weak
             return torch.tensor(dataset.values, dtype=torch.float32);
         else:
             return torch.ones((200,5), dtype= torch.float32);
