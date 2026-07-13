@@ -101,9 +101,12 @@ class Config:
     bootstrapNResamples=1000
     randomSeed=42
     valFraction=0.15
+    valFractionForTune = 0.3;
     # Clustering
     kmeansKRange=[2,3,4]
     kmeansNInit=20
+    minClusterSizeFraction = 0.15;
+    minClusterSizeFloor = 4;
 
     # Motion / QC (verify_setup.py)
     fdThreshold=0.5

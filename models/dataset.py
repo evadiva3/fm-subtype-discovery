@@ -105,8 +105,17 @@ class datasetPreparation(Dataset):
             packaged = self.edgeIndexAttr(False, fullFC);
             graphData = Data(x=torch.tensor(nodes, dtype=torch.float32), y=torch.tensor(yVal, dtype=torch.long), edge_attr=packaged[1], edge_index=packaged[0]);
             graphData.subjectID = subfolder.name;
+            assert graphData.x.shape[0] == config.nNodes, f"Subject {subfolder.name} has {graphData.x.shape[0]} nodes, expected {config.nNodes}";
             return graphData;
         return None;
+    def normalizeData(self):
+        for data in self.DataList:
+            data.x[:, 2:5] = torch.log1p(data.x[:, 2:5]);
+        stacked = torch.stack([data.x for data in self.DataList]);
+        nodeMean = stacked.mean(dim=0);
+        nodeStd = stacked.std(dim=0);
+        for data in self.DataList:
+            data.x = (data.x - nodeMean)/(nodeStd + 1e-8);
 
     def execute(self):
         dataList = [];
@@ -129,6 +138,7 @@ class datasetPreparation(Dataset):
                         data.subjectID = subfolder.name;
                         data.condition = self.conditionNames[i];
                         subjectGraphs[subfolder.name].append(data);
+                        assert data.x.shape[0] == config.nNodes, f"Subject {subfolder.name} condition {self.conditionNames[i]} has {data.x.shape[0]} nodes, expected {config.nNodes}";
                         dataList.append(data);
             for subjectId, graphs in subjectGraphs.items():
                 subjectData.append({"subject_id": subjectId, "graphs": graphs, "group_label": torch.tensor([self.getGroupLabel(subjectId)], dtype=torch.long)});
@@ -143,6 +153,7 @@ class datasetPreparation(Dataset):
                         subjectData.append({"subject_id": subfolder.name, "graphs": [data], "group_label": torch.tensor([self.getGroupLabel(subfolder.name)], dtype=torch.long)});
         self.DataList = dataList;
         self.subjectData = subjectData;
+        self.normalizeData();
         return dataList;
 
     def __len__(self):

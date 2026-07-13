@@ -97,9 +97,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     patience_counter=0
     train_losses=[]
     val_losses=[]
-    i = 0;
     for epoch in range(epochs):
-        i+=1;
         model.train()
         attention_pool.train()
         epoch_loss=0
@@ -133,11 +131,6 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
             optimizer.step()
             epoch_loss+=loss.item()
             n_batches+=1
-        if i == 3 and realData is not None:
-            direct = tune.get_context().get_trial_dir();
-            bestScore = intermedCluster(realData, model, attention_pool, direct);
-            tune.report({"silhouetteScore": bestScore});
-            i=-3;
         scheduler.step()
         avg_train_loss=epoch_loss/max(n_batches, 1)
         train_losses.append(avg_train_loss)
@@ -174,6 +167,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
                 batches+=1
        
         avg_val_loss=val_loss/max(batches, 1)
+        tune.report({"valLoss": avg_val_loss});
         val_losses.append(avg_val_loss)
         print(f"Epoch {epoch}: train={avg_train_loss:.4f} val={avg_val_loss:.4f} tau={attention_pool.tau.item():.4f}")
         if torch.cuda.is_available():
@@ -193,6 +187,10 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     checkpoint=torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(checkpoint['model'])
     attention_pool.load_state_dict(checkpoint['pool'])
+    if realData is not None:
+        direct = tune.get_context().get_trial_dir();
+        bestScore = intermedCluster(realData, model, attention_pool, direct);
+        tune.report({"silhouetteScore": bestScore});
     return model, attention_pool, train_losses, val_losses
 def intermedCluster(data, encodeOut, attentionOut, direct):
     from clustering import cluster;
@@ -201,8 +199,13 @@ def intermedCluster(data, encodeOut, attentionOut, direct):
     clustering.deploy(data);
     embeddings = clustering.setAttention(attentionOut);
     clustering._split_fm_hc();
-    package = clustering.KMeansUse(skip_perm=True, skip_gap=True);
-    bestScore = max(package[0]["silhouette_score"]);
+    package = clustering.KMeansUse(skip_perm=False, skip_gap=True);
+    trialSave = package[0];
+    kSil = trialSave["k_selected_silhouette"].iloc[0];
+    bestScore = trialSave.loc[trialSave["k"]==kSil,"silhouette_score"].iloc[0];
+    permP = package[3];
+    if permP>=config.fdrAlpha:
+        bestScore = 0.0;
     return bestScore;
 if __name__ == "__main__":
     from gnn_encoder import GNNEncoder

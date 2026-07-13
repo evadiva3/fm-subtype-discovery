@@ -5,6 +5,7 @@ from torch_geometric.data import Batch;
 from torch_geometric.nn import LayerNorm;
 from torch.nn import ELU;
 from config import config;
+from torch.utils.checkpoint import checkpoint
 class GNNEncoder(nn.Module):
     def __init__(self):
         super().__init__();
@@ -18,20 +19,27 @@ class GNNEncoder(nn.Module):
             return GATv2Conv(in_channels=head*outChannels, out_channels = outLastChannels, heads=head, concat=concat, edge_dim=edgeDim, dropout=dropout);
     def layerNormal(self, head:int, out:int, mode:str):
         return LayerNorm(in_channels=head*out, mode=mode)
-    def forward(self, data: Batch, boolWeights = False):
-        data.edge_attr = data.edge_attr.unsqueeze(-1);
+    def checkpointMethod(self, x, edgeIndex, edgeAttr, batchVec, boolWeights =False):
         for i in range(0,max(0,config.layers-1)):
                 if(boolWeights): 
-                    data.x, (edge, weights) = self.convList[i](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
+                   x, (edge, weights) = self.convList[i](x, edgeIndex, edgeAttr, return_attention_weights=boolWeights);
                 else:
-                     data.x= self.convList[i](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
-                data.x = self.layerNormalList[i](data.x, data.batch);
-                data.x = self.elu(data.x);
+                     x= self.convList[i](x, edgeIndex, edgeAttr, return_attention_weights=boolWeights);
+                x = self.layerNormalList[i](x, batchVec);
+                x = self.elu(x);
         if(boolWeights):
-            data.x, (edge,weights) = self.convList[config.layers-1](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
+            x , (edge,weights) = self.convList[config.layers-1](x, edgeIndex, edgeAttr, return_attention_weights=boolWeights);
         else:
-            data.x = self.convList[config.layers-1](data.x, data.edge_index, data.edge_attr, return_attention_weights=boolWeights);
-        out = global_mean_pool(data.x, data.batch);
+            x= self.convList[config.layers-1](x, edgeIndex, edgeAttr, return_attention_weights=boolWeights);
         if(boolWeights):
             return weights;
-        return out;
+        else:
+            out = global_mean_pool(x, batchVec);
+            return out;
+    def forward(self, data: Batch, boolWeights = False):
+        edgeAttr = data.edge_attr.unsqueeze(-1);
+        edgeIndex = data.edge_index;
+        x = data.x;
+        batchVec = data.batch;
+        result = checkpoint(self.checkpointMethod, x, edgeIndex, edgeAttr, batchVec, boolWeights, use_reentrant= False);
+        return result;

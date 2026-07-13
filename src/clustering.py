@@ -109,15 +109,30 @@ class cluster():
             takeTensor, subjectIds = self._stack(self.fmEmbed);
         takeTensor = takeTensor.detach().cpu().numpy();
         takeTensor = takeTensor / (np.linalg.norm(takeTensor, axis=1, keepdims=True) + 1e-8);
+        numSubjects = takeTensor.shape[0];
+        minClusterSize = max(config.minClusterSizeFloor, round(config.minClusterSizeFraction * numSubjects));
         trialSave = [];
         labelSave = [];
+        members = [];
         for k in config.kmeansKRange:
             meaner = KMeans(n_clusters = k, n_init = config.kmeansNInit, random_state = config.randomSeed);
             labels = meaner.fit_predict(takeTensor);
+            members.append(np.bincount(labels).min());
             score = silhouette_score(takeTensor, labels);
             trialSave.append(score);
             labelSave.append(labels);
-        bestIdx = trialSave.index(max(trialSave));
+        boolList = [None for _ in range(0,len(labelSave))];
+        for i in range(0,len(labelSave)):
+            if members[i]<minClusterSize:
+                boolList[i] = False;
+            else:
+                boolList[i] = True;
+        passedSave = [];
+        for i in range(0,len(boolList)):
+            if boolList[i] ==True:
+                passedSave.append(trialSave[i]);
+        passedIdx = [index for index in range(0,len(boolList)) if boolList[index]];
+        bestIdx = max(passedIdx, key=lambda i : trialSave[i]);
         bestLabels = labelSave[bestIdx];
         evaluator = cluster_evaluate();
         kSil = config.kmeansKRange[bestIdx];  #silhouette picks final k

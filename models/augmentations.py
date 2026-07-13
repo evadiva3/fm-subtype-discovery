@@ -22,12 +22,18 @@ class graph_augmentor:
         return data
 
     
-    #one view: independently maybe-mask, maybe-noise
     def _one_view(self, data):
         v=data.clone()
-        if torch.rand(1).item()<config.maskApplyProb:
+        boolMask = torch.rand(1).item()<config.maskApplyProb;
+        boolNoise = torch.rand(1).item()<config.noiseApplyProb;
+        if(not boolMask and not boolNoise):
+            if torch.rand(1).item() < 0.5:
+                v = self.node_masking(v);
+            else:
+                v = self.edge_noise(v);
+        if boolMask:
             v=self.node_masking(v)
-        if torch.rand(1).item()<config.noiseApplyProb:
+        if boolNoise:
             v=self.edge_noise(v)
         return v
 
