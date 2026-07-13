@@ -201,10 +201,11 @@ def intermedCluster(data, encodeOut, attentionOut, direct):
     clustering._split_fm_hc();
     package = clustering.KMeansUse(skip_perm=False, skip_gap=True);
     trialSave = package[0];
+    sizeOk = package[4];
     kSil = trialSave["k_selected_silhouette"].iloc[0];
     bestScore = trialSave.loc[trialSave["k"]==kSil,"silhouette_score"].iloc[0];
     permP = package[3];
-    if permP>=config.fdrAlpha:
+    if not(sizeOk) or permP>=config.fdrAlpha:
         bestScore = 0.0;
     return bestScore;
 if __name__ == "__main__":

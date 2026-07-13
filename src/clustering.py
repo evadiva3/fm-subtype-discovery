@@ -132,7 +132,12 @@ class cluster():
             if boolList[i] ==True:
                 passedSave.append(trialSave[i]);
         passedIdx = [index for index in range(0,len(boolList)) if boolList[index]];
-        bestIdx = max(passedIdx, key=lambda i : trialSave[i]);
+        if not passedIdx:
+            bestIdx = trialSave.index(max(trialSave));
+            sizeOk = False;
+        else:
+            bestIdx = max(passedIdx, key=lambda i : trialSave[i]);
+            sizeOk = True;
         bestLabels = labelSave[bestIdx];
         evaluator = cluster_evaluate();
         kSil = config.kmeansKRange[bestIdx];  #silhouette picks final k
@@ -150,7 +155,7 @@ class cluster():
         permColumn[bestIdx] = permP;
         trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label": bestLabels});
         trialSave = pd.DataFrame({"k": config.kmeansKRange, "silhouette_score": trialSave, "gap_stat": [gapDict[kk]["gap"] for kk in config.kmeansKRange], "gap_se": [gapDict[kk]["s"] for kk in config.kmeansKRange], "permutation_p": permColumn, "k_selected_silhouette": kSil, "k_selected_gap": kGap});
-        return [trialSave, trialFrame, bestLabels, permP]
+        return [trialSave, trialFrame, bestLabels, permP, sizeOk];
 
     def UMAPPING(self, array):
         array = array.detach().cpu().numpy();
