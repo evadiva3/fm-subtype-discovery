@@ -6,7 +6,7 @@
 import torch
 import os
 from torch_geometric.data import Batch
-from config import config 
+from config import config
 from ray import tune, train;
 class trainer():
 
