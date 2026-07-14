@@ -1,0 +1,491 @@
+2026-07-13 11:07:15,016	INFO worker.py:2024 -- Started a local Ray instance.
+2026-07-13 11:07:17,125	INFO tune.py:253 -- Initializing Ray automatically. For cluster usage or custom Ray initialization, call `ray.init(...)` before `Tuner(...)`.
+[I 2026-07-13 11:07:17,130] A new study created in memory with name: optuna
+[33m(raylet)[0m Stack (most recent call first):
+[33m(raylet)[0m   File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\worker.py", line 627 in job_logging_config
+[33m(raylet)[0m   File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\worker.py", line 2789 in disconnect
+[33m(raylet)[0m   File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\worker.py", line 2114 in shutdown
+[33m(raylet)[0m   File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\worker.py", line 1170 in wrapper
+[33m(raylet)[0m   File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\client_mode_hook.py", line 110 in wrapper
++------------------------------------------------------------------+
+| Configuration for experiment     runscript_2026-07-13_11-07-12   |
++------------------------------------------------------------------+
+| Search algorithm                 SearchGenerator                 |
+| Scheduler                        AsyncHyperBandScheduler         |
+| Number of trials                 100                             |
++------------------------------------------------------------------+
+
+View detailed results here: S:/Workshop Project/data/RayTune/runscript_2026-07-13_11-07-12
+To visualize your results with TensorBoard, run: `tensorboard --logdir C:/Users/NIKHIL~1/AppData/Local/Temp/ray/session_2026-07-13_11-07-12_735991_36568/artifacts/2026-07-13_11-07-17/runscript_2026-07-13_11-07-12/driver_artifacts`
+
+Trial status: 1 PENDING
+Current time: 2026-07-13 11:07:17. Total running time: 0s
+Logical resource usage: 1.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status       dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7c62a66c   PENDING          33         3         15          2    0.292831   0.000383091      0.00236457     0.105533       0.673132            18 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+Trial runscript_7c62a66c started with configuration:
++---------------------------------------------+
+| Trial runscript_7c62a66c config             |
++---------------------------------------------+
+| batchSize                                18 |
+| dModel                                   33 |
+| dropout                             0.29283 |
+| heads                                     3 |
+| layers                                    2 |
+| lr                                  0.00038 |
+| maskRate                            0.10553 |
+| ntXentTemp                          0.67313 |
+| output                                   15 |
+| weightDecay                         0.00236 |
++---------------------------------------------+
+
+Trial runscript_7a7b58f9 started with configuration:
++---------------------------------------------+
+| Trial runscript_7a7b58f9 config             |
++---------------------------------------------+
+| batchSize                                 8 |
+| dModel                                   57 |
+| dropout                              0.0787 |
+| heads                                     3 |
+| layers                                    3 |
+| lr                                    1e-05 |
+| maskRate                            0.11715 |
+| ntXentTemp                          0.87012 |
+| output                                   50 |
+| weightDecay                          0.0658 |
++---------------------------------------------+
+
+Trial runscript_f0021145 started with configuration:
++---------------------------------------------+
+| Trial runscript_f0021145 config             |
++---------------------------------------------+
+| batchSize                                12 |
+| dModel                                   84 |
+| dropout                             0.04394 |
+| heads                                     3 |
+| layers                                    4 |
+| lr                                  0.00011 |
+| maskRate                            0.17917 |
+| ntXentTemp                            0.434 |
+| output                                   52 |
+| weightDecay                         0.04696 |
++---------------------------------------------+
+[36m(runscript pid=34880)[0m Epoch 0: train=2.7066 val=3.1277 tau=0.9989
+[36m(runscript pid=34880)[0m Epoch 1: train=2.8088 val=3.0833 tau=0.9979
+[36m(runscript pid=34880)[0m Epoch 2: train=2.6345 val=3.0426 tau=0.9968
+[36m(runscript pid=34880)[0m Epoch 3: train=2.5647 val=2.9933 tau=0.9958
+[36m(runscript pid=34880)[0m Epoch 4: train=2.4829 val=2.9467 tau=0.9947[32m [repeated 2x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(runscript pid=34880)[0m Epoch 6: train=2.5474 val=2.8554 tau=0.9930[32m [repeated 5x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 8: train=2.3297 val=2.7753 tau=0.9916[32m [repeated 6x across cluster][0m
+
+Trial status: 3 RUNNING
+Current time: 2026-07-13 11:07:47. Total running time: 30s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status       dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7c62a66c   RUNNING          33         3         15          2   0.292831    0.000383091      0.00236457     0.105533       0.673132            18       10            26.2862     2.74223                   0 |
+| runscript_7a7b58f9   RUNNING          57         3         50          3   0.0786985   1.39365e-05      0.0658005      0.117149       0.870123             8        6            23.2739     1.73116                   0 |
+| runscript_f0021145   RUNNING          84         3         52          4   0.0439437   0.00010989       0.0469557      0.179167       0.433996            12        4            21.7159     1.67418                   0 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=34880)[0m Epoch 10: train=2.3909 val=2.7237 tau=0.9911[32m [repeated 5x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 12: train=2.2692 val=2.7013 tau=0.9906[32m [repeated 5x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 14: train=2.2532 val=2.6879 tau=0.9905[32m [repeated 5x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 16: train=2.2686 val=2.6695 tau=0.9905[32m [repeated 5x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 18: train=2.3388 val=2.6335 tau=0.9905[32m [repeated 5x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 20: train=2.2130 val=2.5964 tau=0.9905[32m [repeated 5x across cluster][0m
+Trial status: 3 RUNNING
+Current time: 2026-07-13 11:08:17. Total running time: 1min 0s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status       dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7c62a66c   RUNNING          33         3         15          2   0.292831    0.000383091      0.00236457     0.105533       0.673132            18       22            56.7324     2.5775                    0 |
+| runscript_7a7b58f9   RUNNING          57         3         50          3   0.0786985   1.39365e-05      0.0658005      0.117149       0.870123             8       16            52.6996     1.66892                   0 |
+| runscript_f0021145   RUNNING          84         3         52          4   0.0439437   0.00010989       0.0469557      0.179167       0.433996            12       12            50.6383     1.33624                   0 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=34880)[0m Epoch 22: train=2.1504 val=2.5606 tau=0.9905[32m [repeated 6x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 24: train=2.2052 val=2.5350 tau=0.9900[32m [repeated 5x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 26: train=2.1813 val=2.5327 tau=0.9892[32m [repeated 4x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 28: train=2.1281 val=2.5418 tau=0.9894[32m [repeated 6x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 30: train=2.0953 val=2.5441 tau=0.9895[32m [repeated 5x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 32: train=2.1181 val=2.5426 tau=0.9897[32m [repeated 6x across cluster][0m
+Trial status: 3 RUNNING
+Current time: 2026-07-13 11:08:47. Total running time: 1min 30s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status       dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7c62a66c   RUNNING          33         3         15          2   0.292831    0.000383091      0.00236457     0.105533       0.673132            18       33            86.3592     2.54262                   0 |
+| runscript_7a7b58f9   RUNNING          57         3         50          3   0.0786985   1.39365e-05      0.0658005      0.117149       0.870123             8       26            82.9509     1.57579                   0 |
+| runscript_f0021145   RUNNING          84         3         52          4   0.0439437   0.00010989       0.0469557      0.179167       0.433996            12       20            80.2075     1.3077                    0 |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=42544)[0m Epoch 27: train=1.8024 val=1.5572 tau=0.9979[32m [repeated 4x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 36: train=2.0174 val=2.4987 tau=0.9896[32m [repeated 6x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 38: train=2.0261 val=2.4844 tau=0.9894[32m [repeated 5x across cluster][0m
+[36m(runscript pid=38112)[0m Early stopping at epoch 24
+[36m(runscript pid=42544)[0m Epoch 33: train=1.7007 val=1.5075 tau=0.9977[32m [repeated 6x across cluster][0m
+
+Trial runscript_f0021145 completed after 26 iterations at 2026-07-13 11:09:07. Total running time: 1min 50s
++---------------------------------------------+
+| Trial runscript_f0021145 result             |
++---------------------------------------------+
+| checkpoint_dir_name                         |
+| time_this_iter_s                    4.50337 |
+| time_total_s                        103.292 |
+| training_iteration                       26 |
+| silhouetteScore                     0.44565 |
+| valLoss                             1.30924 |
++---------------------------------------------+
+
+Trial runscript_4cea8fe6 started with configuration:
++---------------------------------------------+
+| Trial runscript_4cea8fe6 config             |
++---------------------------------------------+
+| batchSize                                12 |
+| dModel                                   62 |
+| dropout                              0.1201 |
+| heads                                     6 |
+| layers                                    3 |
+| lr                                    2e-05 |
+| maskRate                            0.09614 |
+| ntXentTemp                          0.68306 |
+| output                                   64 |
+| weightDecay                         0.00046 |
++---------------------------------------------+
+[36m(runscript pid=34880)[0m Epoch 44: train=1.9969 val=2.4724 tau=0.9896[32m [repeated 6x across cluster][0m
+
+Trial status: 3 RUNNING | 1 TERMINATED
+Current time: 2026-07-13 11:09:17. Total running time: 2min 0s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status         dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7c62a66c   RUNNING            33         3         15          2   0.292831    0.000383091     0.00236457     0.105533        0.673132            18       47            116.776     2.43711            0        |
+| runscript_7a7b58f9   RUNNING            57         3         50          3   0.0786985   1.39365e-05     0.0658005      0.117149        0.870123             8       39            115.091     1.4718             0        |
+| runscript_4cea8fe6   RUNNING            62         6         64          3   0.1201      1.78085e-05     0.000464599    0.0961424       0.683062            12                                                             |
+| runscript_f0021145   TERMINATED         84         3         52          4   0.0439437   0.00010989      0.0469557      0.179167        0.433996            12       26            103.292     1.30924            0.445649 |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=34880)[0m Epoch 47: train=2.0683 val=2.4265 tau=0.9904[32m [repeated 6x across cluster][0m
+[36m(runscript pid=42112)[0m Epoch 0: train=2.8223 val=2.5942 tau=1.0001[32m [repeated 4x across cluster][0m
+[36m(runscript pid=34880)[0m Epoch 51: train=1.9961 val=2.4461 tau=0.9904[32m [repeated 5x across cluster][0m
+[36m(runscript pid=42112)[0m Epoch 3: train=2.7528 val=2.5357 tau=1.0002[32m [repeated 5x across cluster][0m
+
+Trial runscript_4cea8fe6 completed after 5 iterations at 2026-07-13 11:09:40. Total running time: 2min 23s
++---------------------------------------------+
+| Trial runscript_4cea8fe6 result             |
++---------------------------------------------+
+| checkpoint_dir_name                         |
+| time_this_iter_s                    4.35919 |
+| time_total_s                         30.471 |
+| training_iteration                        5 |
+| silhouetteScore                           0 |
+| valLoss                              2.5056 |
++---------------------------------------------+
+[36m(runscript pid=42544)[0m Epoch 45: train=1.6088 val=1.4546 tau=0.9977[32m [repeated 4x across cluster][0m
+
+Trial runscript_ba152b02 started with configuration:
++---------------------------------------------+
+| Trial runscript_ba152b02 config             |
++---------------------------------------------+
+| batchSize                                15 |
+| dModel                                   52 |
+| dropout                              0.1372 |
+| heads                                     8 |
+| layers                                    3 |
+| lr                                    4e-05 |
+| maskRate                            0.12413 |
+| ntXentTemp                          0.93058 |
+| output                                   56 |
+| weightDecay                         0.00389 |
++---------------------------------------------+
+[36m(runscript pid=34880)[0m Early stopping at epoch 57
+
+Trial status: 3 RUNNING | 2 TERMINATED
+Current time: 2026-07-13 11:09:47. Total running time: 2min 30s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status         dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7c62a66c   RUNNING            33         3         15          2   0.292831    0.000383091     0.00236457     0.105533        0.673132            18       58            146.998     2.44317            0        |
+| runscript_7a7b58f9   RUNNING            57         3         50          3   0.0786985   1.39365e-05     0.0658005      0.117149        0.870123             8       49            145.59      1.45091            0        |
+| runscript_ba152b02   RUNNING            52         8         56          3   0.137195    3.5296e-05      0.00389175     0.124134        0.930575            15                                                             |
+| runscript_f0021145   TERMINATED         84         3         52          4   0.0439437   0.00010989      0.0469557      0.179167        0.433996            12       26            103.292     1.30924            0.445649 |
+| runscript_4cea8fe6   TERMINATED         62         6         64          3   0.1201      1.78085e-05     0.000464599    0.0961424       0.683062            12        5             30.471     2.5056             0        |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=42544)[0m Epoch 48: train=1.6039 val=1.4509 tau=0.9978[32m [repeated 6x across cluster][0m
+
+Trial runscript_7c62a66c completed after 59 iterations at 2026-07-13 11:09:51. Total running time: 2min 34s
++---------------------------------------------+
+| Trial runscript_7c62a66c result             |
++---------------------------------------------+
+| checkpoint_dir_name                         |
+| time_this_iter_s                    5.32544 |
+| time_total_s                        152.324 |
+| training_iteration                       59 |
+| silhouetteScore                           0 |
+| valLoss                             2.44317 |
++---------------------------------------------+
+
+Trial runscript_e8d94a65 started with configuration:
++---------------------------------------------+
+| Trial runscript_e8d94a65 config             |
++---------------------------------------------+
+| batchSize                                23 |
+| dModel                                   48 |
+| dropout                             0.11287 |
+| heads                                     3 |
+| layers                                    3 |
+| lr                                  0.00016 |
+| maskRate                            0.11891 |
+| ntXentTemp                          0.62969 |
+| output                                   39 |
+| weightDecay                         0.02332 |
++---------------------------------------------+
+[36m(runscript pid=42544)[0m Epoch 52: train=1.6570 val=1.4411 tau=0.9979[32m [repeated 4x across cluster][0m
+[36m(runscript pid=13600)[0m Epoch 1: train=3.1679 val=2.1196 tau=1.0002[32m [repeated 3x across cluster][0m
+[36m(runscript pid=42544)[0m Epoch 55: train=1.6771 val=1.4383 tau=0.9979[32m [repeated 3x across cluster][0m
+[36m(runscript pid=39832)[0m Epoch 1: train=3.3521 val=3.1862 tau=1.0003[32m [repeated 4x across cluster][0m
+
+Trial status: 3 TERMINATED | 3 RUNNING
+Current time: 2026-07-13 11:10:17. Total running time: 3min 0s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status         dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7a7b58f9   RUNNING            57         3         50          3   0.0786985   1.39365e-05     0.0658005      0.117149        0.870123             8       58           174.841      1.43975            0        |
+| runscript_ba152b02   RUNNING            52         8         56          3   0.137195    3.5296e-05      0.00389175     0.124134        0.930575            15        5            31.7089     1.81271            0        |
+| runscript_e8d94a65   RUNNING            48         3         39          3   0.112875    0.000159674     0.0233216      0.118908        0.629685            23        2            18.7579     3.1862             0        |
+| runscript_7c62a66c   TERMINATED         33         3         15          2   0.292831    0.000383091     0.00236457     0.105533        0.673132            18       59           152.324      2.44317            0        |
+| runscript_f0021145   TERMINATED         84         3         52          4   0.0439437   0.00010989      0.0469557      0.179167        0.433996            12       26           103.292      1.30924            0.445649 |
+| runscript_4cea8fe6   TERMINATED         62         6         64          3   0.1201      1.78085e-05     0.000464599    0.0961424       0.683062            12        5            30.471      2.5056             0        |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=13600)[0m Epoch 5: train=2.8472 val=1.6520 tau=1.0005[32m [repeated 4x across cluster][0m
+[36m(runscript pid=13600)[0m Epoch 6: train=2.7151 val=1.5072 tau=1.0005[32m [repeated 3x across cluster][0m
+
+Trial runscript_e8d94a65 completed after 5 iterations at 2026-07-13 11:10:27. Total running time: 3min 9s
++---------------------------------------------+
+| Trial runscript_e8d94a65 result             |
++---------------------------------------------+
+| checkpoint_dir_name                         |
+| time_this_iter_s                    4.63246 |
+| time_total_s                        32.3492 |
+| training_iteration                        5 |
+| silhouetteScore                           0 |
+| valLoss                             3.01171 |
++---------------------------------------------+
+
+Trial runscript_870853a7 started with configuration:
++---------------------------------------------+
+| Trial runscript_870853a7 config             |
++---------------------------------------------+
+| batchSize                                21 |
+| dModel                                   35 |
+| dropout                             0.07516 |
+| heads                                     7 |
+| layers                                    2 |
+| lr                                    2e-05 |
+| maskRate                            0.11519 |
+| ntXentTemp                           0.4225 |
+| output                                   10 |
+| weightDecay                         0.02816 |
++---------------------------------------------+
+[36m(runscript pid=42544)[0m Epoch 61: train=1.6191 val=1.4369 tau=0.9980[32m [repeated 4x across cluster][0m
+[36m(runscript pid=42544)[0m Epoch 63: train=1.5748 val=1.4359 tau=0.9980[32m [repeated 4x across cluster][0m
+
+Trial status: 4 TERMINATED | 3 RUNNING
+Current time: 2026-07-13 11:10:47. Total running time: 3min 30s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status         dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7a7b58f9   RUNNING            57         3         50          3   0.0786985   1.39365e-05     0.0658005      0.117149        0.870123             8       65           204.408      1.4339             0        |
+| runscript_ba152b02   RUNNING            52         8         56          3   0.137195    3.5296e-05      0.00389175     0.124134        0.930575            15       11            59.1365     1.48111            0        |
+| runscript_870853a7   RUNNING            35         7         10          2   0.0751633   1.82715e-05     0.0281638      0.115189        0.422501            21        2            17.1037     3.26459            0        |
+| runscript_7c62a66c   TERMINATED         33         3         15          2   0.292831    0.000383091     0.00236457     0.105533        0.673132            18       59           152.324      2.44317            0        |
+| runscript_f0021145   TERMINATED         84         3         52          4   0.0439437   0.00010989      0.0469557      0.179167        0.433996            12       26           103.292      1.30924            0.445649 |
+| runscript_4cea8fe6   TERMINATED         62         6         64          3   0.1201      1.78085e-05     0.000464599    0.0961424       0.683062            12        5            30.471      2.5056             0        |
+| runscript_e8d94a65   TERMINATED         48         3         39          3   0.112875    0.000159674     0.0233216      0.118908        0.629685            23        5            32.3492     3.01171            0        |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=13600)[0m Epoch 11: train=2.6133 val=1.4641 tau=1.0005[32m [repeated 5x across cluster][0m
+[36m(runscript pid=13600)[0m Epoch 12: train=2.5553 val=1.4489 tau=1.0005[32m [repeated 3x across cluster][0m
+[36m(runscript pid=13600)[0m Epoch 13: train=2.5543 val=1.4282 tau=1.0006[32m [repeated 3x across cluster][0m
+
+Trial runscript_870853a7 completed after 5 iterations at 2026-07-13 11:10:58. Total running time: 3min 41s
++---------------------------------------------+
+| Trial runscript_870853a7 result             |
++---------------------------------------------+
+| checkpoint_dir_name                         |
+| time_this_iter_s                    3.66357 |
+| time_total_s                        28.6307 |
+| training_iteration                        5 |
+| silhouetteScore                           0 |
+| valLoss                              3.2573 |
++---------------------------------------------+
+
+Trial runscript_3066c142 started with configuration:
+2026-07-13 11:12:27,783	WARNING tune.py:219 -- Stop signal received (e.g. via SIGINT/Ctrl+C), ending Ray Tune run. This will try to checkpoint the experiment state one last time. Press CTRL+C (or send SIGINT/SIGKILL/SIGTERM) to skip. 
+2026-07-13 11:12:27,795	INFO tune.py:1007 -- Wrote the latest version of all result files and experiment state to 'S:/Workshop Project/data/RayTune/runscript_2026-07-13_11-07-12' in 0.0120s.
++---------------------------------------------+
+| Trial runscript_3066c142 config             |
++---------------------------------------------+
+| batchSize                                 8 |
+| dModel                                  113 |
+| dropout                             0.08978 |
+| heads                                     8 |
+| layers                                    2 |
+| lr                                  0.00019 |
+| maskRate                            0.11945 |
+| ntXentTemp                          0.37379 |
+| output                                   16 |
+| weightDecay                          0.0289 |
++---------------------------------------------+
+[36m(runscript pid=42544)[0m Epoch 68: train=1.6053 val=1.4336 tau=0.9980[32m [repeated 3x across cluster][0m
+[36m(runscript pid=13600)[0m Epoch 16: train=2.5427 val=1.4360 tau=1.0006[32m [repeated 3x across cluster][0m
+[36m(runscript pid=13600)[0m Epoch 17: train=2.5169 val=1.4245 tau=1.0005[32m [repeated 3x across cluster][0m
+
+Trial status: 5 TERMINATED | 3 RUNNING
+Current time: 2026-07-13 11:11:17. Total running time: 4min 0s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status         dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7a7b58f9   RUNNING            57         3         50          3   0.0786985   1.39365e-05     0.0658005      0.117149        0.870123             8       72           235.082      1.43175            0        |
+| runscript_ba152b02   RUNNING            52         8         56          3   0.137195    3.5296e-05      0.00389175     0.124134        0.930575            15       18            93.3804     1.42451            0        |
+| runscript_3066c142   RUNNING           113         8         16          2   0.0897818   0.00018503      0.0289048      0.119452        0.373785             8        1            14.4328     1.46062            0        |
+| runscript_7c62a66c   TERMINATED         33         3         15          2   0.292831    0.000383091     0.00236457     0.105533        0.673132            18       59           152.324      2.44317            0        |
+| runscript_f0021145   TERMINATED         84         3         52          4   0.0439437   0.00010989      0.0469557      0.179167        0.433996            12       26           103.292      1.30924            0.445649 |
+| runscript_4cea8fe6   TERMINATED         62         6         64          3   0.1201      1.78085e-05     0.000464599    0.0961424       0.683062            12        5            30.471      2.5056             0        |
+| runscript_e8d94a65   TERMINATED         48         3         39          3   0.112875    0.000159674     0.0233216      0.118908        0.629685            23        5            32.3492     3.01171            0        |
+| runscript_870853a7   TERMINATED         35         7         10          2   0.0751633   1.82715e-05     0.0281638      0.115189        0.422501            21        5            28.6307     3.2573             0        |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=42544)[0m Epoch 72: train=1.5844 val=1.4303 tau=0.9980[32m [repeated 3x across cluster][0m
+[36m(runscript pid=42544)[0m Epoch 73: train=1.5876 val=1.4309 tau=0.9980[32m [repeated 3x across cluster][0m
+[36m(runscript pid=42544)[0m Epoch 74: train=1.6067 val=1.4355 tau=0.9980[32m [repeated 3x across cluster][0m
+[36m(runscript pid=42544)[0m Epoch 75: train=1.6461 val=1.4303 tau=0.9980[32m [repeated 3x across cluster][0m
+[36m(runscript pid=42544)[0m Epoch 76: train=1.5858 val=1.4353 tau=0.9980[32m [repeated 3x across cluster][0m
+Trial status: 5 TERMINATED | 3 RUNNING
+Current time: 2026-07-13 11:11:47. Total running time: 4min 30s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status         dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7a7b58f9   RUNNING            57         3         50          3   0.0786985   1.39365e-05     0.0658005      0.117149        0.870123             8       77           265.076      1.43533            0        |
+| runscript_ba152b02   RUNNING            52         8         56          3   0.137195    3.5296e-05      0.00389175     0.124134        0.930575            15       22           118.706      1.40771            0        |
+| runscript_3066c142   RUNNING           113         8         16          2   0.0897818   0.00018503      0.0289048      0.119452        0.373785             8        7            46.4481     1.05435            0        |
+| runscript_7c62a66c   TERMINATED         33         3         15          2   0.292831    0.000383091     0.00236457     0.105533        0.673132            18       59           152.324      2.44317            0        |
+| runscript_f0021145   TERMINATED         84         3         52          4   0.0439437   0.00010989      0.0469557      0.179167        0.433996            12       26           103.292      1.30924            0.445649 |
+| runscript_4cea8fe6   TERMINATED         62         6         64          3   0.1201      1.78085e-05     0.000464599    0.0961424       0.683062            12        5            30.471      2.5056             0        |
+| runscript_e8d94a65   TERMINATED         48         3         39          3   0.112875    0.000159674     0.0233216      0.118908        0.629685            23        5            32.3492     3.01171            0        |
+| runscript_870853a7   TERMINATED         35         7         10          2   0.0751633   1.82715e-05     0.0281638      0.115189        0.422501            21        5            28.6307     3.2573             0        |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=45476)[0m Epoch 7: train=1.1771 val=1.0024 tau=0.9952[32m [repeated 3x across cluster][0m
+[36m(runscript pid=45476)[0m Epoch 8: train=1.1317 val=1.0212 tau=0.9946[32m [repeated 3x across cluster][0m
+[36m(runscript pid=45476)[0m Epoch 9: train=1.0786 val=0.9406 tau=0.9945[32m [repeated 3x across cluster][0m
+[36m(runscript pid=45476)[0m Epoch 10: train=1.0284 val=0.9334 tau=0.9943[32m [repeated 3x across cluster][0m
+[36m(runscript pid=45476)[0m Epoch 11: train=0.9661 val=0.9056 tau=0.9942[32m [repeated 2x across cluster][0m
+Trial status: 5 TERMINATED | 3 RUNNING
+Current time: 2026-07-13 11:12:17. Total running time: 5min 0s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status         dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_7a7b58f9   RUNNING            57         3         50          3   0.0786985   1.39365e-05     0.0658005      0.117149        0.870123             8       82           294.728     1.43066             0        |
+| runscript_ba152b02   RUNNING            52         8         56          3   0.137195    3.5296e-05      0.00389175     0.124134        0.930575            15       27           150.542     1.43572             0        |
+| runscript_3066c142   RUNNING           113         8         16          2   0.0897818   0.00018503      0.0289048      0.119452        0.373785             8       12            73.0817    0.905619            0        |
+| runscript_7c62a66c   TERMINATED         33         3         15          2   0.292831    0.000383091     0.00236457     0.105533        0.673132            18       59           152.324     2.44317             0        |
+| runscript_f0021145   TERMINATED         84         3         52          4   0.0439437   0.00010989      0.0469557      0.179167        0.433996            12       26           103.292     1.30924             0.445649 |
+| runscript_4cea8fe6   TERMINATED         62         6         64          3   0.1201      1.78085e-05     0.000464599    0.0961424       0.683062            12        5            30.471     2.5056              0        |
+| runscript_e8d94a65   TERMINATED         48         3         39          3   0.112875    0.000159674     0.0233216      0.118908        0.629685            23        5            32.3492    3.01171             0        |
+| runscript_870853a7   TERMINATED         35         7         10          2   0.0751633   1.82715e-05     0.0281638      0.115189        0.422501            21        5            28.6307    3.2573              0        |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[36m(runscript pid=45476)[0m Epoch 12: train=1.0062 val=0.9163 tau=0.9940[32m [repeated 3x across cluster][0m
+[36m(runscript pid=42544)[0m Early stopping at epoch 82
+[36m(runscript pid=45476)[0m Epoch 13: train=0.8991 val=0.9361 tau=0.9939[32m [repeated 3x across cluster][0m
+
+Trial runscript_7a7b58f9 completed after 84 iterations at 2026-07-13 11:12:27. Total running time: 5min 10s
++---------------------------------------------+
+| Trial runscript_7a7b58f9 result             |
++---------------------------------------------+
+| checkpoint_dir_name                         |
+| time_this_iter_s                    4.65021 |
+| time_total_s                        305.485 |
+| training_iteration                       84 |
+| silhouetteScore                           0 |
+| valLoss                             1.43338 |
++---------------------------------------------+
+
+Trial status: 6 TERMINATED | 2 RUNNING | 1 PENDING
+Current time: 2026-07-13 11:12:27. Total running time: 5min 10s
+Logical resource usage: 3.0/32 CPUs, 0/1 GPUs (0.0/1.0 accelerator_type:GeForce-RTX-5080)
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Trial name           status         dModel     heads     output     layers     dropout            lr     weightDecay     maskRate     ntXentTemp     batchSize     iter     total time (s)     valLoss     silhouetteScore |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| runscript_ba152b02   RUNNING            52         8         56          3   0.137195    3.5296e-05      0.00389175     0.124134        0.930575            15       29           162.715     1.41897             0        |
+| runscript_3066c142   RUNNING           113         8         16          2   0.0897818   0.00018503      0.0289048      0.119452        0.373785             8       14            83.495     0.936149            0        |
+| runscript_7c62a66c   TERMINATED         33         3         15          2   0.292831    0.000383091     0.00236457     0.105533        0.673132            18       59           152.324     2.44317             0        |
+| runscript_7a7b58f9   TERMINATED         57         3         50          3   0.0786985   1.39365e-05     0.0658005      0.117149        0.870123             8       84           305.485     1.43338             0        |
+| runscript_f0021145   TERMINATED         84         3         52          4   0.0439437   0.00010989      0.0469557      0.179167        0.433996            12       26           103.292     1.30924             0.445649 |
+| runscript_4cea8fe6   TERMINATED         62         6         64          3   0.1201      1.78085e-05     0.000464599    0.0961424       0.683062            12        5            30.471     2.5056              0        |
+| runscript_e8d94a65   TERMINATED         48         3         39          3   0.112875    0.000159674     0.0233216      0.118908        0.629685            23        5            32.3492    3.01171             0        |
+| runscript_870853a7   TERMINATED         35         7         10          2   0.0751633   1.82715e-05     0.0281638      0.115189        0.422501            21        5            28.6307    3.2573              0        |
+| runscript_b6e328d8   PENDING            70         2         42          2   0.1933      1.13854e-05     0.0119987      0.0668879       0.439492            21                                                             |
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+Traceback (most recent call last):
+  File "S:\Workshop Project\src\hyperparameter_search.py", line 61, in <module>
+    result = rayTune.fit();
+             ^^^^^^^^^^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\tune\tuner.py", line 368, in fit
+    return self._local_tuner.fit()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\tune\impl\tuner_internal.py", line 530, in fit
+    analysis = self._fit_internal(trainable, param_space)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\tune\impl\tuner_internal.py", line 646, in _fit_internal
+    analysis = run(
+               ^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\tune\tune.py", line 1024, in run
+    runner.cleanup()
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\tune\execution\tune_controller.py", line 1976, in cleanup
+    self._cleanup_trials()
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\tune\execution\tune_controller.py", line 803, in _cleanup_trials
+    self._actor_manager.next(timeout=1)
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\air\execution\_internal\actor_manager.py", line 213, in next
+    ready, _ = ray.wait(all_futures, num_returns=1, timeout=timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\client_mode_hook.py", line 110, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\worker.py", line 3196, in wait
+    ready_ids, remaining_ids = worker.core_worker.wait(
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Exception ignored in atexit callback: <function shutdown at 0x000001B0756EB880>
+Traceback (most recent call last):
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\client_mode_hook.py", line 110, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\worker.py", line 1170, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\worker.py", line 2113, in shutdown
+    time.sleep(0.5)
+KeyboardInterrupt: 
+Exception ignored in: <function PlacementGroupResourceManager.__del__ at 0x000001B02626EE80>
+Traceback (most recent call last):
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\air\execution\resources\placement_group.py", line 214, in __del__
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\air\execution\resources\placement_group.py", line 208, in clear
+  File "S:\Workshop Project\venv\Lib\site-packages\ray\_private\client_mode_hook.py", line 139, in wrapper
+ImportError: sys.meta_path is None, Python is likely shutting down
+forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source             
+KERNELBASE.dll     00007FFEC95A3ECD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFECA5EE957  Unknown               Unknown  Unknown
+ntdll.dll          00007FFECC247C1C  Unknown               Unknown  Unknown

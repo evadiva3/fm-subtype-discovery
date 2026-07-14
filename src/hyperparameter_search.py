@@ -1,6 +1,7 @@
 from ray import tune, train as rayTrain;
 import torch;
 import os;
+os.environ["TUNE_DISABLE_STRICT_METRIC_CHECKING"] = "1";
 from ray.tune.search.optuna import OptunaSearch;
 from ray.tune.schedulers import ASHAScheduler;
 import pandas as pd;
@@ -54,9 +55,9 @@ if __name__ == "__main__":
     from dataset import datasetPreparation;
     dataset = datasetPreparation();
     
-    optuna = OptunaSearch();
+    optuna = OptunaSearch(metric="valLoss", mode="min");
     ASHA = ASHAScheduler(time_attr="training_iteration", max_t=config.tuneEpochs, reduction_factor=2, grace_period=5, metric="valLoss", mode="min");
     searchSpace = {"dModel": tune.randint(16, 129), "heads": tune.randint(2,9), "output": tune.randint(8,65), "layers": tune.randint(2,5), "dropout": tune.uniform(0.0, 0.3), "lr": tune.loguniform(1e-5,3e-3), "weightDecay": tune.loguniform(1e-4, 1e-1), "maskRate": tune.uniform(0.05, 0.25), "ntXentTemp": tune.uniform(0.2, 1.0), "batchSize": tune.randint(8, 24)};
     rayTune = tune.Tuner(tune.with_parameters(runscript, dataset=dataset), param_space = searchSpace, tune_config=tune.TuneConfig(metric="valLoss",search_alg=optuna,mode="min", num_samples=config.sampleNum, max_concurrent_trials=config.maxConcurrents, scheduler=ASHA), run_config=tune.RunConfig(storage_path=config.rayStorage,failure_config=(tune.FailureConfig(max_failures=3))));
     result = rayTune.fit();
-    pd.DataFrame([result.get_best_result().config]).to_json(config.raySavePath);
+    pd.DataFrame([result.get_best_result(metric="valLoss", mode="min").config]).to_json(config.raySavePath);
