@@ -84,6 +84,9 @@ def runConditionSpecialist(encoder, loss, device, augmentor, direct):
     from torch.utils.data import random_split;
     from torch.optim import AdamW;
     from transformers import get_cosine_schedule_with_warmup;
+    torch.manual_seed(config.randomSeed);
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(config.randomSeed);
     dataList = datasetPreparation(False);
     data = dataList.DataList;
     torch.save(encoder.state_dict(), "tempModelState.pt");

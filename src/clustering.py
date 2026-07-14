@@ -186,11 +186,13 @@ class cluster():
         self.validate_hc_sep();
         bestTrial = self.KMeansUse();
         self.fmClusterPermP=bestTrial[3]  # perm p for ORIGINAL FM-only
+        bestTrial[0]["passes_guard"] = not((not bestTrial[4]) or bestTrial[3] >= config.fdrAlpha);
         fmTensor, fmIds = self._stack(self.fmEmbed);
         hcTensor, hcIds = self._stack(self.hcEmbed);
         fmProjected = self.project_ortho(fmTensor, hcTensor);
         orthoTrial = self.KMeansUse(fmProjected, fmIds);
         self.orthoClusterPermP=orthoTrial[3]  # perm p for ORTHOGONAL-PROJECTED
+        orthoTrial[0]["passes_guard"] = not((not orthoTrial[4]) or orthoTrial[3] >= config.fdrAlpha);
         self.centroidDistances = self.compute_centroid_distances(fmProjected, orthoTrial[2], self.hcC);  # projected
         self.hcCUnprojDistances = self.compute_centroid_distances(fmTensor, bestTrial[2], hcTensor.mean(dim=0));  # unproj severity continuum
         coordinateVisuals = self.UMAPPING(fmTensor);
