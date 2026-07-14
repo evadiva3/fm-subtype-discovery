@@ -5,7 +5,6 @@
 
 import torch
 import os
-import math
 from torch_geometric.data import Batch
 from config import config
 from ray import tune, train;
@@ -88,28 +87,16 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
         checkpoint_path = os.path.join(config.tuneTrainSave,tuneSave+".pt");
     else:
         checkpoint_path=config.trainSave;
-    optimizer=torch.optim.AdamW([
-        {'params': model.parameters(), 'lr': lr, 'weight_decay': weight_decay},
-        {
-            'params': attention_pool.parameters(),
-            'lr': lr * config.attentionLearningRateMultiplier,
-            'weight_decay': weight_decay
-        }
-    ])
-    warmup_epochs=min(max(1, int(epochs * config.warmupFraction)), epochs)
-
-    def lr_schedule(epoch):
-        if epoch < warmup_epochs:
-            return (epoch + 1) / warmup_epochs
-        progress=(epoch - warmup_epochs) / max(1, epochs - warmup_epochs)
-        return 0.5 * (1.0 + math.cos(math.pi * progress))
-
-    scheduler=torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_schedule)
+    optimizer=torch.optim.AdamW(
+        list(model.parameters())+list(attention_pool.parameters()),
+        lr=lr,
+        weight_decay=weight_decay
+    )
+    scheduler=torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     best_val_loss=float('inf')
     patience_counter=0
     train_losses=[]
     val_losses=[]
-    bestScore=0.0
     for epoch in range(epochs):
         model.train()
         attention_pool.train()
@@ -180,7 +167,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
                 batches+=1
        
         avg_val_loss=val_loss/max(batches, 1)
-        tune.report({"valLoss": avg_val_loss, "silhouetteScore": bestScore});
+        tune.report({"valLoss": avg_val_loss});
         val_losses.append(avg_val_loss)
         print(f"Epoch {epoch}: train={avg_train_loss:.4f} val={avg_val_loss:.4f} tau={attention_pool.tau.item():.4f}")
         if torch.cuda.is_available():
@@ -203,7 +190,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     if realData is not None:
         direct = tune.get_context().get_trial_dir();
         bestScore = intermedCluster(realData, model, attention_pool, direct);
-        tune.report({"valLoss": avg_val_loss, "silhouetteScore": bestScore});
+        tune.report({"silhouetteScore": bestScore});
     return model, attention_pool, train_losses, val_losses
 def intermedCluster(data, encodeOut, attentionOut, direct):
     from clustering import cluster;
