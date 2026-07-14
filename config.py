@@ -80,7 +80,7 @@ class Config:
         output=32;
         layers=3;
         dropout=0.1;
-        lr=1e-4;
+        lr=1e-3;
         weightDecay=1e-2;
         maskRate=0.1;
         noiseStd=0.1;
