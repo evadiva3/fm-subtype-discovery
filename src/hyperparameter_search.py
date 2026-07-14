@@ -12,7 +12,6 @@ def runscript(config1, dataset):
     from contrastive_loss import NTXentLoss
     from attention_pool import condition_attention_pool as conditionAttentionPool
     from augmentations import graph_augmentor as graphAugmentor;
-    from clustering import cluster;
     from torch.utils.data import DataLoader, random_split as randomSplit;
     from train import joint_train as jointTrain;
     torch.manual_seed(config.randomSeed);
@@ -43,7 +42,7 @@ def runscript(config1, dataset):
     training = DataLoader(train, batch_size=config.batchSize, shuffle = True, collate_fn = lambda b:b, drop_last=True);
     testing = DataLoader(test, batch_size = config.batchSize, shuffle = False, collate_fn=lambda b:b);
     tuneName = os.path.basename(direct);
-    encodeOut, attentionOut, trainLoss, valLoss = jointTrain(encoder, attentionPooling, NTXLoss, training, testing, augmentation, config.device, direct,config.tuneEpochs, None, None, None,test,tuneName);
+    encodeOut, attentionOut, trainLoss, valLoss = jointTrain(encoder, attentionPooling, NTXLoss, training, testing, augmentation, config.device, direct,config.tuneEpochs, None, None, None,tuneName);
 class GroupedWrapper(torch.utils.data.Dataset):
         def __init__(self, subject_data):
             self.subject_data=subject_data
@@ -58,6 +57,6 @@ if __name__ == "__main__":
     optuna = OptunaSearch();
     ASHA = ASHAScheduler(time_attr="training_iteration", max_t=config.tuneEpochs, reduction_factor=2, grace_period=5, metric="valLoss", mode="min");
     searchSpace = {"dModel": tune.randint(16, 129), "heads": tune.randint(2,9), "output": tune.randint(8,65), "layers": tune.randint(2,5), "dropout": tune.uniform(0.0, 0.3), "lr": tune.loguniform(1e-5,3e-3), "weightDecay": tune.loguniform(1e-4, 1e-1), "maskRate": tune.uniform(0.05, 0.25), "ntXentTemp": tune.uniform(0.2, 1.0), "batchSize": tune.randint(8, 24)};
-    rayTune = tune.Tuner(tune.with_parameters(runscript, dataset=dataset), param_space = searchSpace, tune_config=tune.TuneConfig(metric="silhouetteScore",search_alg=optuna,mode="max", num_samples=config.sampleNum, max_concurrent_trials=config.maxConcurrents, scheduler=ASHA), run_config=tune.RunConfig(storage_path=config.rayStorage,failure_config=(tune.FailureConfig(max_failures=3))));
+    rayTune = tune.Tuner(tune.with_parameters(runscript, dataset=dataset), param_space = searchSpace, tune_config=tune.TuneConfig(metric="valLoss",search_alg=optuna,mode="min", num_samples=config.sampleNum, max_concurrent_trials=config.maxConcurrents, scheduler=ASHA), run_config=tune.RunConfig(storage_path=config.rayStorage,failure_config=(tune.FailureConfig(max_failures=3))));
     result = rayTune.fit();
     pd.DataFrame([result.get_best_result().config]).to_json(config.raySavePath);
