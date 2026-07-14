@@ -92,7 +92,7 @@ class Config:
 
    #Tuning Hypers:
     tuneEpochs = 100;
-    maxConcurrents = 10;
+    maxConcurrents = 15;
     sampleNum = 100;
     # Training
     epochs=200
