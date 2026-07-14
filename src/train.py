@@ -203,7 +203,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     if realData is not None:
         direct = tune.get_context().get_trial_dir();
         bestScore = intermedCluster(realData, model, attention_pool, direct);
-        tune.report({"valLoss": avg_val_loss, "silhouetteScore": bestScore});
+        tune.report({"valLoss": avg_val_loss});
     return model, attention_pool, train_losses, val_losses
 def intermedCluster(data, encodeOut, attentionOut, direct):
     from clustering import cluster;
