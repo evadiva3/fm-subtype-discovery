@@ -15,8 +15,9 @@ def runscript(config1, dataset):
     from clustering import cluster;
     from torch.utils.data import DataLoader, random_split as randomSplit;
     from train import joint_train as jointTrain;
-
-    
+    torch.manual_seed(config.randomSeed);
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(config.randomSeed);
     direct = tune.get_context().get_trial_dir();
     config.dModel = config1["dModel"];
     config.heads = config1["heads"];
@@ -38,7 +39,8 @@ def runscript(config1, dataset):
     partial = int(size*config.valFractionForTune);
     split = size-partial;
     train, test = randomSplit(data, [split, partial], generator = splitGeneration);
-    training = DataLoader(train, batch_size=config.batchSize, shuffle = True, collate_fn = lambda b:b);
+    dataset.normalizeData(train.indices);
+    training = DataLoader(train, batch_size=config.batchSize, shuffle = True, collate_fn = lambda b:b, drop_last=True);
     testing = DataLoader(test, batch_size = config.batchSize, shuffle = False, collate_fn=lambda b:b);
     tuneName = os.path.basename(direct);
     encodeOut, attentionOut, trainLoss, valLoss = jointTrain(encoder, attentionPooling, NTXLoss, training, testing, augmentation, config.device, direct,config.tuneEpochs, None, None, None,test,tuneName);
@@ -55,7 +57,7 @@ if __name__ == "__main__":
     
     optuna = OptunaSearch();
     ASHA = ASHAScheduler(time_attr="training_iteration", max_t=config.tuneEpochs, reduction_factor=2, grace_period=5, metric="valLoss", mode="min");
-    searchSpace = {"dModel": tune.randint(16, 129), "heads": tune.randint(2,9), "output": tune.randint(8,65), "layers": tune.randint(2,5), "dropout": tune.uniform(0.0, 0.3), "lr": tune.loguniform(1e-5,1e-3), "weightDecay": tune.loguniform(1e-4, 1e-1), "maskRate": tune.uniform(0.05, 0.25), "ntXentTemp": tune.uniform(0.2, 1.0), "batchSize": tune.randint(8, 24)};
+    searchSpace = {"dModel": tune.randint(16, 129), "heads": tune.randint(2,9), "output": tune.randint(8,65), "layers": tune.randint(2,5), "dropout": tune.uniform(0.0, 0.3), "lr": tune.loguniform(1e-5,3e-3), "weightDecay": tune.loguniform(1e-4, 1e-1), "maskRate": tune.uniform(0.05, 0.25), "ntXentTemp": tune.uniform(0.2, 1.0), "batchSize": tune.randint(8, 24)};
     rayTune = tune.Tuner(tune.with_parameters(runscript, dataset=dataset), param_space = searchSpace, tune_config=tune.TuneConfig(metric="silhouetteScore",search_alg=optuna,mode="max", num_samples=config.sampleNum, max_concurrent_trials=config.maxConcurrents, scheduler=ASHA), run_config=tune.RunConfig(storage_path=config.rayStorage,failure_config=(tune.FailureConfig(max_failures=3))));
     result = rayTune.fit();
     pd.DataFrame([result.get_best_result().config]).to_json(config.raySavePath);

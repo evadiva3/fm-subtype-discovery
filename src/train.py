@@ -85,6 +85,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     weight_decay=config.weightDecay if weight_decay is None else weight_decay
     os.makedirs(save_dir, exist_ok=True)
     if tuneSave is not None:
+        os.makedirs(config.tuneTrainSave, exist_ok=True)
         checkpoint_path = os.path.join(config.tuneTrainSave,tuneSave+".pt");
     else:
         checkpoint_path=config.trainSave;
@@ -246,6 +247,8 @@ if __name__ == "__main__":
     n_train=n_total-n_val
     split_generator=torch.Generator().manual_seed(config.randomSeed)
     train_split, val_split=random_split(grouped_dataset, [n_train, n_val], generator=split_generator)
+
+    dataset.normalizeData(train_split.indices)
 
     train_loader=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b, drop_last=True)
     val_loader=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
