@@ -118,6 +118,9 @@ def _train_encoder(dataset, epochs, patience, pct, device):
     dataset.normalizeData(train_split.indices)
     train_load=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b)
     val_load=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
+    torch.manual_seed(config.randomSeed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(config.randomSeed)
     encoder=GNNEncoder().to(device)
     attention=condition_attention_pool().to(device)
     loss_fn=NTXentLoss()
