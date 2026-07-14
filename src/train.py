@@ -97,6 +97,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     patience_counter=0
     train_losses=[]
     val_losses=[]
+    bestScore=0.0
     for epoch in range(epochs):
         model.train()
         attention_pool.train()
@@ -167,7 +168,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
                 batches+=1
        
         avg_val_loss=val_loss/max(batches, 1)
-        tune.report({"valLoss": avg_val_loss});
+        tune.report({"valLoss": avg_val_loss, "silhouetteScore": bestScore});
         val_losses.append(avg_val_loss)
         print(f"Epoch {epoch}: train={avg_train_loss:.4f} val={avg_val_loss:.4f} tau={attention_pool.tau.item():.4f}")
         if torch.cuda.is_available():
@@ -190,7 +191,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     if realData is not None:
         direct = tune.get_context().get_trial_dir();
         bestScore = intermedCluster(realData, model, attention_pool, direct);
-        tune.report({"silhouetteScore": bestScore});
+        tune.report({"valLoss": avg_val_loss, "silhouetteScore": bestScore});
     return model, attention_pool, train_losses, val_losses
 def intermedCluster(data, encodeOut, attentionOut, direct):
     from clustering import cluster;
