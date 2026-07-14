@@ -5,7 +5,6 @@
 
 import torch
 import os
-import math
 from torch_geometric.data import Batch
 from config import config
 from ray import tune, train;
@@ -88,23 +87,12 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
         checkpoint_path = os.path.join(config.tuneTrainSave,tuneSave+".pt");
     else:
         checkpoint_path=config.trainSave;
-    optimizer=torch.optim.AdamW([
-        {'params': model.parameters(), 'lr': lr, 'weight_decay': weight_decay},
-        {
-            'params': attention_pool.parameters(),
-            'lr': lr * config.attentionLearningRateMultiplier,
-            'weight_decay': weight_decay
-        }
-    ])
-    warmup_epochs=min(max(1, int(epochs * config.warmupFraction)), epochs)
-
-    def lr_schedule(epoch):
-        if epoch < warmup_epochs:
-            return (epoch + 1) / warmup_epochs
-        progress=(epoch - warmup_epochs) / max(1, epochs - warmup_epochs)
-        return 0.5 * (1.0 + math.cos(math.pi * progress))
-
-    scheduler=torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_schedule)
+    optimizer=torch.optim.AdamW(
+        list(model.parameters())+list(attention_pool.parameters()),
+        lr=lr,
+        weight_decay=weight_decay
+    )
+    scheduler=torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     best_val_loss=float('inf')
     patience_counter=0
     train_losses=[]
