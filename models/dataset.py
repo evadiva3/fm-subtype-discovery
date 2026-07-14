@@ -31,6 +31,7 @@ class datasetPreparation(Dataset):
         except Exception as error:
             raise FileNotFoundError("clinical_clean.csv not found in the data folder. Please ensure it is present for proper dataset preparation.") from error;
         self.subjectData = [];
+        self.rawNodeFeatures = None;
         self.DataList = self.execute();
     def organizeNodes(self):
         if self.checkOnes == False:
@@ -108,27 +109,26 @@ class datasetPreparation(Dataset):
             assert graphData.x.shape[0] == config.nNodes, f"Subject {subfolder.name} has {graphData.x.shape[0]} nodes, expected {config.nNodes}";
             return graphData;
         return None;
-    def normalizeData(self):
-        for data in self.DataList:
+    def normalizeData(self, trainIndices=None):
+        if self.rawNodeFeatures is None:
+            self.rawNodeFeatures = [data.x.clone() for data in self.DataList];
+        for data, raw in zip(self.DataList, self.rawNodeFeatures):
+            data.x = raw.clone();
             data.x[:, 2:5] = torch.log1p(data.x[:, 2:5]);
-        statGraphs = self.trainGraphsForStats();
+        if trainIndices is None:
+            trainIndices = range(len(self.subjectData));
+        statGraphs = self.trainGraphsForStats(trainIndices);
+        if len(statGraphs) == 0:
+            return;
         stacked = torch.stack([data.x for data in statGraphs]);
         nodeMean = stacked.mean(dim=0);
         nodeStd = stacked.std(dim=0);
         for data in self.DataList:
             data.x = (data.x - nodeMean)/(nodeStd + 1e-8);
 
-    def trainGraphsForStats(self):
-        from torch.utils.data import random_split;
-        nTotal = len(self.subjectData);
-        if nTotal == 0:
-            return self.DataList;
-        nVal = int(nTotal*config.valFraction);
-        nTrain = nTotal-nVal;
-        generator = torch.Generator().manual_seed(config.randomSeed);
-        trainSubset, _ = random_split(range(nTotal), [nTrain, nVal], generator=generator);
+    def trainGraphsForStats(self, trainIndices):
         graphs = [];
-        for index in trainSubset.indices:
+        for index in trainIndices:
             graphs.extend(self.subjectData[index]["graphs"]);
         return graphs;
 

@@ -78,13 +78,14 @@ class trainer():
         path=os.path.join(self.dire, 'best_model.pt')
         self.model.load_state_dict(torch.load(path, map_location=self.device))  
 
-def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, realData = None, tuneSave=None):
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, tuneSave=None):
     epochs=config.epochs if epochs is None else epochs
     patience=config.patience if patience is None else patience
     lr=config.lr if lr is None else lr
     weight_decay=config.weightDecay if weight_decay is None else weight_decay
     os.makedirs(save_dir, exist_ok=True)
     if tuneSave is not None:
+        os.makedirs(config.tuneTrainSave, exist_ok=True)
         checkpoint_path = os.path.join(config.tuneTrainSave,tuneSave+".pt");
     else:
         checkpoint_path=config.trainSave;
@@ -200,29 +201,7 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
     checkpoint=torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(checkpoint['model'])
     attention_pool.load_state_dict(checkpoint['pool'])
-    """""
-    if realData is not None:
-        direct = tune.get_context().get_trial_dir();
-        bestScore = intermedCluster(realData, model, attention_pool, direct);
-        tune.report({"valLoss": avg_val_loss});
-    """""
     return model, attention_pool, train_losses, val_losses
-def intermedCluster(data, encodeOut, attentionOut, direct):
-    from clustering import cluster;
-    from torch.utils.data import DataLoader
-    clustering = cluster(encodeOut, config.clusterOutput, config.conditions, config.subjectList);
-    clustering.deploy(data);
-    embeddings = clustering.setAttention(attentionOut);
-    clustering._split_fm_hc();
-    package = clustering.KMeansUse(skip_perm=False, skip_gap=True);
-    trialSave = package[0];
-    sizeOk = package[4];
-    kSil = trialSave["k_selected_silhouette"].iloc[0];
-    bestScore = trialSave.loc[trialSave["k"]==kSil,"silhouette_score"].iloc[0];
-    permP = package[3];
-    if not(sizeOk) or permP>=config.fdrAlpha:
-        bestScore = 0.0;
-    return bestScore;
 if __name__ == "__main__":
     from gnn_encoder import GNNEncoder
     from contrastive_loss import NTXentLoss
@@ -249,6 +228,8 @@ if __name__ == "__main__":
     n_train=n_total-n_val
     split_generator=torch.Generator().manual_seed(config.randomSeed)
     train_split, val_split=random_split(grouped_dataset, [n_train, n_val], generator=split_generator)
+
+    dataset.normalizeData(train_split.indices)
 
     train_loader=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b, drop_last=True)
     val_loader=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)

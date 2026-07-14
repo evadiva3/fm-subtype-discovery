@@ -115,6 +115,7 @@ def _train_encoder(dataset, epochs, patience, pct, device):
     n_train=len(subjects)-n_val
     gen=torch.Generator().manual_seed(config.randomSeed)
     train_split, val_split=random_split(subjects, [n_train, n_val], generator=gen)
+    dataset.normalizeData(train_split.indices)
     train_load=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b)
     val_load=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
     encoder=GNNEncoder().to(device)
