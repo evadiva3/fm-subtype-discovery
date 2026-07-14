@@ -228,6 +228,9 @@ if __name__ == "__main__":
     from augmentations import graph_augmentor
     from dataset import datasetPreparation
     from torch.utils.data import DataLoader, random_split
+    torch.manual_seed(config.randomSeed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(config.randomSeed)
     dataset=datasetPreparation()
     class GroupedWrapper(torch.utils.data.Dataset):
         def __init__(self, subject_data):
@@ -245,7 +248,7 @@ if __name__ == "__main__":
     split_generator=torch.Generator().manual_seed(config.randomSeed)
     train_split, val_split=random_split(grouped_dataset, [n_train, n_val], generator=split_generator)
 
-    train_loader=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b)
+    train_loader=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b, drop_last=True)
     val_loader=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
 
     encoder=GNNEncoder().to(config.device)

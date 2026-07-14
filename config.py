@@ -80,12 +80,12 @@ class Config:
         output=32;
         layers=3;
         dropout=0.1;
-        lr=5e-3
+        lr=1e-3
         weightDecay=1e-2;
         maskRate=0.1;
         noiseStd=0.1;
         ntXentTemp=0.1
-        batchSize=8;
+        batchSize=16
     # Augmentation apply probs (per view, independent of strength)
     maskApplyProb=0.5
     noiseApplyProb=0.5

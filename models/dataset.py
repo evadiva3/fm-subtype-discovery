@@ -111,11 +111,26 @@ class datasetPreparation(Dataset):
     def normalizeData(self):
         for data in self.DataList:
             data.x[:, 2:5] = torch.log1p(data.x[:, 2:5]);
-        stacked = torch.stack([data.x for data in self.DataList]);
+        statGraphs = self.trainGraphsForStats();
+        stacked = torch.stack([data.x for data in statGraphs]);
         nodeMean = stacked.mean(dim=0);
         nodeStd = stacked.std(dim=0);
         for data in self.DataList:
             data.x = (data.x - nodeMean)/(nodeStd + 1e-8);
+
+    def trainGraphsForStats(self):
+        from torch.utils.data import random_split;
+        nTotal = len(self.subjectData);
+        if nTotal == 0:
+            return self.DataList;
+        nVal = int(nTotal*config.valFraction);
+        nTrain = nTotal-nVal;
+        generator = torch.Generator().manual_seed(config.randomSeed);
+        trainSubset, _ = random_split(range(nTotal), [nTrain, nVal], generator=generator);
+        graphs = [];
+        for index in trainSubset.indices:
+            graphs.extend(self.subjectData[index]["graphs"]);
+        return graphs;
 
     def execute(self):
         dataList = [];
