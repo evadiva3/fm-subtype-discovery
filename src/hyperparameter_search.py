@@ -1,7 +1,14 @@
 from ray import tune, train as rayTrain;
 import torch;
 import os;
+import sys;
+from pathlib import Path;
 os.environ["TUNE_DISABLE_STRICT_METRIC_CHECKING"] = "1";
+
+_ROOT = Path(__file__).resolve().parent.parent;
+for _p in (_ROOT, _ROOT / "src", _ROOT / "models"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p));
 from ray.tune.search.optuna import OptunaSearch;
 from ray.tune.schedulers import ASHAScheduler;
 import pandas as pd;
@@ -60,4 +67,7 @@ if __name__ == "__main__":
     searchSpace = {"dModel": tune.randint(16, 129), "heads": tune.randint(2,9), "output": tune.randint(8,65), "layers": tune.randint(2,5), "dropout": tune.uniform(0.0, 0.3), "lr": tune.loguniform(1e-5,3e-3), "weightDecay": tune.loguniform(1e-4, 1e-1), "maskRate": tune.uniform(0.05, 0.25), "ntXentTemp": tune.uniform(0.2, 1.0), "batchSize": tune.randint(8, 24)};
     rayTune = tune.Tuner(tune.with_parameters(runscript, dataset=dataset), param_space = searchSpace, tune_config=tune.TuneConfig(search_alg=optuna, num_samples=config.sampleNum, max_concurrent_trials=config.maxConcurrents, scheduler=ASHA, trial_dirname_creator=lambda trial: trial.trial_id), run_config=tune.RunConfig(storage_path=config.rayStorage,failure_config=(tune.FailureConfig(max_failures=3))));
     result = rayTune.fit();
-    pd.DataFrame([result.get_best_result(metric="valLoss", mode="min").config]).to_json(config.raySavePath);
+    best = result.get_best_result(metric="valLoss", mode="min");
+    os.makedirs(os.path.dirname(str(config.raySavePath)), exist_ok=True);
+    pd.DataFrame([best.config]).to_json(config.raySavePath);
+    print(f"Wrote best hyperparameters -> {config.raySavePath}: {best.config}");
