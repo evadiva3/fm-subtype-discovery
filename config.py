@@ -96,7 +96,7 @@ class Config:
     sampleNum = 100;
     # Training
     epochs=200
-    patience=10
+    patience=25
     warmupFraction=0.05
     attentionLearningRateMultiplier=10.0
     nPermutations=1000
