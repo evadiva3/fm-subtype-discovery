@@ -11,20 +11,21 @@ class cluster_evaluate():
     def silhouette(self,embed,label):
         return silhouette_score(embed,label)
     
-    def _null_shuffle(self,embed):
-        out=embed.copy()
-        for j in range(out.shape[1]):
-            np.random.shuffle(out[:,j])
-        return out
+    def _null_mvn(self,embed,rng):
+        mu=embed.mean(axis=0)
+        cov=np.cov(embed,rowvar=False)
+        return rng.multivariate_normal(mu,cov,size=embed.shape[0],method="svd")
 
-    def perm(self,embed,label,n_permutations=None):
+    def perm(self,embed,label,n_permutations=None,random_state=None):
         n_permutations=config.nPermutations if n_permutations is None else n_permutations
         embed=np.asarray(embed)
         k=len(np.unique(label))
         real=self.silhouette(embed,label)
+        seed=config.randomSeed if random_state is None else random_state
+        rng=np.random.default_rng(seed)
         c=0
         for i in range(0,n_permutations):
-            null=self._null_shuffle(embed)
+            null=self._null_mvn(embed,rng)
             lab=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=i).fit_predict(null)
             s=self.silhouette(null,lab)
             if s>real:
@@ -37,7 +38,6 @@ class cluster_evaluate():
         km.fit(x)
         return km.inertia_
 
-    #B refs, per-dim uniform box, s_k correction
     def gap_stat(self,embed,k=[2,3,4],B=None):
         B=getattr(config,"gapB",10) if B is None else B
         embed=np.asarray(embed)
@@ -52,7 +52,6 @@ class cluster_evaluate():
             out[i]={"gap":float(gap),"s":float(s)}
         return out
 
-    #1-SE rule: smallest k with gap(k)>=gap(k+1)-s(k+1)
     def gap_k(self,gaps,k_range):
         ks=list(k_range)
         for j in range(len(ks)-1):

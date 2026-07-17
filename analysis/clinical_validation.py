@@ -35,27 +35,26 @@ class clinical_validator:
         merged=self._label_df(labels_path)
         labs=sorted(merged['temp'].unique())
         if len(labs)<2:
-            raise ValueError(f"compare_groups needs 2 subtypes, got {labs}")
-        if len(labs)>2:
-            print(f"[clinical_validation] WARNING: {len(labs)} subtypes present {labs}; comparing only {labs[0]} vs {labs[1]}, rest dropped")
-        group=merged[merged['temp']==labs[0]]
-        group1=merged[merged['temp']==labs[1]]
+            raise ValueError(f"compare_groups needs >=2 subtypes, got {labs}")
+        groups={g: merged[merged['temp']==g] for g in labs}
+        n_groups=len(labs)
         results=[]
         for i in self.count_vars:
-            stat, p=stats.mannwhitneyu(group[i], group1[i], alternative='two-sided')
-            #above is man-whitney u math
-            mean0=group[i].mean()
-            mean1=group1[i].mean()
-            std0=group[i].std()
-            std1=group1[i].std()
-            pooled_std = np.sqrt((std0**2 + std1**2) / 2)
-            d=(mean0 - mean1)/pooled_std
-            results.append({
-                'variable': i,
-                'p_value': p,
-                'cohens_d': d
-                            })
-            #above is cohen
+            samples=[groups[g][i].dropna() for g in labs]
+            n_total=int(sum(len(s) for s in samples))
+            stat, p=stats.kruskal(*samples)
+            eps_sq=(stat-n_groups+1)/(n_total-n_groups) if n_total>n_groups else np.nan
+            row={'variable': i, 'H_stat': float(stat), 'p_value': float(p),
+                 'epsilon_sq': float(eps_sq), 'n_groups': n_groups}
+            for g in labs:
+                row[f'mean_{g}']=groups[g][i].mean()
+            if n_groups==2:
+                m0,m1=groups[labs[0]][i].mean(),groups[labs[1]][i].mean()
+                s0,s1=groups[labs[0]][i].std(),groups[labs[1]][i].std()
+                row['cohens_d']=(m0-m1)/np.sqrt((s0**2+s1**2)/2)
+            else:
+                row['cohens_d']=np.nan
+            results.append(row)
         results_df=pd.DataFrame(results)
         _,corrected_p, _, _=multipletests(results_df['p_value'], method='fdr_bh')
         results_df['p_corrected']=corrected_p
@@ -63,7 +62,6 @@ class clinical_validator:
         return results_df
     
     def compute_effect_sizes(self,subtype=None,labels_path=None):
-        # subtype arg kept for API compat, labels now joined by subject_id not position
         merged=self._label_df(labels_path)
         group=merged[merged['temp']==0]
         group1=merged[merged['temp']==1]
@@ -80,11 +78,6 @@ class clinical_validator:
 
 
     def project_sample_size(self,results_df,target_power=0.80,alpha=0.05):
-        # given each variables already computed Cohen's d, this estimates the n per group a
-        # follow up study would need to reach target_power. This plans a future study it does
-        # not judge whether the current results are significant.
-        # statsmodels has no direct nonparametric (Mann-Whitney U) power solver, so TTestIndPower
-        # is used as the closest parametric approximation of the required sample size
         solver=TTestIndPower()
         projected_n=[]
         for d in results_df['cohens_d']:
@@ -110,8 +103,6 @@ class clinical_validator:
         return df
 
 
-#per-subtype FD (motion) check
-
 def _load_labels(path=None):
     path=config.clusterOutput/"K-Means-Labeling.csv" if path is None else Path(path)
     if not path.exists():
@@ -131,7 +122,6 @@ def _load_fd(path=None):
         df=df[df["exclusion_reason"].fillna("").astype(str)==""] 
     return pd.DataFrame({"sid": df["subject_id"], "fd": df[cols].mean(axis=1)}), None
 
-#MannWhitney FD across 2 subtypes
 def subtype_fd_test(lab, fd):
     m=lab.merge(fd, on="sid")
     if len(m)==0:
@@ -155,48 +145,43 @@ def run_fd_comparison(labels_path=None, fd_path=None):
 
 
 def structural_self_test():
-    #two fake subtypes
     rng=np.random.default_rng(config.randomSeed)
     n=20
     lab=pd.DataFrame({"sid": [f"s{i}" for i in range(2*n)], "lab": [0]*n+[1]*n})
 
-    print("[self-test] FD differs between subtypes -> significant p ...")
+    print("self-test: FD differs, want significant")
     fd=pd.DataFrame({"sid": [f"s{i}" for i in range(2*n)], "fd": np.concatenate([rng.normal(0.10, 0.02, n), rng.normal(0.30, 0.02, n)])})
     res, blk=subtype_fd_test(lab, fd)
     assert blk is None, blk
-    print(f"  U={res['U']:.1f} p={res['p']:.2e}")
+    print(f"U={res['U']:.1f} p={res['p']:.2e}")
     assert res["p"]<0.05, "real FD diff must be significant"
 
-    print("[self-test] no FD difference -> non-significant p ...")
+    print("self-test: no FD diff, want non-significant")
     fd2=pd.DataFrame({"sid": [f"s{i}" for i in range(2*n)], "fd": rng.normal(0.20, 0.05, 2*n)})
     res2, blk2=subtype_fd_test(lab, fd2)
     assert blk2 is None, blk2
-    print(f"  U={res2['U']:.1f} p={res2['p']:.4f}")
+    print(f"U={res2['U']:.1f} p={res2['p']:.4f}")
     assert res2["p"]>0.05, "no FD diff must be non-significant"
-    print("[self-test] Good! FD subtype test behaves.")
+    print("self-test ok")
     return True
 
 
 def main():
     os.makedirs(config.resultsRoot, exist_ok=True)
-    print("=" * 70)
-    print("Per-subtype FD motion check (paper Section 4.1)")
-    print("=" * 70)
+    print("per-subtype FD motion check")
     res, blk=run_fd_comparison()
     if res is not None:
         out=config.resultsRoot / "subtype_fd_comparison.csv"
         pd.DataFrame([res]).to_csv(out, index=False)
-        print(f"[fd] wrote {out}")
-        print(f"  U={res['U']:.2f} p={res['p']:.4f} n0={res['n0']} n1={res['n1']}")
+        print(f"wrote {out}")
+        print(f"U={res['U']:.2f} p={res['p']:.4f} n0={res['n0']} n1={res['n1']}")
         if res["p"]>=config.fdrAlpha:
-            print("  non-significant -> subtypes NOT explained by motion (desired)")
+            print("non-significant, subtypes not explained by motion")
         else:
-            print("  SIGNIFICANT -> motion may confound subtypes (flag)")
+            print("significant, motion may confound subtypes")
     else:
-        print("-" * 70)
-        print(f"FD comparison BLOCKED: {blk}")
-        print("-" * 70)
-        print("Running structural self-test on synthetic FD instead ...")
+        print(f"FD comparison blocked: {blk}")
+        print("running self-test on synthetic FD instead")
         structural_self_test()
 
 
