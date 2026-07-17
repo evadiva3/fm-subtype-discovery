@@ -1,3 +1,5 @@
+AI Usage Note: AI was utilized to write this README, debug code, define data requirements, organize the repository structure, and provide conceptual clarity on complex topics.
+
 # FM Subtype Discovery
 
 Graph neural network–based self-supervised learning to discover fibromyalgia (FM) subtypes from short-epoch task fMRI.
