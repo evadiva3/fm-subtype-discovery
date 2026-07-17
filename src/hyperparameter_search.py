@@ -53,11 +53,11 @@ def runscript(config1, dataset):
     encodeOut, attentionOut, trainLoss, valLoss = jointTrain(encoder, attentionPooling, NTXLoss, training, testing, augmentation, config.device, direct,config.tuneEpochs, None, None, None,tuneName);
 class GroupedWrapper(torch.utils.data.Dataset):
         def __init__(self, subject_data):
-            self.subject_data=subject_data
+            self.subject_data=subject_data;
         def __len__(self):
-            return len(self.subject_data)
+            return len(self.subject_data);
         def __getitem__(self, idx):
-            return self.subject_data[idx]
+            return self.subject_data[idx];
 if __name__ == "__main__":
     from dataset import datasetPreparation;
     dataset = datasetPreparation();

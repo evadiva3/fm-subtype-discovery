@@ -6,9 +6,9 @@ from torch_geometric.data import Data;
 import torch;
 from torch.utils.data import Dataset;
 from config import config;
-import sys
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "preprocessing"))
-from subject_filter import get_included_subjects
+import sys;
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "preprocessing"));
+from subject_filter import get_included_subjects;
 class datasetPreparation(Dataset):
     def __init__(self, avgCond=False, fm_only=False, checkOnes = False):
         super().__init__();

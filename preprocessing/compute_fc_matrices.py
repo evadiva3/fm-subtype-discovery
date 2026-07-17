@@ -1,8 +1,3 @@
-# changes made:
-# removed orphaned buildSparse graph-construction path
-#bandpass filter added
-#fix hardcoding
-
 import os;
 import sys;
 import numpy as np;
