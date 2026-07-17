@@ -1,6 +1,4 @@
-#resample FM subjects with replacement, recluster, compare each resample back to the full-sample labels via ARI
-
-
+#remove dev comments since this is done.
 import os
 import sys
 from pathlib import Path
@@ -19,12 +17,9 @@ from clustering import cluster
 from dataset import datasetPreparation
 from sensitivity_analysis import load_trained_model
 
-
 def _t(m):
     return torch.tensor(np.asarray(m), dtype=torch.float32)
 
-
-# resample ids w/ replacement, cluster, ARI v full-sample labels on shared subjects
 def run_bootstrap(runner, emb, ids, n_res=None, seed=None):
     n_res=config.bootstrapNResamples if n_res is None else n_res
     seed=config.randomSeed if seed is None else seed
@@ -37,7 +32,6 @@ def run_bootstrap(runner, emb, ids, n_res=None, seed=None):
         idx=rng.integers(0, n, n)
         bids=[ids[i] for i in idx]
         res=runner.KMeansUse(_t(emb[idx]), bids, skip_perm=True, skip_gap=True)
-        #collapse dups to one label per subject
         seen={}
         for sid, lab in zip(bids, res[2]):
             seen[sid]=lab
@@ -45,8 +39,6 @@ def run_bootstrap(runner, emb, ids, n_res=None, seed=None):
         aris[b]=adjusted_rand_score([omap[s] for s in com], [seen[s] for s in com])
     return aris
 
-
-# ARI array+summary into saveable frame
 def _summary_frame(aris):
     rows=pd.DataFrame({"resample": np.arange(len(aris)), "ari": aris})
     summ={
@@ -58,8 +50,6 @@ def _summary_frame(aris):
     }
     return rows, summ
 
-
-# load model, build FM embeddings, bootstrap, or return blocker
 def run_real(conds):
     model=load_trained_model(config.jointCheckpointPath)
     if model is None:
@@ -79,8 +69,6 @@ def run_real(conds):
     rows, summ=_summary_frame(aris)
     return rows, summ, None
 
-
-# synthetic FM embeddings: k well-separated blobs, noise
 def _synthetic_embeddings(n=30, k=3, d=config.dModel, spread=8.0, noise=1.0, seed=0):
     rng=np.random.default_rng(seed)
     cen=rng.normal(0, spread, (k, d))
@@ -90,24 +78,18 @@ def _synthetic_embeddings(n=30, k=3, d=config.dModel, spread=8.0, noise=1.0, see
     ids=[f"sub-fm{i:03d}" for i in range(n)]
     return m, ids
 
-
-# bare runner just to borrow KMeansUse, no real model
 def _bare_runner(conds, ids):
     return cluster(None, str(config.checkpointDir), conds, ids)
 
-
 def structural_self_test():
-    # proves resampling+ARI logic w/o real data
     conds=list(config.conditions)
     n_res=25
-
     print("[self-test] well-separated clusters -> ARI should be near 1.0 ...")
     m, ids=_synthetic_embeddings(noise=0.5, seed=1)
     runner=_bare_runner(conds, ids)
     aris=run_bootstrap(runner, m, ids, n_res=n_res, seed=config.randomSeed)
     print(f"  clean: mean={aris.mean():.4f} range=[{aris.min():.4f},{aris.max():.4f}]")
     assert aris.mean()>0.8, "well-separated clusters must be stable"
-
     print("[self-test] pure-noise embeddings -> ARI should be lower/scattered ...")
     rng=np.random.default_rng(7)
     noisy=rng.normal(0, 1, (30, config.dModel)).astype(np.float32)
@@ -116,25 +98,21 @@ def structural_self_test():
     naris=run_bootstrap(nrunner, noisy, nids, n_res=n_res, seed=config.randomSeed)
     print(f"  noise: mean={naris.mean():.4f} range=[{naris.min():.4f},{naris.max():.4f}]")
     assert naris.mean()<aris.mean(), "noise must be less stable than clean clusters"
-
     print("[self-test] duplicate-collapse + ARI alignment ...")
     frame, summ=_summary_frame(aris)
     assert len(frame)==n_res and summ["n_resamples"]==n_res, "summary shape mismatch"
     print("[self-test] Good! Bootstrap resampling + ARI logic are sound.")
     return True
 
-
 def main():
     conds=list(config.conditions)
     rdir=config.resultsRoot
     os.makedirs(rdir, exist_ok=True)
     blks=[]
-
     print("=" * 70)
     print("Bootstrap stability analysis (subtype reproducibility under resampling)")
     print(f"  BOOTSTRAP_N_RESAMPLES = {config.bootstrapNResamples}")
     print("=" * 70)
-
     rows, summ, blk=run_real(conds)
     if rows is not None:
         out=rdir/"bootstrap_stability.csv"
@@ -144,14 +122,13 @@ def main():
               f"range=[{summ['ari_min']:.4f},{summ['ari_max']:.4f}]")
     else:
         blks.append(f"bootstrap stability BLOCKED: {blk}")
-
     if blks:
         print("\n" + "-" * 70)
         print("BLOCKERS (no results fabricated):")
         for b in blks:
             print(f"  - {b}")
         print("-" * 70)
-        print("Running structural self-test against synthetic data instead ...")
+        print("Running structural self-test against synthetic data instead....")
         structural_self_test()
 
     return blks

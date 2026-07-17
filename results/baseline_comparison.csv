@@ -1,0 +1,5 @@
+baseline,metric,value,k,n_subjects,note
+pca_kmeans,silhouette,0.02194209210574627,3.0,27,"FM only, mean-FC"
+flat_triangle_kmeans,silhouette,0.021942071616649628,3.0,27,"FM only, upper-triangle"
+svm_classification,cv_accuracy,0.45757575757575764,,57,"FM vs HC, 5-fold CV"
+group_ica_kmeans,silhouette,0.2578674554824829,3.0,27,"FM only, CanICA best-of-k in {2,3,4}"

@@ -1,3 +1,5 @@
+#remove dev 
+
 import sys
 from pathlib import Path
 import numpy as np
@@ -83,17 +85,7 @@ class attention_interpreter():
         weight_entropy=float(entropy(mean_weights.detach().cpu().numpy(), base=2))
         mean_tau=float(torch.stack(taus).mean().item())
         return {"mean_weights": mean_weights, "entropy": weight_entropy, "tau_attn": mean_tau}
-
-
-#yeo-krienen 7-network mapping for per-region GATv2 attention
-#real per-region attention depends on gnn_encoder.forward retrun val (not wired)
-#the mapping and aggregation below are written against per-region attention arrays of the correct shape
-
-# Yeo-Krienen 7 functional networks
 YEO7_NETWORKS=("Visual","Somatomotor","Dorsal Attention","Ventral Attention","Limbic","Frontoparietal","Default Mode")
-
-#schaefer-2018 (nilearn yeo_networks=7) parcel-label tokens to Yeo-7 names
-#It is NOT an invented 200 to 7 mapping just implementation
 SCHAEFER_TOKEN_TO_YEO7={
     "Vis":"Visual",
     "SomMot":"Somatomotor",
@@ -103,10 +95,7 @@ SCHAEFER_TOKEN_TO_YEO7={
     "Cont":"Frontoparietal",
     "Default":"Default Mode",
 }
-
-
 def load_schaefer_yeo7_lookup(n_rois=None):
-    #build the Schaefer-200 to Yeo-7 lookup: one network name per parcel
     n_rois=config.nNodes if n_rois is None else n_rois
     try:
         from nilearn import datasets
@@ -129,7 +118,6 @@ def load_schaefer_yeo7_lookup(n_rois=None):
 
 
 def aggregate_by_network(attention,region_networks):
-    #collapse per-region attention into one mean value per Yeo-7 network
     attention=np.asarray(attention,dtype=float)
     if attention.ndim==2:
         attention=attention.mean(axis=0)
@@ -145,7 +133,6 @@ def aggregate_by_network(attention,region_networks):
 
 
 def network_attention_by_subtype(subject_attention,subtype_labels,region_networks):
-    #aggregate per-region attention into per-network means for each discovered FM subtype.
     grouped={}
     for subject_id,label in subtype_labels.items():
         if subject_id not in subject_attention:
@@ -160,9 +147,7 @@ def network_attention_by_subtype(subject_attention,subtype_labels,region_network
     frame.index.name="subtype"
     return frame
 
-
 def elevated_networks_per_subtype(network_frame,top_n=2):
-    #for each subtype name the networks with the highest mean attention.
     report={}
     for subtype,row in network_frame.iterrows():
         ranked=row.sort_values(ascending=False)
@@ -171,7 +156,6 @@ def elevated_networks_per_subtype(network_frame,top_n=2):
 
 
 def load_subtype_labels(csv_path=None):
-    #read subject subtype assignments produced by src/clustering.py
     csv_path=config.clusterOutput/"K-Means-Labeling.csv" if csv_path is None else Path(csv_path)
     if not csv_path.exists():
         return None,f"no subtype labels found (expected {csv_path}); run src/clustering.py first"
@@ -237,8 +221,6 @@ def main():
     if subtype_labels is None:
         blockers.append(f"subtype labels BLOCKED: {label_blocker}")
 
-    #real per-region attention depends on gnn_encoder.forward(return_attention_weights=...)
-    #which isnt wired yet, so live per-network aggregation is put off for now
     blockers.append("real per-region attention BLOCKED: gnn_encoder return_attention_weights not wired yet")
 
     if blockers:
