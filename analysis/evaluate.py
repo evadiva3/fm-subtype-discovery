@@ -28,9 +28,9 @@ class cluster_evaluate():
             null=self._null_mvn(embed,rng)
             lab=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=i).fit_predict(null)
             s=self.silhouette(null,lab)
-            if s>real:
+            if s>=real:
                 c+=1
-        p=c/n_permutations
+        p=(c+1)/(n_permutations+1)
         return p
     
     def _inertia(self,x,k):
