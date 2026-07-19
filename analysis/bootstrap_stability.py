@@ -62,6 +62,9 @@ def run_real(conds):
         runner.setAttention(att)
         runner._split_fm_hc()
         fmT, fmIds=runner._stack(runner.fmEmbed)
+        order=list(np.argsort(fmIds))
+        fmIds=[fmIds[i] for i in order]
+        fmT=fmT[order]
     except Exception as e:
         return None, None, f"could not build FM embeddings: {type(e).__name__}: {e}"
     emb=fmT.detach().cpu().numpy()

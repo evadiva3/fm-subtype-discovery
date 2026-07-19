@@ -10,9 +10,43 @@ for d in (root, root/"src", root/"models", root/"analysis", root/"preprocessing"
 from config import config
 from subject_filter import get_included_subjects
 from baselines import baselines
+from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
+from sklearn.svm import SVC
+from sklearn.model_selection import cross_val_score
 fmridir=root.parent/"fmriprep_output"
 k=3
 conds=[c.replace(" ", "") for c in config.conditions]
+
+def _guard(label):
+    n=len(label)
+    mn=max(config.minClusterSizeFloor, round(config.minClusterSizeFraction*n))
+    _, cnt=np.unique(label, return_counts=True)
+    return bool((cnt>=mn).all())
+def _perm(X, label, seed=None):
+    seed=config.randomSeed if seed is None else seed
+    X=np.asarray(X, dtype=float)
+    kk=len(np.unique(label))
+    real=silhouette_score(X, label)
+    n=len(X)
+    mu=X.mean(0); Xc=X-mu; sc=np.sqrt(max(n-1, 1))
+    rng=np.random.default_rng(seed)
+    c=0
+    for i in range(config.nPermutations):
+        nul=mu+(rng.standard_normal((n, n))@Xc)/sc
+        lab=KMeans(n_clusters=kk, n_init=config.kmeansNInit, random_state=i).fit_predict(nul)
+        if silhouette_score(nul, lab)>real:
+            c+=1
+    return c/config.nPermutations
+def _acc_perm(X, y, acc, seed=None):
+    seed=config.randomSeed if seed is None else seed
+    rng=np.random.default_rng(seed)
+    c=0
+    for i in range(config.nPermutations):
+        yp=rng.permutation(y)
+        if cross_val_score(SVC(), X, yp, cv=config.svmCvFolds).mean()>=acc:
+            c+=1
+    return (c+1)/(config.nPermutations+1)
 def load_mean_fc(sid):
     base=Path(config.subjectDataFolder)/sid
     mats=[]
@@ -58,45 +92,50 @@ def main():
     rows=[]
 
     try:
-        _, s=bl.pca_kmeans(k)
+        lab, s, X=bl.pca_kmeans(k)
+        pp=_perm(X, lab); g=_guard(lab)
         rows.append({"baseline": "pca_kmeans", "metric": "silhouette", "value": float(s),
-                     "k": k, "n_subjects": int(len(bl.fc_matrices)), "note": "FM only, mean-FC"})
-        print(f"pca_kmeans k={k} sil={s:.6f}")
+                     "k": k, "n_subjects": int(len(bl.fc_matrices)), "perm_p": pp, "passes_guard": g, "note": "FM only, mean-FC"})
+        print(f"pca_kmeans k={k} sil={s:.6f} perm_p={pp:.4f} guard={g}")
     except Exception as e:
         rows.append({"baseline": "pca_kmeans", "metric": "silhouette", "value": np.nan,
-                     "k": k, "n_subjects": int(len(bl.fc_matrices)), "note": f"failed: {type(e).__name__}: {e}"})
+                     "k": k, "n_subjects": int(len(bl.fc_matrices)), "perm_p": np.nan, "passes_guard": False, "note": f"failed: {type(e).__name__}: {e}"})
         print(f"pca_kmeans failed: {e}")
 
     try:
-        _, s=bl.flat_triangle_kmeans(k)
+        lab, s, X=bl.flat_triangle_kmeans(k)
+        pp=_perm(X, lab); g=_guard(lab)
         rows.append({"baseline": "flat_triangle_kmeans", "metric": "silhouette", "value": float(s),
-                     "k": k, "n_subjects": int(len(bl.fc_matrices)), "note": "FM only, upper-triangle"})
-        print(f"flat_triangle_kmeans k={k} sil={s:.6f}")
+                     "k": k, "n_subjects": int(len(bl.fc_matrices)), "perm_p": pp, "passes_guard": g, "note": "FM only, upper-triangle"})
+        print(f"flat_triangle_kmeans k={k} sil={s:.6f} perm_p={pp:.4f} guard={g}")
     except Exception as e:
         rows.append({"baseline": "flat_triangle_kmeans", "metric": "silhouette", "value": np.nan,
-                     "k": k, "n_subjects": int(len(bl.fc_matrices)), "note": f"failed: {type(e).__name__}: {e}"})
+                     "k": k, "n_subjects": int(len(bl.fc_matrices)), "perm_p": np.nan, "passes_guard": False, "note": f"failed: {type(e).__name__}: {e}"})
         print(f"flat_triangle_kmeans failed: {e}")
 
     try:
         acc=bl.svm_classification()
+        flat=bl._fc_matrices_all.reshape(len(bl._fc_matrices_all), -1)
+        pp=_acc_perm(flat, bl._labels_all, acc)
         rows.append({"baseline": "svm_classification", "metric": "cv_accuracy", "value": float(acc),
-                     "k": np.nan, "n_subjects": int(len(bl._fc_matrices_all)),
-                     "note": f"FM vs HC, {config.svmCvFolds}-fold CV"})
-        print(f"svm_classification {config.svmCvFolds}-fold cv acc={acc:.6f}")
+                     "k": np.nan, "n_subjects": int(len(bl._fc_matrices_all)), "perm_p": pp, "passes_guard": np.nan,
+                     "note": f"FM vs HC, {config.svmCvFolds}-fold CV, label-perm p"})
+        print(f"svm_classification {config.svmCvFolds}-fold cv acc={acc:.6f} perm_p={pp:.4f}")
     except Exception as e:
         rows.append({"baseline": "svm_classification", "metric": "cv_accuracy", "value": np.nan,
-                     "k": np.nan, "n_subjects": int(len(bl._fc_matrices_all)), "note": f"failed: {type(e).__name__}: {e}"})
+                     "k": np.nan, "n_subjects": int(len(bl._fc_matrices_all)), "perm_p": np.nan, "passes_guard": np.nan, "note": f"failed: {type(e).__name__}: {e}"})
         print(f"svm_classification failed: {e}")
 
     try:
-        _, s, bk=bl.group_ica_kmeans()
+        lab, s, bk, X=bl.group_ica_kmeans()
+        pp=_perm(X, lab); g=_guard(lab)
         rows.append({"baseline": "group_ica_kmeans", "metric": "silhouette", "value": float(s),
-                     "k": int(bk), "n_subjects": int(len(bl._fm_subject_ids)),
-                     "note": "FM only, CanICA best-of-k in {2,3,4}"})
-        print(f"group_ica_kmeans best_k={bk} sil={s:.6f}")
+                     "k": int(bk), "n_subjects": int(len(bl._fm_subject_ids)), "perm_p": pp, "passes_guard": g,
+                     "note": "FM only, task-epr CanICA best-of-k in {2,3,4}"})
+        print(f"group_ica_kmeans best_k={bk} sil={s:.6f} perm_p={pp:.4f} guard={g}")
     except Exception as e:
         rows.append({"baseline": "group_ica_kmeans", "metric": "silhouette", "value": np.nan,
-                     "k": np.nan, "n_subjects": int(len(bl._fm_subject_ids)), "note": f"failed: {type(e).__name__}: {e}"})
+                     "k": np.nan, "n_subjects": int(len(bl._fm_subject_ids)), "perm_p": np.nan, "passes_guard": False, "note": f"failed: {type(e).__name__}: {e}"})
         print(f"group_ica_kmeans failed: {e}")
 
     outdir=config.resultsRoot

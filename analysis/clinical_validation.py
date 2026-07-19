@@ -127,12 +127,12 @@ def subtype_fd_test(lab, fd):
     if len(m)==0:
         return None, "no overlap between labeled subjects and FD subjects"
     grps=sorted(m["lab"].unique())
-    if len(grps)!=2:
-        return None, f"MannWhitney needs 2 subtypes, got {len(grps)}"
-    a=m[m["lab"]==grps[0]]["fd"].dropna()
-    b=m[m["lab"]==grps[1]]["fd"].dropna()
-    u,p=stats.mannwhitneyu(a, b, alternative="two-sided")
-    return {"U": float(u), "p": float(p), "n0": int(len(a)), "n1": int(len(b))}, None
+    if len(grps)<2:
+        return None, f"kruskal needs >=2 subtypes, got {len(grps)}"
+    samps=[m[m["lab"]==g]["fd"].dropna() for g in grps]
+    h,p=stats.kruskal(*samps)
+    ns={f"n_{g}": int(len(s)) for g,s in zip(grps, samps)}
+    return {"H": float(h), "p": float(p), "k": len(grps), **ns}, None
 
 def run_fd_comparison(labels_path=None, fd_path=None):
     lab, blk=_load_labels(labels_path)
@@ -153,14 +153,14 @@ def structural_self_test():
     fd=pd.DataFrame({"sid": [f"s{i}" for i in range(2*n)], "fd": np.concatenate([rng.normal(0.10, 0.02, n), rng.normal(0.30, 0.02, n)])})
     res, blk=subtype_fd_test(lab, fd)
     assert blk is None, blk
-    print(f"U={res['U']:.1f} p={res['p']:.2e}")
+    print(f"H={res['H']:.1f} p={res['p']:.2e}")
     assert res["p"]<0.05, "real FD diff must be significant"
 
     print("self-test: no FD diff, want non-significant")
     fd2=pd.DataFrame({"sid": [f"s{i}" for i in range(2*n)], "fd": rng.normal(0.20, 0.05, 2*n)})
     res2, blk2=subtype_fd_test(lab, fd2)
     assert blk2 is None, blk2
-    print(f"U={res2['U']:.1f} p={res2['p']:.4f}")
+    print(f"H={res2['H']:.1f} p={res2['p']:.4f}")
     assert res2["p"]>0.05, "no FD diff must be non-significant"
     print("self-test ok")
     return True
@@ -168,13 +168,20 @@ def structural_self_test():
 
 def main():
     os.makedirs(config.resultsRoot, exist_ok=True)
+    print("clinical comparison across subtypes (10 variables)")
+    cv=clinical_validator()
+    tab=cv.run_all(None)
+    print(tab.to_string(index=False))
+    print(f"wrote {config.resultsRoot / 'clinical_validation_results.csv'}")
+
     print("per-subtype FD motion check")
     res, blk=run_fd_comparison()
     if res is not None:
         out=config.resultsRoot / "subtype_fd_comparison.csv"
         pd.DataFrame([res]).to_csv(out, index=False)
         print(f"wrote {out}")
-        print(f"U={res['U']:.2f} p={res['p']:.4f} n0={res['n0']} n1={res['n1']}")
+        ncols=" ".join(f"{k}={v}" for k, v in res.items() if k.startswith("n_"))
+        print(f"H={res['H']:.2f} p={res['p']:.4f} k={res['k']} {ncols}")
         if res["p"]>=config.fdrAlpha:
             print("non-significant, subtypes not explained by motion")
         else:

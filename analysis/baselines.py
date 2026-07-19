@@ -36,7 +36,7 @@ class baselines():
         a=km.fit(reduce)
         label=a.labels_
         score=silhouette_score(reduce,label)
-        return(label,score)
+        return(label,score,reduce)
 
     def flat_triangle_kmeans(self,k):  
         #19,900 dim upper triangle-only flatten excludes diagonal and redundant mirrored lower triangle
@@ -48,15 +48,16 @@ class baselines():
         km=KMeans(n_clusters=k, random_state=config.randomSeed)
         a=km.fit(flat)
         label=a.labels_
-        score=silhouette_score(flat,label)  
-        return(label,score)
+        score=silhouette_score(flat,label)
+        return(label,score,flat)
 
     def _discover_subject_niftis(self, base, sid):
         space="space-MNI152NLin2009cAsym"
+        task="task-epr"
         patterns=[
-            f"{sid}/func/*{space}*desc-preproc_bold.nii*",      
-            f"{sid}/ses-*/func/*{space}*desc-preproc_bold.nii*",
-            f"{sid}/**/*{space}*desc-preproc_bold.nii*",     
+            f"{sid}/func/*{task}*{space}*desc-preproc_bold.nii*",
+            f"{sid}/ses-*/func/*{task}*{space}*desc-preproc_bold.nii*",
+            f"{sid}/**/*{task}*{space}*desc-preproc_bold.nii*",
         ]
         for pat in patterns: 
             candidates=sorted(base.glob(pat))
@@ -94,9 +95,9 @@ class baselines():
             km=KMeans(n_clusters=k, random_state=config.randomSeed)
             label=km.fit_predict(features)
             score=silhouette_score(features, label) 
-            if score>best_score: 
-                best_label, best_score, best_k=label, score, k  
-        return(best_label, best_score, best_k) 
+            if score>best_score:
+                best_label, best_score, best_k=label, score, k
+        return(best_label, best_score, best_k, features)
 
     def svm_classification(self):
         flat=self._fc_matrices_all.reshape(len(self._fc_matrices_all),-1) 

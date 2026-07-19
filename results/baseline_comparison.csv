@@ -1,5 +1,5 @@
-baseline,metric,value,k,n_subjects,note
-pca_kmeans,silhouette,0.02194209210574627,3.0,27,"FM only, mean-FC"
-flat_triangle_kmeans,silhouette,0.021942071616649628,3.0,27,"FM only, upper-triangle"
-svm_classification,cv_accuracy,0.45757575757575764,,57,"FM vs HC, 5-fold CV"
-group_ica_kmeans,silhouette,0.2578674554824829,3.0,27,"FM only, CanICA best-of-k in {2,3,4}"
+baseline,metric,value,k,n_subjects,perm_p,passes_guard,note
+pca_kmeans,silhouette,0.017566131427884102,3.0,28,1.0,True,"FM only, mean-FC"
+flat_triangle_kmeans,silhouette,0.017566094174981117,3.0,28,1.0,True,"FM only, upper-triangle"
+svm_classification,cv_accuracy,0.503030303030303,,58,0.4025974025974026,,"FM vs HC, 5-fold CV, label-perm p"
+group_ica_kmeans,silhouette,0.384630411863327,2.0,28,0.068,True,"FM only, task-epr CanICA best-of-k in {2,3,4}"

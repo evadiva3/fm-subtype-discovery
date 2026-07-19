@@ -3,19 +3,14 @@ import re
 import numpy as np
 import pandas as pd
 from pathlib import Path
-
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from config import config
-
-DATA_FOLDER=config.subjectDataFolder  #match root
-
+DATA_FOLDER=config.subjectDataFolder
 TR=config.tr
 FD_THRESHOLD=config.fdThreshold
 FRACTION_THRESHOLD=config.fdFractionThreshold
 FD_COLUMN="framewise_displacement"
-
 CONDITIONS=config.conditions
-
 CANON=re.compile(r"^sub-\d+$") 
 KNOWN_MISSING={"sub-005", "sub-012", "sub-032"} 
 
@@ -49,14 +44,12 @@ def slice_conditions(fd, events_path):
     return {c: (np.concatenate(s) if s else np.array([], dtype=float)) for c, s in per_cond.items()}
 
 
-#classify why a subject is excluded
 def _reason(r):
     if not CANON.match(r["subject_id"]):
         return "junk_duplicate"
     if not r["excluded"]:
         return ""
     return "missing_file" if r["error"] else "motion"
-
 
 def evaluate_subject(subject_dir):
     sid=subject_dir.name
@@ -88,13 +81,14 @@ def evaluate_subject(subject_dir):
         result["excluded"]=True
         result["error"]=f"{type(error).__name__}: {error}"
     if not CANON.match(sid):
-        result["excluded"]=True  #non-canonical folder=junk
+        result["excluded"]=True
     result["exclusion_reason"]=_reason(result)
     return result
 
 
-#move ids into data_folder/dest, append to dest/log_name
 def _relocate(ids, data_folder, dest, log_name):
+    if not ids:
+        return
     dd=data_folder / dest
     dd.mkdir(exist_ok=True)
     rows=[]
@@ -111,7 +105,7 @@ def _relocate(ids, data_folder, dest, log_name):
             rows.append({"subject_id": sid, "action": "not_found", "timestamp": pd.Timestamp.now().isoformat()})
     log=dd / log_name
     df=pd.DataFrame(rows)
-    if log.exists():
+    if log.exists() and log.stat().st_size>0:
         df=pd.concat([pd.read_csv(log), df], ignore_index=True)
     df.to_csv(log, index=False)
     print(f"  log -> {log}")
@@ -129,14 +123,11 @@ def main():
         if d.is_dir() and not d.name.startswith("top_") and d.name not in skip
     )
     results=[evaluate_subject(d) for d in subject_dirs]
-
-    #split by reason
     junk=[r["subject_id"] for r in results if r["exclusion_reason"]=="junk_duplicate"]
     miss=[r["subject_id"] for r in results if r["exclusion_reason"]=="missing_file"]
     mot=[r["subject_id"] for r in results if r["exclusion_reason"]=="motion"]
     clean=[r["subject_id"] for r in results if r["exclusion_reason"]==""]
 
-   
     if results:
         cond_cols=[f"meanFD_{_clean(c)}" for c in CONDITIONS]
         ordered=["subject_id", "excluded", "exclusion_reason", "frac_above_threshold", "error"] + cond_cols
