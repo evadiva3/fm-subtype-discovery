@@ -9,17 +9,18 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
 from config import config
 
 ROOT=Path(__file__).resolve().parents[3]/"resting_state_dep_data"
-CONF_PAT="{s}/{s}_rest_confounds.tsv"
+FMRIPREP=Path(__file__).resolve().parents[3]/"fmriprep_ds002748_out"
 TS_PAT="{s}/{s}_rest_ts.npy"
+CONF_PAT="{s}/func/{s}_task-rest_desc-confounds_timeseries.tsv"
 FD_COL="framewise_displacement"
 SUBTYPE_AMBIG=None
 
 def _subs():
-    return sorted(f.name for f in ROOT.iterdir() if f.is_dir() and not f.name.startswith("top_") and f.name!="excluded")
+    return sorted(f.name for f in ROOT.iterdir() if f.is_dir() and not f.name.startswith("top_") and not f.name.startswith(".") and f.name!="excluded")
 def complete(sid):
-    return (ROOT/TS_PAT.format(s=sid)).exists() and (ROOT/CONF_PAT.format(s=sid)).exists()
+    return (ROOT/TS_PAT.format(s=sid)).exists() and (FMRIPREP/CONF_PAT.format(s=sid)).exists()
 def motion_ok(sid):
-    p=ROOT/CONF_PAT.format(s=sid)
+    p=FMRIPREP/CONF_PAT.format(s=sid)
     if not p.exists():
         return False
     c=pd.read_csv(p,sep="\t")
