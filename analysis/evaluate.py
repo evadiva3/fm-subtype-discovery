@@ -40,15 +40,17 @@ class cluster_evaluate():
         km.fit(x)
         return km.inertia_
 
-    def gap_stat(self,embed,k=[2,3,4],B=None):
+    def gap_stat(self,embed,k=[2,3,4],B=None,seed=None):
         B=getattr(config,"gapB",10) if B is None else B
+        seed=config.randomSeed if seed is None else seed
+        rng=np.random.default_rng(seed)
         embed=np.asarray(embed)
         lo=embed.min(axis=0)
         hi=embed.max(axis=0)
         out={}
         for i in k:
             wk=self._inertia(embed,i)
-            logs=np.array([np.log(self._inertia(np.random.uniform(lo,hi,embed.shape),i)) for _ in range(B)])
+            logs=np.array([np.log(self._inertia(rng.uniform(lo,hi,embed.shape),i)) for _ in range(B)])
             gap=logs.mean()-np.log(wk)
             s=logs.std()*np.sqrt(1+1.0/B)
             out[i]={"gap":float(gap),"s":float(s)}

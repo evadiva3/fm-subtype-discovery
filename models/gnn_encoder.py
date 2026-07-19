@@ -37,7 +37,9 @@ class GNNEncoder(nn.Module):
             out = global_mean_pool(x, batchVec);
             return out;
     def forward(self, data: Batch, boolWeights = False):
-        edgeAttr = data.edge_attr.unsqueeze(-1);
+        edgeAttr = data.edge_attr;
+        if edgeAttr.dim() == 1:
+            edgeAttr = edgeAttr.unsqueeze(-1);
         edgeIndex = data.edge_index;
         x = data.x;
         batchVec = data.batch;
