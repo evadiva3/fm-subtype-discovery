@@ -1,7 +1,9 @@
 import numpy as np
+import diptest
 from sklearn.metrics import silhouette_score
 from sklearn.cluster import KMeans
-from config import config  
+from sklearn.decomposition import PCA
+from config import config
 
 class cluster_evaluate():
 
@@ -58,6 +60,15 @@ class cluster_evaluate():
             if gaps[ks[j]]["gap"]>=gaps[ks[j+1]]["gap"]-gaps[ks[j+1]]["s"]:
                 return ks[j]
         return ks[-1]
+
+    def dip_pcs(self,embed,n=5):
+        embed=np.asarray(embed)
+        pcs=PCA(n_components=n,random_state=config.randomSeed).fit_transform(embed)
+        out={}
+        for i in range(n):
+            dp,pv=diptest.diptest(pcs[:,i])
+            out[i+1]={"dip":float(dp),"p":float(pv)}
+        return out
 
         
 

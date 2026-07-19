@@ -78,7 +78,7 @@ class trainer():
         path=os.path.join(self.dire, 'best_model.pt')
         self.model.load_state_dict(torch.load(path, map_location=self.device))  
 
-def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, tuneSave=None):
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, tuneSave=None, guardPrimary=False):
     epochs=config.epochs if epochs is None else epochs
     patience=config.patience if patience is None else patience
     lr=config.lr if lr is None else lr
@@ -88,7 +88,10 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
         os.makedirs(config.tuneTrainSave, exist_ok=True)
         checkpoint_path = os.path.join(config.tuneTrainSave,tuneSave+".pt");
     else:
-        checkpoint_path=config.trainSave;
+        checkpoint_path=os.path.join(str(save_dir), os.path.basename(config.trainSave))
+    prim=os.path.abspath(config.trainSave)
+    if guardPrimary and os.path.abspath(checkpoint_path)==prim:
+        raise RuntimeError(f"retrain refused: would overwrite primary checkpoint {prim}")
     optimizer=torch.optim.AdamW([
         {'params': model.parameters(), 'lr': lr, 'weight_decay': weight_decay},
         {

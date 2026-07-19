@@ -4,7 +4,7 @@
 
 import sys, shutil
 from pathlib import Path
-ROOT=Path(__file__).resolve().parent.parent
+ROOT=Path(__file__).resolve().parents[2]
 for p in (ROOT, ROOT / "src", ROOT / "models", ROOT / "analysis", ROOT / "preprocessing"):
     sys.path.insert(0, str(p))
 from config import config

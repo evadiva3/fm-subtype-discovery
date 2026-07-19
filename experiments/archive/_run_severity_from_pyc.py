@@ -2,7 +2,7 @@
 import sys, warnings, marshal
 from pathlib import Path
 warnings.filterwarnings("ignore")
-ROOT=Path(__file__).resolve().parent.parent
+ROOT=Path(__file__).resolve().parents[2]
 for p in (ROOT, ROOT/"src", ROOT/"models", ROOT/"analysis", ROOT/"preprocessing"):
     sys.path.insert(0, str(p))
 import subject_filter

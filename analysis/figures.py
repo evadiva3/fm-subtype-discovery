@@ -3,7 +3,9 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 import os
-from config import config  
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from config import config
 
 class figure_gen():
     def __init__(self,dire=None):
@@ -42,26 +44,36 @@ class figure_gen():
         fig.savefig(os.path.join(self.dire,nm+'.svg'),bbox_inches='tight')
         plt.close(fig)
     def plot_null_silh(self):
-        mu,sd,obs,z,pc=0.192,0.028,0.150,-1.51,5.2
+        E=np.load(config.clusterOutput/"Embeddings.npy")
+        lab=pd.read_csv(config.clusterOutput/"K-Means-Labeling.csv")["Label"].to_numpy()
+        En=E/(np.linalg.norm(E,axis=1,keepdims=True)+1e-8)
+        k=len(np.unique(lab))
+        obs=silhouette_score(En,lab)
+        mu=En.mean(0); Xc=En-mu; sc=np.sqrt(max(len(En)-1,1))
         rng=np.random.default_rng(config.randomSeed)
-        d=rng.normal(mu,sd,1000)
+        d=np.empty(config.nPermutations)
+        for i in range(config.nPermutations):
+            nul=mu+(rng.standard_normal((len(En),len(En)))@Xc)/sc
+            nl=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=i).fit_predict(nul)
+            d[i]=silhouette_score(nul,nl)
+        pc=float((d>obs).mean()*100)
         fig,ax=plt.subplots(figsize=(7,5))
         ax.hist(d,bins=40,density=True,color='pink',edgecolor='white')
         ax.axvline(obs,color='crimson',lw=2)
-        ax.annotate(f"z = {z}, exceeds only {pc}% of null draws",xy=(obs,ax.get_ylim()[1]*0.9),xytext=(mu+sd,ax.get_ylim()[1]*0.9),arrowprops=dict(arrowstyle='->',color='crimson'),va='center')
-        ax.set_title("FM-only k=3 clustering: observed silhouette vs. covariance-preserving null (n=1000)",fontsize=9)
+        ax.annotate(f"observed={obs:.3f}, exceeds {100-pc:.1f}% of null draws (p={pc/100:.3f})",xy=(obs,ax.get_ylim()[1]*0.9),xytext=(d.mean(),ax.get_ylim()[1]*0.9),arrowprops=dict(arrowstyle='->',color='crimson'),va='center',fontsize=8)
+        ax.set_title(f"FM-only k={k} clustering: observed silhouette vs. covariance-preserving null (n={config.nPermutations})",fontsize=9)
         ax.set_xlabel("silhouette score")
         ax.set_ylabel("density")
         self._sv(fig,'fig1_null_silhouette')
     def plot_ablation(self):
+        ab=pd.read_csv(config.resultsRoot/"ablation_table.csv").set_index("condition")
+        sd=pd.read_csv(config.resultsRoot/"severity_gradient_random_seeds.csv")["r"].tolist()
+        reg=pd.read_csv(config.resultsRoot/"severity_gradient_regression.csv").set_index("space")["r"]
         nm=['Full model','Mean pooling','Untrained encoder']
-        sil=[0.168,0.240,0.520]
-        lo=[0,0,0.520-0.43]
-        hi=[0,0,0]
-        sd=[0.3811532576634764,0.3433691061855307,0.3339335233576474,0.32217302996386665,0.3932047322574061,0.08614835399249417,0.41169575718497503,0.3346713696098955,0.3217275400177396,0.2759226691725773]
-        mn,ot=-0.044572519455699504,-0.2230989402720051
+        sil=[float(ab.loc[n,"silhouette"]) for n in nm]
+        mn=float(reg.loc["main-trained"]); ot=float(reg.loc["orthogonal-trained"])
         fig,ax=plt.subplots(1,2,figsize=(12,5))
-        ax[0].bar(nm,sil,yerr=[lo,hi],capsize=6,color='pink',edgecolor='white')
+        ax[0].bar(nm,sil,capsize=6,color='pink',edgecolor='white')
         ax[0].set_ylabel("silhouette score")
         ax[0].set_title("A. Ablation")
         sns.stripplot(x=[0]*len(sd),y=sd,ax=ax[1],color='pink',size=8,jitter=0.15)
@@ -74,15 +86,17 @@ class figure_gen():
         fig.tight_layout()
         self._sv(fig,'fig2_ablation')
     def plot_gap(self):
-        k=[2,3,4,5,6]
-        g=[0.412,0.532,0.622,0.695,0.770]
+        sc=pd.read_csv(config.clusterOutput/"silhouette-scores.csv")
+        k=sc["k"].tolist()
+        g=sc["gap_stat"].tolist()
+        kg=int(sc["k_selected_gap"].iloc[0])
         fig,ax=plt.subplots(figsize=(7,5))
         ax.plot(k,g,marker='o',color='crimson')
         ax.set_xticks(k)
         ax.set_xlabel("k")
         ax.set_ylabel("gap statistic")
         ax.set_title("Gap statistic across k")
-        ax.annotate("no interior peak; 1-SE rule returns range ceiling (k=6), not a detected peak",xy=(k[-1],g[-1]),xytext=(k[0]+0.1,g[-1]),fontsize=8,va='top')
+        ax.annotate(f"no interior peak; 1-SE rule returns range ceiling (k={kg}), not a detected peak",xy=(k[-1],g[-1]),xytext=(k[0]+0.1,g[-1]),fontsize=8,va='top')
         self._sv(fig,'fig3_gap_statistic')
 
 
