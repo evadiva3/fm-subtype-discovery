@@ -29,7 +29,7 @@ def rand_encoder(subs,ids):
         if torch.cuda.is_available():
             torch.cuda.manual_seed_all(sd)
         e=GNNEncoder()
-        r=mddCluster(e,str(config.checkpointDir),None,ids)
+        r=mddCluster(e,str(config.checkpointDir),[],ids)
         r.deploy(subs)
         r._split_fm_hc()
         t,tids=r._stack(r.fmEmbed)
@@ -42,7 +42,7 @@ def trained(subs,ids):
     ck=torch.load(config.checkpointDir/"bestMddModel.pt",map_location="cpu")
     e=GNNEncoder()
     e.load_state_dict(ck["enc"])
-    r=mddCluster(e,str(config.checkpointDir),None,ids)
+    r=mddCluster(e,str(config.checkpointDir),[],ids)
     r.deploy(subs)
     r._split_fm_hc()
     t,tids=r._stack(r.fmEmbed)

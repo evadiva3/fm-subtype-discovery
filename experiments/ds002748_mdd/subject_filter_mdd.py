@@ -16,7 +16,7 @@ FD_COL="framewise_displacement"
 SUBTYPE_AMBIG=None
 
 def _subs():
-    return sorted(f.name for f in ROOT.iterdir() if f.is_dir() and not f.name.startswith("top_") and f.name!="excluded")
+    return sorted(f.name for f in ROOT.iterdir() if f.is_dir() and not f.name.startswith("top_") and not f.name.startswith(".") and f.name!="excluded")
 def complete(sid):
     return (ROOT/TS_PAT.format(s=sid)).exists() and (FMRIPREP/CONF_PAT.format(s=sid)).exists()
 def motion_ok(sid):

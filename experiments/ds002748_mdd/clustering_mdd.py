@@ -57,7 +57,7 @@ if __name__=="__main__":
     ck=torch.load(config.checkpointDir/"bestMddModel.pt",map_location="cpu")
     enc=GNNEncoder()
     enc.load_state_dict(ck["enc"])
-    r=mddCluster(enc,str(config.checkpointDir),None,ds.subjectList)
+    r=mddCluster(enc,str(config.checkpointDir),[],ds.subjectList)
     tr,ids,emb,ar=r.run(ds.subjectData)
     r.save(tr,ids,emb,ar)
     print(tr[0].to_string())
