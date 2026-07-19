@@ -39,7 +39,7 @@ def rand_encoder(subs,ids):
 
 def trained(subs,ids):
     from gnn_encoder import GNNEncoder
-    ck=torch.load(config.trainSave,map_location="cpu")
+    ck=torch.load(config.checkpointDir/"bestMddModel.pt",map_location="cpu")
     e=GNNEncoder()
     e.load_state_dict(ck["enc"])
     r=mddCluster(e,str(config.checkpointDir),None,ids)

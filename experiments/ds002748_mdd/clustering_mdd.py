@@ -54,7 +54,7 @@ if __name__=="__main__":
     from gnn_encoder import GNNEncoder
     from dataset_mdd import mddDataset
     ds=mddDataset()
-    ck=torch.load(config.trainSave,map_location="cpu")
+    ck=torch.load(config.checkpointDir/"bestMddModel.pt",map_location="cpu")
     enc=GNNEncoder()
     enc.load_state_dict(ck["enc"])
     r=mddCluster(enc,str(config.checkpointDir),None,ds.subjectList)

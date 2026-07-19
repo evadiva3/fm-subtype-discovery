@@ -64,7 +64,7 @@ def main():
     subs=ds.subjectData
     pf=pd.read_csv(PART_TSV,sep="\t")
     pf[COLUMN_MAP["subject_id"]]=pf[COLUMN_MAP["subject_id"]].astype(str)
-    ck=torch.load(config.trainSave,map_location="cpu")
+    ck=torch.load(config.checkpointDir/"bestMddModel.pt",map_location="cpu")
     enc=GNNEncoder()
     enc.load_state_dict(ck["enc"])
     print("PRIMARY: Zung_SDS")
