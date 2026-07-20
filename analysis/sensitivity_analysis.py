@@ -1,6 +1,3 @@
-# sensitivity_analysis.py: rebuild graphs at different 
-# edge thresholds + retrain configs, 
-# check if clustering result stays stable
 
 
 import os
@@ -125,8 +122,8 @@ def _train_encoder(dataset, epochs, patience, pct, device):
     attention=condition_attention_pool().to(device)
     loss_fn=NTXentLoss()
     augmentor=graph_augmentor()
-    save_dir=config.checkpointDir / f"sensitivity_pct_{pct}"
-    encoder, attention, _, _=joint_train(encoder, attention, loss_fn, train_load, val_load, augmentor, device, str(save_dir), epochs=epochs, patience=patience)
+    save_dir=config.checkpointDir / "sensitivity" / f"pct_{pct}"
+    encoder, attention, _, _=joint_train(encoder, attention, loss_fn, train_load, val_load, augmentor, device, str(save_dir), epochs=epochs, patience=patience, guardPrimary=True)
     encoder.to("cpu").eval()
     attention.to("cpu").eval()
     return encoder, attention
@@ -146,7 +143,8 @@ def run_percentile_sweep(conditionList, epochs=None, patience=None, dataset_buil
         try:
             dataset=dataset_builder()
             encoder, attention=_train_encoder(dataset, epochs, patience, pct, device)
-            orig, ortho=evaluate_clustering(encoder, attention, dataset, conditionList)
+            cds=dataset_builder()
+            orig, ortho=evaluate_clustering(encoder, attention, cds, conditionList)
         except Exception as error:
             set_edge_percentile(config.edgePercentile)
             return None, f"retrain/cluster failed at percentile {pct}: {type(error).__name__}: {error}"
@@ -280,6 +278,7 @@ def _tiny_graph(n_nodes=8):
 #fake dataset shaped exactly like datasetPreparation output
 def _synthetic_dataset(n_fm=14, n_hc=6, n_cons=7, n_nodes=8):
     ds=type("S", (), {})()
+    ds.normalizeData=lambda *a, **k: None
     ds.subjectData=[]
     ds.subjectList=[]
     for label, tmpl, count in ((0, "sub-fm%03d", n_fm), (1, "sub-hc%03d", n_hc)):
@@ -316,10 +315,9 @@ def main():
     blockers=[]
 
     print("=" * 70)
-    print("Sensitivity analysis (paper Section 4.5)")
+    print("Sensitivity analysis")
     print(f"  EDGE_PERCENTILE_SENSITIVITY = {config.edgePercentileSensitivity}")
     print(f"  primary edge percentile     = {config.edgePercentile}")
-    print("  paper/draft_v1.md is empty -> using two-separate-tables layout (flagged)")
     print("=" * 70)
 
     # percentile

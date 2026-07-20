@@ -1,7 +1,9 @@
 import numpy as np
+import diptest
 from sklearn.metrics import silhouette_score
 from sklearn.cluster import KMeans
-from config import config  
+from sklearn.decomposition import PCA
+from config import config
 
 class cluster_evaluate():
 
@@ -38,15 +40,17 @@ class cluster_evaluate():
         km.fit(x)
         return km.inertia_
 
-    def gap_stat(self,embed,k=[2,3,4],B=None):
+    def gap_stat(self,embed,k=[2,3,4],B=None,seed=None):
         B=getattr(config,"gapB",10) if B is None else B
+        seed=config.randomSeed if seed is None else seed
+        rng=np.random.default_rng(seed)
         embed=np.asarray(embed)
         lo=embed.min(axis=0)
         hi=embed.max(axis=0)
         out={}
         for i in k:
             wk=self._inertia(embed,i)
-            logs=np.array([np.log(self._inertia(np.random.uniform(lo,hi,embed.shape),i)) for _ in range(B)])
+            logs=np.array([np.log(self._inertia(rng.uniform(lo,hi,embed.shape),i)) for _ in range(B)])
             gap=logs.mean()-np.log(wk)
             s=logs.std()*np.sqrt(1+1.0/B)
             out[i]={"gap":float(gap),"s":float(s)}
@@ -58,6 +62,15 @@ class cluster_evaluate():
             if gaps[ks[j]]["gap"]>=gaps[ks[j+1]]["gap"]-gaps[ks[j+1]]["s"]:
                 return ks[j]
         return ks[-1]
+
+    def dip_pcs(self,embed,n=5):
+        embed=np.asarray(embed)
+        pcs=PCA(n_components=n,random_state=config.randomSeed).fit_transform(embed)
+        out={}
+        for i in range(n):
+            dp,pv=diptest.diptest(pcs[:,i])
+            out[i+1]={"dip":float(dp),"p":float(pv)}
+        return out
 
         
 
