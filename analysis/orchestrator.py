@@ -15,29 +15,29 @@ class Orchestrator():
             self.embeddings = pd.DataFrame(np.load(config.embeddingPath));
         if labelPath is not None:
             try:
-                self.labels = pd.read_csv(labelPath, index_col="Subject_Id");
+                self.labels = pd.read_csv(labelPath).set_index("subject_id", drop=False);
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {labelPath} Does Not Exist - Check File Type. Using Default Path");
-                self.labels = pd.read_csv(config.kLabelPath, index_col="Subject_Id");
+                self.labels = pd.read_csv(config.kLabelPath).set_index("subject_id", drop=False);
         else:
-            self.labels = pd.read_csv(config.kLabelPath, index_col="Subject_Id");
+            self.labels = pd.read_csv(config.kLabelPath).set_index("subject_id", drop=False);
         if subjectExclusions is not None:
             try:
-                self.subjectExclusions = pd.read_csv(subjectExclusions, index_col="subject_id")
+                self.subjectExclusions = pd.read_csv(subjectExclusions).set_index("Subject_Id", drop=False);
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {subjectExclusions} Does Not Exist - Check File Type. Using Default Path");
-                self.subjectExclusions = pd.read_csv(config.exclusionManifestPath, index_col="subject_id");
+                self.subjectExclusions = pd.read_csv(config.exclusionManifestPath).set_index("Subject_Id", drop=False);
         else:
-            self.subjectExclusions = pd.read_csv(config.exclusionManifestPath,index_col="subject_id");
+            self.subjectExclusions = pd.read_csv(config.exclusionManifestPath).set_index("Subject_Id", drop=False);
         self.ids = self.labels["Subject_Id"];
         if clinicalCSV is not None:
             try:
-                self.clinicalCSV = pd.read_csv(clinicalCSV, index_col="subject_id");
+                self.clinicalCSV = pd.read_csv(clinicalCSV).set_index("subject_id", drop=False);
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {clinicalCSV} Does Not Exist - Check File Type. Using Default Path");
-                self.clinicalCSV = pd.read_csv(config.clinicalCSV, index_col="subject_id");
+                self.clinicalCSV = pd.read_csv(config.clinicalCSV).set_index("subject_id", drop=False);
         else:
-            self.clinicalCSV = pd.read_csv(config.clinicalCSV, index_col="subject_id");
+            self.clinicalCSV = pd.read_csv(config.clinicalCSV).set_index("subject_id", drop=False);
         if dumpPath is not None:
             try:
                 self.savePath = dumpPath;
