@@ -109,8 +109,8 @@ class Config:
     # Motion / QC (verify_setup.py)
     fdThreshold=0.5
     fdFractionThreshold=0.25
-    cMeanFDStartIdx = 6;
-    cMeanFDEndIdx = 13; #this is for slicing the subject exclusion csv and is specific to it. 
+    cMeanFDStartIdx = 5;
+    cMeanFDEndIdx = 12; #this is for slicing the subject exclusion csv and is specific to it. 
     # Statistics
     fdrAlpha=0.05
 

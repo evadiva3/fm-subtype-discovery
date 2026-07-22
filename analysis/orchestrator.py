@@ -60,10 +60,10 @@ class Orchestrator():
         mean = [];
         subjectExclusions = self.subjectExclusions.loc[(self.subjectExclusions["excluded"]==False),:];
         subjectExclusions = subjectExclusions.loc[(self.clinicalCSV["group"]=="FM"), :];
-        subjectExclusions["k"] = self.labels.loc[self.labels["Subject_Id"], "Label"];
-        kLabels = subjectExclusions["k"].unique();
         for subject in subjectExclusions.to_numpy():
             mean.append(subject[config.cMeanFDStartIdx:config.cMeanFDEndIdx].mean());
+        subjectExclusions["k"] = self.labels.loc[self.labels["Subject_Id"], "Label"];
+        kLabels = subjectExclusions["k"].unique();
         subjectFD = pd.DataFrame({"SubjectId":subjectExclusions["subject_id"], "FD": mean, "K":subjectExclusions["k"]});
         for _ in range(0,len(subjectFD["SubjectId"])):
             for i in range(0,len(subjectFD["SubjectId"])-1):
