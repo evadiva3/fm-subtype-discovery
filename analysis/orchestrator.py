@@ -35,9 +35,9 @@ class Orchestrator():
                 self.clinicalCSV = pd.read_csv(clinicalCSV).set_index("subject_id", drop=False);
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {clinicalCSV} Does Not Exist - Check File Type. Using Default Path");
-                self.clinicalCSV = pd.read_csv(config.clinicalCSV).set_index("subject_id", drop=False);
+                self.clinicalCSV = pd.read_csv(config.clinicalCsv).set_index("subject_id", drop=False);
         else:
-            self.clinicalCSV = pd.read_csv(config.clinicalCSV).set_index("subject_id", drop=False);
+            self.clinicalCSV = pd.read_csv(config.clinicalCsv).set_index("subject_id", drop=False);
         if dumpPath is not None:
             try:
                 self.savePath = dumpPath;
