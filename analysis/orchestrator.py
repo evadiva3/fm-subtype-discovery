@@ -7,12 +7,12 @@ class Orchestrator():
     def __init__(self, subjectExclusions = None, embeddingsPath = None, labelPath = None, clinicalCSV = None, dumpPath = None):
         if embeddingsPath is not None:
             try:
-                self.embeddings = pd.DataFrame(np.load(embeddingsPath));
+                self.embeddings = np.load(embeddingsPath);
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {embeddingsPath} Does Not Exist - Check File Type. Using Default Path");
-                self.embeddings = pd.DataFrame(np.load(config.embeddingPath));
+                self.embeddings = np.load(config.embeddingPath);
         else:
-            self.embeddings = pd.DataFrame(np.load(config.embeddingPath));
+            self.embeddings = np.load(config.embeddingPath);
         if labelPath is not None:
             try:
                 self.labels = pd.read_csv(labelPath).set_index("Subject_Id", drop=False);
