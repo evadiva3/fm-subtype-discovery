@@ -71,3 +71,6 @@ class Orchestrator():
         package1 = self.leaveOneOut();
         package2 = self.kToFD();
         pd.DataFrame({"effectiveRank": package, "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "hPerm": package2[1], "nCount": package2[2]}).to_csv(config.analysisOrchestrator);
+if __name__ == "__main__":
+    orchestrate = Orchestrator(None, None, None, None);
+    orchestrate.main();
