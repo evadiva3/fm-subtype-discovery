@@ -79,7 +79,7 @@ class Orchestrator():
         package = self.effectiveRank();
         package1 = self.leaveOneOut();
         package2 = self.kToFD();
-        pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "hPerm": package2[1], "nCount": package2[2]}).to_csv(self.savePath);
+        pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "hPerm": package2[1], "nCount": package2[2]}, index=[0]).to_csv(self.savePath);
 if __name__ == "__main__":
     orchestrate = Orchestrator(None, None, None, None, None);
     orchestrate.main();
