@@ -65,7 +65,7 @@ class Orchestrator():
         subjectExclusions["k"] = self.labels.loc[self.labels["Subject_Id"], "Label"];
         kLabels = subjectExclusions["k"].unique();
         subjectFD = pd.DataFrame({"SubjectId":subjectExclusions["subject_id"], "FD": mean, "K":subjectExclusions["k"]});
-        subjectFD = subjectFD.reset_index(drop=True) 
+        subjectFD = subjectFD.reset_index(drop=True);
         for _ in range(0,len(subjectFD["SubjectId"])):
             for i in range(0,len(subjectFD["SubjectId"])-1):
                 if (subjectFD.iloc[i,1]>subjectFD.iloc[i+1,1]):
