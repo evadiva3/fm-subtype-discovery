@@ -4,7 +4,7 @@ import numpy as np;
 import driver_utils as driverUtils;
 import warnings;
 class Orchestrator():
-    def __init__(self, subjectExclusions = None, embeddingsPath = None, labelPath = None, clinicalCSV = None):
+    def __init__(self, subjectExclusions = None, embeddingsPath = None, labelPath = None, clinicalCSV = None, dumpPath = None):
         if embeddingsPath is not None:
             try:
                 self.embeddings = pd.DataFrame(np.load(embeddingsPath));
@@ -15,29 +15,37 @@ class Orchestrator():
             self.embeddings = pd.DataFrame(np.load(config.embeddingPath));
         if labelPath is not None:
             try:
-                self.labels = pd.read_csv(labelPath);
+                self.labels = pd.read_csv(labelPath, index_col="Subject_Id");
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {labelPath} Does Not Exist - Check File Type. Using Default Path");
-                self.labels = pd.read_csv(config.kLabelPath);
+                self.labels = pd.read_csv(config.kLabelPath, index_col="Subject_Id");
         else:
-            self.labels = pd.read_csv(config.kLabelPath);
+            self.labels = pd.read_csv(config.kLabelPath, index_col="Subject_Id");
         if subjectExclusions is not None:
             try:
-                self.subjectExclusions = pd.read_csv(subjectExclusions)
+                self.subjectExclusions = pd.read_csv(subjectExclusions, index_col="subject_id")
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {subjectExclusions} Does Not Exist - Check File Type. Using Default Path");
-                self.subjectExclusions = pd.read_csv(config.exclusionManifestPath);
+                self.subjectExclusions = pd.read_csv(config.exclusionManifestPath, index_col="subject_id");
         else:
-            self.subjectExclusions = pd.read_csv(config.exclusionManifestPath);
+            self.subjectExclusions = pd.read_csv(config.exclusionManifestPath,index_col="subject_id");
         self.ids = self.labels["Subject_Id"];
         if clinicalCSV is not None:
             try:
-                self.clinicalCSV = pd.read_csv(clinicalCSV);
+                self.clinicalCSV = pd.read_csv(clinicalCSV, index_col="subject_id");
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {clinicalCSV} Does Not Exist - Check File Type. Using Default Path");
-                self.clinicalCSV = pd.read_csv(config.clinicalCSV);
+                self.clinicalCSV = pd.read_csv(config.clinicalCSV, index_col="subject_id");
         else:
-            self.clinicalCSV = pd.read_csv(config.clinicalCSV);
+            self.clinicalCSV = pd.read_csv(config.clinicalCSV, index_col="subject_id");
+        if dumpPath is not None:
+            try:
+                self.savePath = dumpPath;
+            except FileNotFoundError:
+                warnings.warn(f"Path Specified: {dumpPath} Does Not Exist - Check File Type. Using Default Path");
+                self.savePath = config.anaylsisOrchestrator;
+        else:
+            self.savePath = config.anaylsisOrchestrator;
     def effectiveRank(self):
         effectiveRank, pc1 = driverUtils.eff_rank(self.embeddings);
         return [effectiveRank, pc1];
@@ -70,7 +78,7 @@ class Orchestrator():
         package = self.effectiveRank();
         package1 = self.leaveOneOut();
         package2 = self.kToFD();
-        pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "hPerm": package2[1], "nCount": package2[2]}).to_csv(config.analysisOrchestrator);
+        pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "hPerm": package2[1], "nCount": package2[2]}).to_csv(self.savePath);
 if __name__ == "__main__":
     orchestrate = Orchestrator(None, None, None, None);
     orchestrate.main();
