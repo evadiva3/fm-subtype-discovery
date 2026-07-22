@@ -34,6 +34,12 @@ class Config:
     @property
     def clusterOutput(self): return (self.dataRoot/"outputs");
     @property
+    def embeddingPath(self): return(self.clusterOutput/"Embeddings.npy");
+    @property
+    def kLabelPath(self): return(self.clusterOutput/"K-Means-Labeling.csv");
+    @property
+    def anaylsisOrchestrator(self): return(self.dataRoot/"dataAnalysis");
+    @property
     def subjectList(self):
         datafolder = Path(self.subjectDataFolder);
         subjectList = [subfolder.name for subfolder in datafolder.iterdir() if subfolder.is_dir() and not subfolder.name.startswith("top_") and subfolder.name != "excluded"];
@@ -103,7 +109,8 @@ class Config:
     # Motion / QC (verify_setup.py)
     fdThreshold=0.5
     fdFractionThreshold=0.25
-
+    cMeanFDStartIdx = 5;
+    cMeanFDEndIdx = 12; #this is for slicing the subject exclusion csv and is specific to it. 
     # Statistics
     fdrAlpha=0.05
 
