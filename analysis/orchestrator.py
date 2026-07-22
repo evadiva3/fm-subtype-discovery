@@ -15,20 +15,20 @@ class Orchestrator():
             self.embeddings = pd.DataFrame(np.load(config.embeddingPath));
         if labelPath is not None:
             try:
-                self.labels = pd.read_csv(labelPath).set_index("subject_id", drop=False);
+                self.labels = pd.read_csv(labelPath).set_index("Subject_Id", drop=False);
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {labelPath} Does Not Exist - Check File Type. Using Default Path");
-                self.labels = pd.read_csv(config.kLabelPath).set_index("subject_id", drop=False);
+                self.labels = pd.read_csv(config.kLabelPath).set_index("Subject_Id", drop=False);
         else:
-            self.labels = pd.read_csv(config.kLabelPath).set_index("subject_id", drop=False);
+            self.labels = pd.read_csv(config.kLabelPath).set_index("Subject_Id", drop=False);
         if subjectExclusions is not None:
             try:
-                self.subjectExclusions = pd.read_csv(subjectExclusions).set_index("Subject_Id", drop=False);
+                self.subjectExclusions = pd.read_csv(subjectExclusions).set_index("subject_id", drop=False);
             except FileNotFoundError:
                 warnings.warn(f"Path Specified: {subjectExclusions} Does Not Exist - Check File Type. Using Default Path");
-                self.subjectExclusions = pd.read_csv(config.exclusionManifestPath).set_index("Subject_Id", drop=False);
+                self.subjectExclusions = pd.read_csv(config.exclusionManifestPath).set_index("subject_id", drop=False);
         else:
-            self.subjectExclusions = pd.read_csv(config.exclusionManifestPath).set_index("Subject_Id", drop=False);
+            self.subjectExclusions = pd.read_csv(config.exclusionManifestPath).set_index("subject_id", drop=False);
         self.ids = self.labels["Subject_Id"];
         if clinicalCSV is not None:
             try:
@@ -80,5 +80,5 @@ class Orchestrator():
         package2 = self.kToFD();
         pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "hPerm": package2[1], "nCount": package2[2]}).to_csv(self.savePath);
 if __name__ == "__main__":
-    orchestrate = Orchestrator(None, None, None, None);
+    orchestrate = Orchestrator(None, None, None, None, None);
     orchestrate.main();
