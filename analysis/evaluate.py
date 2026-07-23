@@ -16,13 +16,16 @@ class cluster_evaluate():
     def _null_mvn(self,embed,rng):
         mu=embed.mean(axis=0)
         cov=np.cov(embed,rowvar=False)
-        return rng.multivariate_normal(mu,cov,size=embed.shape[0],method="svd")
+        draws=rng.multivariate_normal(mu,cov,size=embed.shape[0],method="svd")
+        draws=draws/(np.linalg.norm(draws,axis=1,keepdims=True)+1e-8)
+        return draws
 
     def perm(self,embed,label,n_permutations=None,random_state=None):
         n_permutations=config.nPermutations if n_permutations is None else n_permutations
         embed=np.asarray(embed)
         k=len(np.unique(label))
-        real=self.silhouette(embed,label)
+        embedN=embed/(np.linalg.norm(embed,axis=1,keepdims=True)+1e-8)
+        real=self.silhouette(embedN,label)
         seed=config.randomSeed if random_state is None else random_state
         rng=np.random.default_rng(seed)
         c=0
