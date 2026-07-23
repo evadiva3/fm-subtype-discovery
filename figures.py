@@ -10,6 +10,9 @@ BROWN="#B88E8C"
 LATTE="#966B6D"
 COFFEE="#734F50"
 BLACK="#000000"
+PRIMARY=PINK
+SECONDARY=BROWN
+HIGHLIGHT=COFFEE
 ALPHA=0.05
 ARI_REAL=0.80
 _HERE=Path(__file__).resolve().parent
@@ -25,6 +28,7 @@ def _style():
         "axes.edgecolor":"#3a3a3a",
         "axes.linewidth":0.8,
         "axes.grid":True,
+        "axes.grid.axis":"y",
         "axes.axisbelow":True,
         "grid.color":"#c9c9c9",
         "grid.linewidth":0.5,
@@ -41,50 +45,72 @@ def _find_stability(results_dir):
             return c
     return None
 
+def _pairwise_ari(mat):
+    n=len(mat)
+    return float(np.mean([adjusted_rand_score(mat[i],mat[j]) for i,j in itertools.combinations(range(n),2)]))
+
 def plot_pipeline_instability(results_dir=DEFAULT_RESULTS, stability_dir=None):
     _style()
     results_dir=Path(results_dir)
     stability_dir=Path(stability_dir) if stability_dir is not None else _find_stability(results_dir)
     if stability_dir is None or not stability_dir.exists():
         raise FileNotFoundError(f"FM_20run_stability not found near {results_dir}")
+    fa_dir=results_dir/"fm_fixed_arch_control"
+    if not fa_dir.exists():
+        raise FileNotFoundError(f"fm_fixed_arch_control not found at {fa_dir}")
     run=pd.read_csv(stability_dir/"by_run"/"fm_silhouette_by_run.csv")
     perm=run["fm_permp_selected"].to_numpy(dtype=float)
-    ksel=run["fm_k_sel_sil"].to_numpy(dtype=int)
+    ksv=run["fm_k_sel_sil"].to_numpy(dtype=int)
+    kfa=pd.read_csv(fa_dir/"fixed_arch_by_run.csv")["k_sel"].to_numpy(dtype=int)
     ab=pd.read_csv(results_dir/"ablation_table.csv").set_index("condition")
     canon=float(ab.loc["Full model","perm_p"])
     boot=float(pd.read_csv(results_dir/"bootstrap_stability.csv")["ari"].mean())
-    lab=pd.read_csv(stability_dir/"by_run"/"fm_labels_by_run.csv").set_index("run").to_numpy()
-    cross=float(np.mean([adjusted_rand_score(lab[i],lab[j]) for i,j in itertools.combinations(range(len(lab)),2)]))
-    fig,ax=plt.subplots(1,3,figsize=(13.5,4.3))
+    svlab=pd.read_csv(stability_dir/"by_run"/"fm_labels_by_run.csv").set_index("run").to_numpy()
+    sv_ari=_pairwise_ari(svlab)
+    fal=[pd.read_csv(fa_dir/"by_run"/f"run{r}_labels.csv").set_index("Subject_Id")["Label"] for r in range(1,21)]
+    common=sorted(set.intersection(*[set(s.index) for s in fal]))
+    fa_ari=_pairwise_ari([s.loc[common].to_numpy() for s in fal])
+
+    fig,ax=plt.subplots(1,3,figsize=(13.8,4.3))
     ps=np.sort(perm)
-    cols=[LATTE if v<ALPHA else PINK for v in ps]
-    ax[0].bar(np.arange(1,len(ps)+1),ps,color=cols,width=0.82,edgecolor="white",linewidth=0.4)
-    ax[0].axhline(ALPHA,color=COFFEE,ls="--",lw=1.1)
-    ax[0].axhline(canon,color=BROWN,ls=":",lw=1.6)
-    ax[0].text(len(ps),ALPHA,f"  p={ALPHA:g}",color=BLACK,va="bottom",ha="right",fontsize=8)
+    n=len(ps)
+    nsig=int(np.sum(ps<ALPHA))
+    nsig_corr=int(np.sum(ps<ALPHA/n))       
+    med=float(np.median(ps))
+    cols=[HIGHLIGHT if v<ALPHA else PRIMARY for v in ps]
+    ax[0].bar(np.arange(1,n+1),ps,color=cols,width=0.82,edgecolor="white",linewidth=0.4)
+    ax[0].axhline(ALPHA,color=BLACK,ls="--",lw=1.1)
+    ax[0].axhline(canon,color=LATTE,ls=":",lw=1.6)
+    ax[0].text(n,ALPHA,f"  p={ALPHA:g}",color=BLACK,va="bottom",ha="right",fontsize=8)
     ax[0].text(0.4,canon,f"canonical p={canon:g}",color=BLACK,va="bottom",ha="left",fontsize=8)
+    ax[0].text(0.98,0.97,f"{nsig} of {n} uncorrected; {nsig_corr} of {n} after correction\nmedian p = {med:.3f}",
+               transform=ax[0].transAxes,ha="right",va="top",fontsize=8)
     ax[0].set_xlabel("run (sorted by permutation p)")
     ax[0].set_ylabel("covariance-preserving permutation p")
-    nsig=int(np.sum(ps<ALPHA))
-    ax[0].set_title(f"A  clustering significance across 20 reruns\n{nsig}/{len(ps)} uncorrected, 0/{len(ps)} after correction",fontsize=10,loc="left")
+    ax[0].set_title("A  clustering significance (search-varying)",fontsize=10,loc="left")
     ax[0].margins(x=0.02)
-    kc=pd.Series(ksel).value_counts().sort_index()
-    ax[1].bar(kc.index.astype(int).astype(str),kc.to_numpy(),color=PINK,width=0.7,edgecolor="white",linewidth=0.6)
-    for xi,v in zip(range(len(kc)),kc.to_numpy()):
-        ax[1].text(xi,v,str(int(v)),ha="center",va="bottom",fontsize=9)
+    kvals=sorted(set(ksv.tolist())|set(kfa.tolist()))
+    sc=[int(np.sum(ksv==k)) for k in kvals]
+    fc=[int(np.sum(kfa==k)) for k in kvals]
+    x=np.arange(len(kvals)); w=0.38
+    ax[1].bar(x-w/2,sc,w,color=PRIMARY,edgecolor="white",linewidth=0.6,label="search-varying")
+    ax[1].bar(x+w/2,fc,w,color=SECONDARY,edgecolor="white",linewidth=0.6,label="fixed-architecture")
+    for xi,v in zip(x-w/2,sc): ax[1].text(xi,v,str(v),ha="center",va="bottom",fontsize=8)
+    for xi,v in zip(x+w/2,fc): ax[1].text(xi,v,str(v),ha="center",va="bottom",fontsize=8)
+    ax[1].set_xticks(x); ax[1].set_xticklabels([str(k) for k in kvals])
     ax[1].set_xlabel("silhouette-selected k")
     ax[1].set_ylabel("number of runs")
-    ax[1].set_title("B  selected cluster count is unstable",fontsize=10,loc="left")
-    ax[1].set_ylim(0,kc.max()*1.18)
-    labels=["within-checkpoint\nbootstrap","cross-retrain\nmean pairwise"]
-    vals=[boot,cross]
-    ax[2].bar(labels,vals,color=[PINK,BROWN],width=0.6,edgecolor="white",linewidth=0.6)
-    ax[2].axhline(ARI_REAL,color=LATTE,ls="--",lw=1.2)
-    ax[2].text(1.45,ARI_REAL,f"real subtypes ~{ARI_REAL:g}",color=BLACK,va="bottom",ha="right",fontsize=8)
-    for xi,v in enumerate(vals):
-        ax[2].text(xi,v,f"{v:.2f}",ha="center",va="bottom",fontsize=9)
+    ax[1].set_title("B  selected k unstable under both protocols",fontsize=10,loc="left")
+    ax[1].set_ylim(0,max(max(sc),max(fc))*1.20)
+    ax[1].legend(frameon=False,fontsize=8,loc="upper right")
+    labels=["within-checkpoint\nbootstrap","search-varying\ncross-run","fixed-arch\ncross-run"]
+    vals=[boot,sv_ari,fa_ari]
+    ax[2].bar(labels,vals,color=[SECONDARY,HIGHLIGHT,HIGHLIGHT],width=0.62,edgecolor="white",linewidth=0.6)
+    ax[2].axhline(ARI_REAL,color=BLACK,ls="--",lw=1.2)
+    ax[2].text(2.45,ARI_REAL,f"real subtypes ~{ARI_REAL:g}",color=BLACK,va="bottom",ha="right",fontsize=8)
+    for xi,v in enumerate(vals): ax[2].text(xi,v,f"{v:.2f}",ha="center",va="bottom",fontsize=9)
     ax[2].set_ylabel("adjusted Rand index")
-    ax[2].set_title("C  cluster assignments do not reproduce",fontsize=10,loc="left")
+    ax[2].set_title("C  partitions do not reproduce",fontsize=10,loc="left")
     ax[2].set_ylim(0,1.0)
     fig.tight_layout()
     return fig
@@ -105,8 +131,8 @@ def plot_silhouette_vs_effrank(results_dir=DEFAULT_RESULTS):
     axR.spines["right"].set_visible(True)
     axR.spines["top"].set_visible(False)
     axR.grid(False)
-    b1=axL.bar(x-w/2,sil,w,color=PINK,edgecolor="white",linewidth=0.6,label="silhouette")
-    b2=axR.bar(x+w/2,er,w,color=BROWN,edgecolor="white",linewidth=0.6,label="effective rank")
+    b1=axL.bar(x-w/2,sil,w,color=PRIMARY,edgecolor="white",linewidth=0.6,label="silhouette")
+    b2=axR.bar(x+w/2,er,w,color=SECONDARY,edgecolor="white",linewidth=0.6,label="effective rank")
     for xi,v in zip(x-w/2,sil):
         axL.text(xi,v,f"{v:.3f}",ha="center",va="bottom",fontsize=8,color=BLACK)
     for xi,v in zip(x+w/2,er):
