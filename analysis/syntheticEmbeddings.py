@@ -10,7 +10,10 @@ class syntheticEmbeddings():
             try:
                 self.embeddings = np.load(path2Embeddings);
             except FileNotFoundError:
-                            raise FileNotFoundError(f"Path Specified: {path2Embeddings} Does Not Exist - Check File Type. There is no default");
+                warnings.warn(f"Path Specified: {path2Embeddings} Does Not Exist - Check File Type. Using Default Path");
+                self.embeddings = np.load(config.real2Synth);
+        else:
+            self.embeddings = np.load(config.real2Synth);
     def normCheck(self):
         check = np.linalg.norm(self.embeddings, axis=1);
         if(np.any(np.abs(check-1)<=config.normalizedTolerance)):
@@ -56,4 +59,9 @@ class syntheticEmbeddings():
                     target = os.path.join(config.syntheticOutputs,".".join(map(str,group)),str(config.deltas[delta]));
                     os.makedirs(target, exist_ok=True);
                     kmeansOut.to_csv(os.path.join(target,f"run{run}.csv"));
-    
+    def main(self):
+        self.normCheck();
+        self.claculate();
+if __name__ == "__main__":
+    synthesize = syntheticEmbeddings(None);
+    synthesize.main();
