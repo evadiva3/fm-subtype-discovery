@@ -10,10 +10,10 @@ class syntheticEmbeddings():
             try:
                 self.embeddings = np.load(path2Embeddings);
             except FileNotFoundError:
-                            warnings.warn(f"Path Specified: {path2Embeddings} Does Not Exist - Check File Type. Using Default Path");
+                            raise FileNotFoundError(f"Path Specified: {path2Embeddings} Does Not Exist - Check File Type. There is no default");
     def normCheck(self):
         check = np.linalg.norm(self.embeddings, axis=1);
-        if(np.abs(check-1)>config.normalizedTolerance):
+        if(np.any(np.abs(check-1)<=config.normalizedTolerance)):
               raise RuntimeError(f"These Embeddings Have Already Been Normalized: Terminate");
     def splitGroups(self):
         groupList = [];
