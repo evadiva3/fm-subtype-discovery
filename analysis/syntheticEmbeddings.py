@@ -15,7 +15,7 @@ class syntheticEmbeddings():
         check = np.linalg.norm(self.embeddings, axis=1);
         if(np.abs(check-1)>config.normalizedTolerance):
               raise RuntimeError(f"These Embeddings Have Already Been Normalized: Terminate");
-    def splitGroups(self, rng):
+    def splitGroups(self):
         groupList = [];
         rng = np.random.default_rng(config.synthSeedG);
         if(config.usePresets):
@@ -39,6 +39,7 @@ class syntheticEmbeddings():
                 sigmas = [np.std(self.embeddings@Q[:,groupIdx]) for groupIdx in range(0,len(groupedEmbed))];
                 clusterList = [];
                 trueLabels = np.repeat(np.arange(len(group)),group);
+                trueLabels = trueLabels[unshuffle];
                 for i in range(0,len(groupedEmbed)):
                     cluster = np.stack(groupedEmbed[i]);
                     deltaArray = np.array(config.deltas).reshape(-1, 1, 1);
