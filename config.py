@@ -56,6 +56,10 @@ class Config:
     def tuneTrainSave(self): return os.path.join(self.dataRoot, "checkpoints", "results");
     @property
     def checkpointDir(self): return Path(self.trainSave).parent;
+    @property
+    def real2Synth(self): return os.path.join(self.dataRoot,"synthetic", "modelEmbeddings.npy");
+    @property
+    def syntheticOutputs(self): return os.path.join(self.dataRoot,"synthetic");
     # Pipeline constants
     raySavePath = Path(os.path.join(dataRoot,"tune","bestParams.json"));
     conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]  # paper events.tsv order
@@ -125,7 +129,17 @@ class Config:
     
     #gap
     gapB=10
-
+    #Synthetic Data Parms
+    synthSeedG = 5; #group assignment
+    offsetSeed = 5;
+    deltas = [0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0];
+    normalizedTolerance = 1e-4;
+    numRandGroups = 4;
+    presetGroups = [[5,9,7,7], [7,7,7,7]]; #for 28 subjects. note, even across is easier and gives best case.
+    usePresets = False; #if False, will randomly generate x groups. if true, will run along x-2 groups. 
+    subjectAmt = 28;
+    clustersPerGroup = 4;
+    runsPerDelta = 20;
     # Device
     @property
     def device(self):
