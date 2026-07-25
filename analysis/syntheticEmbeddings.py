@@ -61,7 +61,7 @@ class syntheticEmbeddings():
                     kmeansOut.to_csv(os.path.join(target,f"run{run}.csv"));
     def main(self):
         self.normCheck();
-        self.claculate();
+        self.calculate();
 if __name__ == "__main__":
     synthesize = syntheticEmbeddings(None);
     synthesize.main();
