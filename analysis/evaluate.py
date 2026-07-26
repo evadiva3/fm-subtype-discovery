@@ -13,10 +13,10 @@ class cluster_evaluate():
     def silhouette(self,embed,label):
         return silhouette_score(embed,label)
     
-    def _null_mvn(self,embed,rng):
-        mu=embed.mean(axis=0)
-        cov=np.cov(embed,rowvar=False)
-        draws=rng.multivariate_normal(mu,cov,size=embed.shape[0],method="svd")
+    def _null_mvn(self,embedN,rng):
+        mu=embedN.mean(axis=0)
+        cov=np.cov(embedN,rowvar=False)
+        draws=rng.multivariate_normal(mu,cov,size=embedN.shape[0],method="svd")
         draws=draws/(np.linalg.norm(draws,axis=1,keepdims=True)+1e-8)
         return draws
 
@@ -30,7 +30,7 @@ class cluster_evaluate():
         rng=np.random.default_rng(seed)
         c=0
         for i in range(0,n_permutations):
-            null=self._null_mvn(embed,rng)
+            null=self._null_mvn(embedN,rng)
             lab=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=i).fit_predict(null)
             s=self.silhouette(null,lab)
             if s>real:
