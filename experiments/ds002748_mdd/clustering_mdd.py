@@ -52,9 +52,15 @@ class mddCluster(cluster):
 
 if __name__=="__main__":
     from gnn_encoder import GNNEncoder
-    from dataset_mdd import mddDataset
+    from dataset_mdd import mddDataset,load_mdd_params
+    import warnings
+    load_mdd_params()
     ds=mddDataset()
     ck=torch.load(config.checkpointDir/"bestMddModel.pt",map_location="cpu")
+    if ck.get("mu") is not None:
+        ds.applyNormalization(ck["mu"],ck["sig"])
+    else:
+        warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)")
     enc=GNNEncoder()
     enc.load_state_dict(ck["enc"])
     r=mddCluster(enc,str(config.checkpointDir),[],ds.subjectList)

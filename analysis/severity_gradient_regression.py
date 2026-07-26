@@ -78,7 +78,7 @@ def permutation_p(folds, y, r_obs, nperm=NPERM, seed=SEED):
         yp=rng.permutation(y)
         preds=loo_predictions(folds, yp)
         null[i]=np.corrcoef(preds, yp)[0, 1]
-    p=float(np.mean(null > r_obs))
+    p=float((np.sum(null >= r_obs)+1)/(nperm+1))
     return p, null
 def run_space(name, X, y):
     folds=make_folds(X)
@@ -118,6 +118,10 @@ def main():
 
     print("loading checkpoint, extracting embeddings")
     ck=torch.load(config.trainSave, map_location="cpu")
+    if ck.get("nodeMean") is not None:
+        ds.applyNormalization(ck["nodeMean"], ck["nodeStd"])
+    else:
+        warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)")
     enc=GNNEncoder()
     enc.load_state_dict(ck["model"])
     pool=make_pool()

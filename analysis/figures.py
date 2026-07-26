@@ -5,6 +5,7 @@ import pandas as pd
 import os
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+from analysis.evaluate import cluster_evaluate
 from config import config
 
 class figure_gen():
@@ -49,14 +50,12 @@ class figure_gen():
         En=E/(np.linalg.norm(E,axis=1,keepdims=True)+1e-8)
         k=len(np.unique(lab))
         obs=silhouette_score(En,lab)
-        mu=En.mean(0); Xc=En-mu; sc=np.sqrt(max(len(En)-1,1))
+        ev=cluster_evaluate()
         rng=np.random.default_rng(config.randomSeed)
         d=np.empty(config.nPermutations)
         for i in range(config.nPermutations):
-            nul=mu+(rng.standard_normal((len(En),len(En)))@Xc)/sc
-            nl=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=i).fit_predict(nul)
-            d[i]=silhouette_score(nul,nl)
-        pc=float((d>obs).mean()*100)
+            d[i]=ev._select_best_silhouette(ev._null_mvn(En,rng),random_state=i)
+        pc=float((np.sum(d>=obs)+1)/(config.nPermutations+1)*100)
         fig,ax=plt.subplots(figsize=(7,5))
         ax.hist(d,bins=40,density=True,color='pink',edgecolor='white')
         ax.axvline(obs,color='crimson',lw=2)

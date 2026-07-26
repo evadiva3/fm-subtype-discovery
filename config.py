@@ -49,6 +49,8 @@ class Config:
     @property
     def saveRayParams(self): return os.path.join(self.dataRoot, "tune", "bestParams.json");
     @property
+    def mddRaySavePath(self): return Path(os.path.join(self.dataRoot,"tune","bestParamsMdd.json"));
+    @property
     def trainSave(self): return os.path.join(self.dataRoot, "checkpoints", "results","bestJointModel.pt");
     @property
     def jointCheckpointPath(self): return Path(self.trainSave);
@@ -71,6 +73,7 @@ class Config:
     # Confound regressors
     confoundColumns = ["global_signal", "white_matter", "csf", "trans_x", "trans_x_derivative1", "trans_x_derivative1_power2", "trans_x_power2", "trans_y", "trans_y_derivative1", "trans_y_power2", "trans_y_derivative1_power2", "trans_z", "trans_z_derivative1", "trans_z_derivative1_power2", "trans_z_power2", "rot_x", "rot_x_derivative1", "rot_x_power2", "rot_x_derivative1_power2", "rot_y", "rot_y_derivative1", "rot_y_power2", "rot_y_derivative1_power2", "rot_z", "rot_z_derivative1", "rot_z_power2", "rot_z_derivative1_power2"]
     noiseStd=0.1;
+    tuneBatchSize = 12;
     _tunedParamNames=("dModel","heads","output","layers","dropout","lr",
                       "weightDecay","maskRate","ntXentTemp","batchSize")
     if raySavePath.exists():
@@ -85,7 +88,7 @@ class Config:
         maskRate=float(tuneParams.at[0,"maskRate"]);
         noiseStd=float(tuneParams.at[0,"noiseStd"]) if "noiseStd" in tuneParams.columns else 0.1;
         ntXentTemp=float(tuneParams.at[0,"ntXentTemp"]);
-        batchSize=int(tuneParams.at[0,"batchSize"]);
+        batchSize=int(tuneParams.at[0,"batchSize"]) if "batchSize" in tuneParams.columns else tuneBatchSize;
     # Augmentation apply probs (per view, independent of strength)
     maskApplyProb=0.5
     noiseApplyProb=0.5
@@ -132,11 +135,11 @@ class Config:
     #Synthetic Data Parms
     synthSeedG = 5; #group assignment
     offsetSeed = 5;
-    deltas = [0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0];
+    deltas = [0, 1.0, 3.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 15.0, 20.0];
     normalizedTolerance = 1e-4;
-    numRandGroups = 4;
+    numRandGroups = 6;
     presetGroups = [[5,9,7,7], [7,7,7,7]]; #for 28 subjects. note, even across is easier and gives best case.
-    usePresets = False; #if False, will randomly generate x groups. if true, will run along x-2 groups. 
+    usePresets = True; #if False, will randomly generate x groups. if true, will run along x-2 groups. 
     subjectAmt = 28;
     clustersPerGroup = 4;
     runsPerDelta = 20;

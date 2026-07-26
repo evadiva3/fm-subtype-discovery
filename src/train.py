@@ -78,7 +78,7 @@ class trainer():
         path=os.path.join(self.dire, 'best_model.pt')
         self.model.load_state_dict(torch.load(path, map_location=self.device))  
 
-def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, tuneSave=None, guardPrimary=False):
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, tuneSave=None, guardPrimary=False, normStats=None):
     epochs=config.epochs if epochs is None else epochs
     patience=config.patience if patience is None else patience
     lr=config.lr if lr is None else lr
@@ -192,7 +192,9 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
             best_val_loss=avg_val_loss
             torch.save({
                 'model': model.state_dict(),
-                'pool': attention_pool.state_dict()
+                'pool': attention_pool.state_dict(),
+                'nodeMean': None if normStats is None else normStats[0],
+                'nodeStd': None if normStats is None else normStats[1]
             }, checkpoint_path)
             patience_counter=0
         else:
@@ -232,6 +234,7 @@ if __name__ == "__main__":
     train_split, val_split=random_split(grouped_dataset, [n_train, n_val], generator=split_generator)
 
     dataset.normalizeData(train_split.indices)
+    normStats=(dataset.nodeMean, dataset.nodeStd)
 
     train_loader=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b, drop_last=True)
     val_loader=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
@@ -245,5 +248,5 @@ if __name__ == "__main__":
 
     model, attention, train_losses, val_losses=joint_train(
         encoder, attention, loss_fn, train_loader, val_loader,
-        augmentor, device, config.checkpointDir
+        augmentor, device, config.checkpointDir, normStats=normStats
     )

@@ -26,6 +26,7 @@ def _guard(label):
 def _perm(X, label, seed=None):
     seed=config.randomSeed if seed is None else seed
     X=np.asarray(X, dtype=float)
+    X=X/(np.linalg.norm(X, axis=1, keepdims=True)+1e-8)
     kk=len(np.unique(label))
     real=silhouette_score(X, label)
     n=len(X)
@@ -34,10 +35,11 @@ def _perm(X, label, seed=None):
     c=0
     for i in range(config.nPermutations):
         nul=mu+(rng.standard_normal((n, n))@Xc)/sc
+        nul=nul/(np.linalg.norm(nul, axis=1, keepdims=True)+1e-8)
         lab=KMeans(n_clusters=kk, n_init=config.kmeansNInit, random_state=i).fit_predict(nul)
-        if silhouette_score(nul, lab)>real:
+        if silhouette_score(nul, lab)>=real:
             c+=1
-    return c/config.nPermutations
+    return (c+1)/(config.nPermutations+1)
 def _acc_perm(X, y, acc, seed=None):
     seed=config.randomSeed if seed is None else seed
     rng=np.random.default_rng(seed)

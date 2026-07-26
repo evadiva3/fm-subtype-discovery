@@ -134,6 +134,6 @@ def legacyFlatTriangle(FCMatrix, folder : str, conditionList, saveFolder, checkp
     vecAVGCON = np.stack(stackFCVec, axis = 0);
     output = pca.fit_transform(vecAVGCON);
     kmeans = cluster(None, folder, conditionList, None);
-    kTrials = kmeans.KMeansUse(output, subjectList);
+    kTrials = kmeans.KMeansUse(torch.tensor(output, dtype=torch.float32), subjectList);
     kTrials[0].to_csv(dataFolderPath/saveFolder/"silhouette-scores.csv");
     kTrials[1].to_csv(dataFolderPath/saveFolder/"K-Means-Labeling.csv");

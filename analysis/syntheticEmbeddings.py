@@ -21,10 +21,13 @@ class syntheticEmbeddings():
     def splitGroups(self):
         groupList = [];
         rng = np.random.default_rng(config.synthSeedG);
+        minSize = max(config.minClusterSizeFloor, round(config.minClusterSizeFraction*config.subjectAmt));
         if(config.usePresets):
             groupList = config.presetGroups.copy();
-        for _ in range(config.numRandGroups-len(groupList)):
-            groupList.append(np.diff(np.insert(np.sort(rng.choice(np.arange(1,config.subjectAmt), size=config.clustersPerGroup-1, replace=False)),[0,config.clustersPerGroup-1], [0,config.subjectAmt])).tolist());
+        while(len(groupList)<config.numRandGroups):
+            candidate = np.diff(np.insert(np.sort(rng.choice(np.arange(1,config.subjectAmt), size=config.clustersPerGroup-1, replace=False)),[0,config.clustersPerGroup-1], [0,config.subjectAmt])).tolist();
+            if(min(candidate)>=minSize):
+                groupList.append(candidate);
         return groupList;
     def calculate(self):
         groups = self.splitGroups();

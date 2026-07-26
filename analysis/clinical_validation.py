@@ -63,16 +63,18 @@ class clinical_validator:
     
     def compute_effect_sizes(self,subtype=None,labels_path=None):
         merged=self._label_df(labels_path)
-        group=merged[merged['temp']==0]
-        group1=merged[merged['temp']==1]
+        labs=sorted(merged['temp'].unique())
         effect_sizes={}
         for i in self.count_vars:
-            mean=group[i].mean()
-            mean1=group1[i].mean()
-            std=group[i].std()
-            std1=group1[i].std()
-            pooled_std=np.sqrt((std**2 + std1**2) / 2)
-            effect_sizes[i]=(mean - mean1)/pooled_std
+            for a in range(len(labs)):
+                for b in range(a+1, len(labs)):
+                    group=merged[merged['temp']==labs[a]][i].dropna()
+                    group1=merged[merged['temp']==labs[b]][i].dropna()
+                    if len(group)<2 or len(group1)<2:
+                        effect_sizes[f"{i}_{labs[a]}v{labs[b]}"]=np.nan
+                        continue
+                    pooled_std=np.sqrt((group.std()**2 + group1.std()**2) / 2)
+                    effect_sizes[f"{i}_{labs[a]}v{labs[b]}"]=(group.mean() - group1.mean())/pooled_std
         return effect_sizes
 
 

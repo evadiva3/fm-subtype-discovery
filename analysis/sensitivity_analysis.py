@@ -3,6 +3,7 @@
 import os
 import sys
 import json
+import warnings
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -42,7 +43,7 @@ def _patched_edgeIndexAttr(self, loadFile, FCMatrix):
 
 
 
-datasetPreparation.edgeIndexAttr=_patched_edgeIndexAttr
+_ORIGINAL_EDGE_FN=datasetPreparation.edgeIndexAttr
 
 #change which percentile the patch uses next
 def set_edge_percentile(pct):
@@ -51,7 +52,9 @@ def set_edge_percentile(pct):
 
 #pull the best silhouette score out of a KMeansUse result
 def _best_silhouette(kmeans_result):
-    return float(kmeans_result[0]["silhouette_score"].max())
+    df=kmeans_result[0]
+    kSel=df["k_selected_silhouette"].iloc[0]
+    return float(df.loc[df["k"]==kSel, "silhouette_score"].iloc[0])
 
 #cluster FM subjects both before and after removing the FM-HC axis and return both silhouettes
 def compute_original_orthogonal(runner):
@@ -113,7 +116,7 @@ def _train_encoder(dataset, epochs, patience, pct, device):
     gen=torch.Generator().manual_seed(config.randomSeed)
     train_split, val_split=random_split(subjects, [n_train, n_val], generator=gen)
     dataset.normalizeData(train_split.indices)
-    train_load=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b)
+    train_load=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b, drop_last=True)
     val_load=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
     torch.manual_seed(config.randomSeed)
     if torch.cuda.is_available():
@@ -136,23 +139,30 @@ def run_percentile_sweep(conditionList, epochs=None, patience=None, dataset_buil
     patience=config.patience if patience is None else patience
     dataset_builder=_default_dataset_builder if dataset_builder is None else dataset_builder
     device=config.device if device is None else device
-    rows=[]
-    for pct in config.edgePercentileSensitivity:
-        print(f"[percentile sweep] pct={pct}: retraining from scratch (expensive) ...")
-        set_edge_percentile(pct)
-        try:
-            dataset=dataset_builder()
-            encoder, attention=_train_encoder(dataset, epochs, patience, pct, device)
-            cds=dataset_builder()
-            orig, ortho=evaluate_clustering(encoder, attention, cds, conditionList)
-        except Exception as error:
-            set_edge_percentile(config.edgePercentile)
-            return None, f"retrain/cluster failed at percentile {pct}: {type(error).__name__}: {error}"
-        rows.append(
-            {"percentile": pct, "silhouette_original": orig, "silhouette_orthogonal": ortho}
-        )
-    set_edge_percentile(config.edgePercentile)
-    return pd.DataFrame(rows), None
+    datasetPreparation.edgeIndexAttr=_patched_edgeIndexAttr
+    try:
+        rows=[]
+        for pct in config.edgePercentileSensitivity:
+            print(f"[percentile sweep] pct={pct}: retraining from scratch (expensive) ...")
+            set_edge_percentile(pct)
+            try:
+                dataset=dataset_builder()
+                encoder, attention=_train_encoder(dataset, epochs, patience, pct, device)
+                cds=dataset_builder()
+                if dataset.nodeMean is not None:
+                    cds.applyNormalization(dataset.nodeMean, dataset.nodeStd)
+                orig, ortho=evaluate_clustering(encoder, attention, cds, conditionList)
+            except Exception as error:
+                set_edge_percentile(config.edgePercentile)
+                return None, f"retrain/cluster failed at percentile {pct}: {type(error).__name__}: {error}"
+            rows.append(
+                {"percentile": pct, "silhouette_original": orig, "silhouette_orthogonal": ortho}
+            )
+        set_edge_percentile(config.edgePercentile)
+        return pd.DataFrame(rows), None
+    finally:
+        datasetPreparation.edgeIndexAttr=_ORIGINAL_EDGE_FN
+        set_edge_percentile(config.edgePercentile)
 
 
 # grab the current main hyperparameter settings as a dict
@@ -208,6 +218,11 @@ def run_hyperparameter_sweep(conditionList):
         model=load_trained_model(_checkpoint_for_config(cfg))
         encoder, attention=model
         dataset=datasetPreparation(fm_only=False)
+        ckpt=torch.load(_checkpoint_for_config(cfg), map_location="cpu")
+        if ckpt.get("nodeMean") is not None:
+            dataset.applyNormalization(ckpt["nodeMean"], ckpt["nodeStd"])
+        else:
+            warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)")
         orig, _=evaluate_clustering(encoder, attention, dataset, conditionList)
         rows.append(
             {
@@ -279,6 +294,7 @@ def _tiny_graph(n_nodes=8):
 def _synthetic_dataset(n_fm=14, n_hc=6, n_cons=7, n_nodes=8):
     ds=type("S", (), {})()
     ds.normalizeData=lambda *a, **k: None
+    ds.nodeMean=None
     ds.subjectData=[]
     ds.subjectList=[]
     for label, tmpl, count in ((0, "sub-fm%03d", n_fm), (1, "sub-hc%03d", n_hc)):

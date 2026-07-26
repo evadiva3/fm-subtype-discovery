@@ -20,7 +20,7 @@ class datasetPreparation(Dataset):
         self.subjectList = [];
         self.avgCond = avgCond;
         self.fm_only = bool(fm_only);
-        self.checkOnes = False;
+        self.checkOnes = bool(checkOnes);
         self.conditionNames = config.conditions;
         self.clinicalDataFrame = None;
         self.clinicalLookup = {};
@@ -32,6 +32,8 @@ class datasetPreparation(Dataset):
             raise FileNotFoundError("clinical_clean.csv not found in the data folder. Please ensure it is present for proper dataset preparation.") from error;
         self.subjectData = [];
         self.rawNodeFeatures = None;
+        self.nodeMean = None;
+        self.nodeStd = None;
         self.DataList = self.execute();
     def organizeNodes(self):
         if self.checkOnes == False:
@@ -123,8 +125,20 @@ class datasetPreparation(Dataset):
         stacked = torch.stack([data.x for data in statGraphs]);
         nodeMean = stacked.mean(dim=0);
         nodeStd = stacked.std(dim=0);
+        self.nodeMean = nodeMean;
+        self.nodeStd = nodeStd;
         for data in self.DataList:
             data.x = (data.x - nodeMean)/(nodeStd + 1e-8);
+
+    def applyNormalization(self, nodeMean, nodeStd):
+        if self.rawNodeFeatures is None:
+            self.rawNodeFeatures = [data.x.clone() for data in self.DataList];
+        for data, raw in zip(self.DataList, self.rawNodeFeatures):
+            data.x = raw.clone();
+            data.x[:, 2:5] = torch.log1p(data.x[:, 2:5]);
+            data.x = (data.x - nodeMean)/(nodeStd + 1e-8);
+        self.nodeMean = nodeMean;
+        self.nodeStd = nodeStd;
 
     def trainGraphsForStats(self, trainIndices):
         graphs = [];
@@ -142,6 +156,8 @@ class datasetPreparation(Dataset):
             inc = set(get_included_subjects());  #include set
             for subfolder in self.datafolderPath.iterdir():
                 if subfolder.is_dir() and subfolder.name in inc:
+                    if self.fm_only and self.getGroupLabel(subfolder.name) != 0:
+                        continue;
                     self.subjectList.append(subfolder.name);
                     subjectGraphs[subfolder.name] = [];
                     for i in range(0, 7):
@@ -161,6 +177,8 @@ class datasetPreparation(Dataset):
             inc = set(get_included_subjects())  #include set
             for subfolder in self.datafolderPath.iterdir():
                 if subfolder.is_dir() and subfolder.name in inc:
+                    if self.fm_only and self.getGroupLabel(subfolder.name) != 0:
+                        continue;
                     self.subjectList.append(subfolder.name);
                     data = self.averageConditions(subfolder, clinical);
                     if data is not None:

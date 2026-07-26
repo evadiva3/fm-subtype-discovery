@@ -57,23 +57,18 @@ class Orchestrator():
         return[r, r2, permutations];
     def kToFD(self):
         from scipy import stats;
-        mean = [];
         subjectExclusions = self.subjectExclusions.loc[(self.subjectExclusions["excluded"]==False),:];
-        subjectExclusions = subjectExclusions.loc[(self.clinicalCSV["group"]=="FM"), :];
-        for subject in subjectExclusions.to_numpy():
-            mean.append(subject[config.cMeanFDStartIdx:config.cMeanFDEndIdx].mean());
-        subjectExclusions["k"] = self.labels.loc[self.labels["Subject_Id"], "Label"];
-        kLabels = subjectExclusions["k"].unique();
-        subjectFD = pd.DataFrame({"SubjectId":subjectExclusions["subject_id"], "FD": mean, "K":subjectExclusions["k"]});
-        subjectFD = subjectFD.reset_index(drop=True);
-        for _ in range(0,len(subjectFD["SubjectId"])):
-            for i in range(0,len(subjectFD["SubjectId"])-1):
-                if (subjectFD.iloc[i,1]>subjectFD.iloc[i+1,1]):
-                    subjectFD.iloc[i,:], subjectFD.iloc[i+1,:] = subjectFD.iloc[i+1,:].copy(), subjectFD.iloc[i,:].copy();
-        subjectFD["rankings"] = subjectFD.index+1;
-        clusters = [subjectFD[subjectFD["K"]==k] for k in kLabels];
-        H = ((12/((len(subjectFD["SubjectId"]))*(len(subjectFD["SubjectId"])+1)))*(sum(((sum(group["rankings"])**2)/len(group["SubjectId"]) for group in clusters)))) - 3*(len(subjectFD["SubjectId"])+1);
-        HPerm = stats.chi2.sf(H,len(clusters)-1);
+        fmIds = self.clinicalCSV.index[(self.clinicalCSV["group"]=="FM")];
+        subjectExclusions = subjectExclusions.loc[subjectExclusions.index.intersection(fmIds), :];
+        fdColumns = list(subjectExclusions.columns[config.cMeanFDStartIdx:config.cMeanFDEndIdx]);
+        mean = subjectExclusions[fdColumns].apply(pd.to_numeric, errors="coerce").mean(axis=1);
+        labelSeries = self.labels.set_index("Subject_Id")["Label"];
+        subjectFD = pd.DataFrame({"SubjectId":subjectExclusions.index, "FD": mean.to_numpy(), "K":labelSeries.reindex(subjectExclusions.index).to_numpy()});
+        subjectFD = subjectFD.dropna(subset=["FD","K"]).reset_index(drop=True);
+        clusters = [group["FD"].to_numpy() for _, group in subjectFD.groupby("K")];
+        if len(clusters)<2:
+            return [float("nan"), float("nan"), len(subjectFD["SubjectId"])];
+        H, HPerm = stats.kruskal(*clusters);
         return [H, HPerm, len(subjectFD["SubjectId"])];
     def main(self):
         package = self.effectiveRank();

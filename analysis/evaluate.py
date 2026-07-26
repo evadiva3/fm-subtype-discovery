@@ -20,7 +20,20 @@ class cluster_evaluate():
         draws=draws/(np.linalg.norm(draws,axis=1,keepdims=True)+1e-8)
         return draws
 
-    def perm(self,embed,label,n_permutations=None,random_state=None):
+    def _select_best_silhouette(self,data,random_state=0):
+        n=data.shape[0]
+        minSize=max(config.minClusterSizeFloor,round(config.minClusterSizeFraction*n))
+        sils=[]
+        members=[]
+        for k in config.kmeansKRange:
+            lab=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=random_state).fit_predict(data)
+            sils.append(self.silhouette(data,lab))
+            members.append(int(np.bincount(lab).min()))
+        passed=[i for i in range(len(config.kmeansKRange)) if members[i]>=minSize]
+        best=max(passed,key=lambda i:sils[i]) if passed else int(np.argmax(sils))
+        return sils[best]
+
+    def perm(self,embed,label,n_permutations=None,random_state=None,match_selection=True):
         n_permutations=config.nPermutations if n_permutations is None else n_permutations
         embed=np.asarray(embed)
         k=len(np.unique(label))
@@ -31,8 +44,11 @@ class cluster_evaluate():
         c=0
         for i in range(0,n_permutations):
             null=self._null_mvn(embedN,rng)
-            lab=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=i).fit_predict(null)
-            s=self.silhouette(null,lab)
+            if match_selection:
+                s=self._select_best_silhouette(null,random_state=i)
+            else:
+                lab=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=i).fit_predict(null)
+                s=self.silhouette(null,lab)
             if s>=real:
                 c+=1
         p=(c+1)/(n_permutations+1)
@@ -65,6 +81,13 @@ class cluster_evaluate():
             if gaps[ks[j]]["gap"]>=gaps[ks[j+1]]["gap"]-gaps[ks[j+1]]["s"]:
                 return ks[j]
         return ks[-1]
+
+    def gap_k_at_boundary(self,gaps,k_range):
+        ks=list(k_range)
+        for j in range(len(ks)-1):
+            if gaps[ks[j]]["gap"]>=gaps[ks[j+1]]["gap"]-gaps[ks[j+1]]["s"]:
+                return False
+        return True
 
     def dip_pcs(self,embed,n=5):
         embed=np.asarray(embed)
