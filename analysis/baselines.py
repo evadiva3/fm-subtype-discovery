@@ -95,10 +95,10 @@ class baselines():
         for img in subject_imgs: 
             time_courses=canica.transform([img])[0]
             features.append(np.abs(time_courses).mean(axis=0))
-        features=np.array(features)
-        best_label, best_score, best_k=None, -1.0, None 
+        features=self._l2(np.array(features))  
+        best_label, best_score, best_k=None, -1.0, None
         for k in (2, 3, 4):
-            km=KMeans(n_clusters=k, random_state=config.randomSeed)
+            km=KMeans(n_clusters=k, n_init=config.kmeansNInit, random_state=config.randomSeed) 
             label=km.fit_predict(features)
             score=silhouette_score(features, label) 
             if score>best_score:
