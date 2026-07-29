@@ -55,7 +55,7 @@ fm-subtype-discovery/
 │   │                                  #   on forward(), default False, zero behavior
 │   │                                  #   change for existing callers. Exposes final
 │   │                                  #   GATv2Conv layer's (edge_index, alpha) for
-│   │                                  #   interpretability.py.
+│   │                                  #   interpretability.py.   [REMOVED 2026-07-29 — never wired, produced no output]
 │   ├── attention_pool.py              # Condition attention pooling layer, learned τ_attn
 │   ├── contrastive_loss.py            # NT-Xent loss (Eva)
 │   └── augmentations.py              # Node masking + edge noise (Eva)
@@ -87,7 +87,7 @@ fm-subtype-discovery/
 │   │                                  #   corresponding clustering result.
 │   │                                  #   Confirmed: condition order matches events.tsv
 │   │                                  #   confirmed order (see below).
-│   └── ablations.py                   # 4 ablations, confirmed scope:
+│   └── ablations.py                   # 4 ablations, confirmed scope:   [REMOVED 2026-07-29 — dead code]
 │                                      #   run_no_pretraining, run_resting_state,
 │                                      #   run_no_pooling, run_mean_pooling.
 │                                      #   run_3feature_nodes and run_identity_features
@@ -104,7 +104,7 @@ fm-subtype-discovery/
 │   ├── evaluate.py                    # Silhouette + permutation test (perm) +
 │   │                                  #   gap statistic (gap_stat) -- implemented,
 │   │                                  #   now actually called from clustering.py
-│   ├── interpretability.py            # GAT attention weight extraction + brain maps
+│   ├── interpretability.py            # GAT attention weight extraction + brain maps   [REMOVED 2026-07-29 — never wired, produced no output]
 │   │                                  #   3-tuple unpack fix, entropy, τ_attn: DONE.
 │   │                                  #   NEW: Yeo-Krienen 7-network mapping
 │   │                                  #   (Schaefer-200 → Yeo-7 lookup, per-network
@@ -125,7 +125,7 @@ fm-subtype-discovery/
 │   │                                  #   Rerun against real embeddings once training
 │   │                                  #   completes -- currently validated on synthetic
 │   │                                  #   data only.
-│   ├── merge_clinical_imaging.py      # Merge clinical CSV with model embeddings
+│   ├── merge_clinical_imaging.py      # Merge clinical CSV with model embeddings   [REMOVED 2026-07-29 — dead code]
 │   │                                  #   Same rerun caveat as figures.py.
 │   ├── sensitivity_analysis.py        # NEW FILE -- loops over 4 edge-percentile
 │   │                                  #   thresholds {75,80,85,90} and 3 alt

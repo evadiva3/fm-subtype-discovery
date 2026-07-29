@@ -49,8 +49,17 @@ def trained(subs,ids):
     return _sil(r.KMeansUse(t,tids,skip_perm=True,skip_gap=True))
 
 if __name__=="__main__":
-    from dataset_mdd import mddDataset
+    from dataset_mdd import mddDataset,load_mdd_params
+    import warnings
+    load_mdd_params()
     ds=mddDataset()
+    ckp=config.checkpointDir/"bestMddModel.pt"
+    if ckp.exists():
+        ck=torch.load(ckp,map_location="cpu")
+        if ck.get("mu") is not None:
+            ds.applyNormalization(ck["mu"],ck["sig"])
+        else:
+            warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)")
     rdf=rand_encoder(ds.subjectData,ds.subjectList)
     OUT.mkdir(parents=True,exist_ok=True)
     rdf.to_csv(OUT/"random_encoder_ablation.csv",index=False)

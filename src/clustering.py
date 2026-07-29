@@ -7,6 +7,7 @@
 
 import os;
 import json;
+import warnings;
 import torch;
 import pandas as pd;
 import numpy as np;
@@ -81,8 +82,9 @@ class cluster():
         ids = list(self.attentionEmbeddings.keys());
         embeddings = torch.stack([self.attentionEmbeddings[i] for i in ids]).detach().cpu().numpy();
         labels = np.array([self.groupLabels[i] for i in ids]);
+        embeddings = embeddings / (np.linalg.norm(embeddings, axis=1, keepdims=True) + 1e-8);
         self.hcSepSilh = silhouette_score(embeddings, labels);
-        self.hcSepPermP = cluster_evaluate().perm(embeddings, labels);
+        self.hcSepPermP = cluster_evaluate().perm(embeddings, labels, match_selection=False);
         return self.hcSepSilh;
 
     def project_ortho(self, fmEmbeddings, hcEmbeddings):
@@ -144,9 +146,11 @@ class cluster():
         if skip_gap: 
             gapDict = {kk: {"gap": np.nan, "s": np.nan} for kk in config.kmeansKRange};
             kGap = np.nan;
+            kGapBoundary = np.nan;
         else:
             gapDict = evaluator.gap_stat(takeTensor, k=config.kmeansKRange);  
             kGap = evaluator.gap_k(gapDict, config.kmeansKRange);  
+            kGapBoundary = evaluator.gap_k_at_boundary(gapDict, config.kmeansKRange);
         if skip_perm: 
             permP = np.nan;
         else:
@@ -154,7 +158,7 @@ class cluster():
         permColumn = [np.nan for _ in config.kmeansKRange]
         permColumn[bestIdx] = permP;
         trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label": bestLabels});
-        trialSave = pd.DataFrame({"k": config.kmeansKRange, "silhouette_score": trialSave, "gap_stat": [gapDict[kk]["gap"] for kk in config.kmeansKRange], "gap_se": [gapDict[kk]["s"] for kk in config.kmeansKRange], "permutation_p": permColumn, "k_selected_silhouette": kSil, "k_selected_gap": kGap});
+        trialSave = pd.DataFrame({"k": config.kmeansKRange, "silhouette_score": trialSave, "gap_stat": [gapDict[kk]["gap"] for kk in config.kmeansKRange], "gap_se": [gapDict[kk]["s"] for kk in config.kmeansKRange], "permutation_p": permColumn, "k_selected_silhouette": kSil, "k_selected_gap": kGap, "k_gap_at_boundary": kGapBoundary});
         return [trialSave, trialFrame, bestLabels, permP, sizeOk];
 
     def UMAPPING(self, array):
@@ -210,6 +214,10 @@ if __name__ == "__main__":
     attention = condition_attention_pool(d_model=config.dModel, num_cons=config.nConditions);  #no hardcode
     encoder = GNNEncoder();
     checkpoint = torch.load(config.trainSave, map_location='cpu');
+    if checkpoint.get('nodeMean') is not None:
+        dataset.applyNormalization(checkpoint['nodeMean'], checkpoint['nodeStd']);
+    else:
+        warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)");
     encoder.load_state_dict(checkpoint['model']);
     attention.load_state_dict(checkpoint['pool']);
     runCluster = cluster(encoder, config.trainSave, conditionList, dataList);

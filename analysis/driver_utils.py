@@ -1,4 +1,5 @@
 import sys
+import warnings
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -22,6 +23,11 @@ from analysis.evaluate import cluster_evaluate
 ALPHAS=np.logspace(-3, 4, 20)
 def fm_subs():
     ds=datasetPreparation(avgCond=False, fm_only=False)
+    ck=torch.load(config.trainSave, map_location="cpu")
+    if ck.get("nodeMean") is not None:
+        ds.applyNormalization(ck["nodeMean"], ck["nodeStd"])
+    else:
+        warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)")
     fm=[s for s in ds.subjectData if int(s["group_label"].view(-1)[0])==0]
     return sorted(fm, key=lambda s: s["subject_id"])
 def fm_ids(fm):
@@ -115,6 +121,6 @@ def perm_r(fit_predict, X, y, r_obs, seed=None):
     for _ in range(config.nPermutations):
         yp=rng.permutation(y)
         pr=loo_predict(fit_predict, X, yp)
-        if np.corrcoef(pr, yp)[0, 1]>r_obs:
+        if np.corrcoef(pr, yp)[0, 1]>=r_obs:
             c+=1
-    return c/config.nPermutations
+    return (c+1)/(config.nPermutations+1)

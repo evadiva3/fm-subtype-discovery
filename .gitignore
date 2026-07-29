@@ -9,3 +9,8 @@ data/
 venv/
 tune_out.log
 *.bak
+results/*
+!results/.gitkeep
+!results/subject_exclusions.csv
+_*archive_*/
+prerun_archive_20260726-155229/

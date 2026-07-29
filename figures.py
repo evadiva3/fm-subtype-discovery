@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score, silhouette_score
+from analysis.evaluate import cluster_evaluate
 
 PINK="#DDA7A5"
 BROWN="#B88E8C"
@@ -59,6 +60,7 @@ def _recompute_null_draws(X, k, mode, n_perm, seed=42, n_init=20, label=None):
     fit=X if mode=="A" else Xn                
     mu=fit.mean(axis=0); cov=np.cov(fit,rowvar=False)
     rng=np.random.default_rng(seed)
+    ev=cluster_evaluate()
     nulls=np.empty(n_perm); c=0
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -66,10 +68,13 @@ def _recompute_null_draws(X, k, mode, n_perm, seed=42, n_init=20, label=None):
             d=rng.multivariate_normal(mu,cov,size=X.shape[0],method="svd")
             if mode in ("A","B"):
                 d=d/(np.linalg.norm(d,axis=1,keepdims=True)+1e-8)
-            dl=KMeans(n_clusters=k,n_init=n_init,random_state=i).fit_predict(d)
-            s=silhouette_score(d,dl); nulls[i]=s
-            if s>real: c+=1
-    return real, nulls, c/n_perm
+                s=ev._select_best_silhouette(d,random_state=i)
+            else:
+                dl=KMeans(n_clusters=k,n_init=n_init,random_state=i).fit_predict(d)
+                s=silhouette_score(d,dl)
+            nulls[i]=s
+            if s>=real: c+=1
+    return real, nulls, (c+1)/(n_perm+1)
 
 def _null_draws_k4(results_dir, force=False):
     results_dir=Path(results_dir)
@@ -82,8 +87,8 @@ def _null_draws_k4(results_dir, force=False):
     X=np.load(emb)
     k=int(ref["old"]["k"]); nperm=int(ref["old"]["n_perm"])
     real_m, mis, p_m=_recompute_null_draws(X,k,"old",nperm)
-    real_c, cor, p_c=_recompute_null_draws(X,k,"A",nperm)
-    for tag,real,nulls,p in (("old",real_m,mis,p_m),("A",real_c,cor,p_c)):
+    real_c, cor, p_c=_recompute_null_draws(X,k,"B",nperm)
+    for tag,real,nulls,p in (("old",real_m,mis,p_m),("B",real_c,cor,p_c)):
         r=ref[tag]
         assert abs(real-r["real"])<1e-6,      f"{tag} real drift {real} vs {r['real']}"
         assert abs(nulls.mean()-r["null_mean"])<1e-6, f"{tag} mean drift"
@@ -101,7 +106,7 @@ def plot_null_correction(results_dir=DEFAULT_RESULTS, stability_dir=None):
         raise FileNotFoundError(f"FM_20run_stability not found near {results_dir}")
     real, mis, cor, ref = _null_draws_k4(results_dir)
     mis_mean=float(ref["old"]["null_mean"]); mis_p=float(ref["old"]["p"])
-    cor_mean=float(ref["A"]["null_mean"]);   cor_p=float(ref["A"]["p"])
+    cor_mean=float(ref["B"]["null_mean"]);   cor_p=float(ref["B"]["p"])
     fig,ax=plt.subplots(1,3,figsize=(14.2,4.4))
     a=ax[0]
     lo=min(mis.min(),cor.min()); hi=max(real,mis.max(),cor.max())
