@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
-rp=Path(__file__).resolve().parents[2]
+rp=Path(__file__).resolve().parents[1] 
 sys.path.insert(0,str(rp))
 from analysis.evaluate import cluster_evaluate
 from config import config

@@ -1,131 +1,277 @@
-AI Usage Note: AI was utilized to write this README, debug code, define data requirements, organize the repository structure, assist in paper writing, and provide conceptual clarity on complex topics.
-
 # Significance Without Structure
 
-**Researcher Degrees of Freedom in Small-Sample Self-Supervised Neuroimaging Subtyping**
+**Null Misspecification and Non-Reproducible Subtypes in Small-Sample Self-Supervised Neuroimaging**
 
-Eva Bangsil, Nikhil [surname]. Correspondence: eva.bangsil@gmail.com
+Eva Bangsil, Nikhil Joshi — correspondence: eva.bangsil@gmail.com
 
-> Repository note: the directory is named `fm-subtype-discovery` for historical reasons. It began as a fibromyalgia subtype-discovery project and was reframed, after the results below, into a methodological study of when small-sample self-supervised subtyping can and cannot be trusted. The fibromyalgia pipeline is now the primary case study, not the contribution.
+> **Repository name.** The directory is called `fm-subtype-discovery` for historical
+> reasons. It began as a fibromyalgia subtype-discovery project and became, after the
+> results below, a methodological study of when small-sample self-supervised subtyping
+> can be trusted. The fibromyalgia pipeline is the case study, not the contribution.
 
 ---
 
-## What this project shows in one paragraph
+## In one paragraph
 
-Small-sample neuroimaging subtyping validates unsupervised representations by clustering embeddings, reporting a silhouette score, and testing significance with a permutation null, increasingly a covariance-preserving null (Dinga et al., 2019). We built a self-supervised GATv2 pipeline for this task and found that a single converged run produces exactly the result the procedure rewards: a four-cluster fibromyalgia partition that is significant under the covariance-preserving null (p = 0.024), with moderate bootstrap stability (adjusted Rand index 0.68). Re-running the identical pipeline 20 times on byte-identical inputs, with only the unseeded architecture search varying, that significance does not reproduce: 0 of 20 runs survive multiple-comparison correction, the selected cluster count wanders from two to five, and cross-run cluster agreement is 0.23. The significance is a property of the architecture search, not of the data. The failure replicates in an independent resting-state depression cohort. The repository contains the pipeline, the multi-run reproducibility protocol, and every analysis behind these claims.
+Small-sample neuroimaging subtyping validates unsupervised representations by clustering
+embeddings, reporting a silhouette, and testing significance against a
+covariance-preserving permutation null (Dinga et al., 2019). We built such a pipeline —
+a GATv2 encoder trained with NT-Xent — and obtained a four-cluster fibromyalgia partition
+at **p = 0.024**. It did not reproduce under retraining on byte-identical inputs. Chasing
+that discrepancy surfaced **two independent errors in the null itself**, each sufficient
+alone to manufacture significance. Corrected, the same analysis gives **p = 0.68**, and
+**0 of 40 runs across two disorders** reach nominal significance. The reproducibility
+checks — which invoke no null at all — reached the correct conclusion while the
+significance test did not.
+
+---
+
+## The two errors
+
+A permutation null is valid only if each draw undergoes the entire procedure that produced
+the observed statistic. Ours failed that in two places.
+
+| | Error | Effect |
+|---|---|---|
+| **1. Geometry** | Observed embeddings are L2-normalized onto the unit sphere; null draws were sampled in ambient space and never projected. | Draws carry radial variance the data cannot have → harder to cluster → null silhouettes depressed → **p biased down**. |
+| **2. Selection** | The observed statistic is a maximum over *k* ∈ {2…6}; each null draw was evaluated at a single fixed *k*. | Selection performed outside the resampling loop → **p biased down**. Granted the same search, 43.7% of null draws select *k* = 2; only 18.1% select the *k* = 4 we chose. |
+
+A third, smaller issue: the estimator was `c/n` with a strict inequality, which can return
+an invalid p of exactly 0. Now `(c+1)/(n+1)`.
+
+**Progression on the checkpoint where the errors were identified:**
+`0.024` → `0.177` (geometry) → `0.93` (+ selection).
+On the fully rebuilt pipeline the corrected value is **0.6773**.
 
 ---
 
 ## Headline results
 
-| Quantity | Fibromyalgia (ds004144, 28 patients) | Depression (ds002748, 51 patients) |
-|---|---|---|
-| Trained silhouette (selected k) | 0.306 (k = 4) | 0.135 (k = 5) |
-| Single-checkpoint permutation p | 0.024 | 0.205 |
-| Permutation p across full-pipeline reruns | median 0.139; 0 of 20 significant after correction | multi-run protocol in progress |
-| Cross-run cluster agreement (ARI) | 0.23 | in progress |
-| Within-checkpoint bootstrap ARI (for contrast) | 0.68 | 0.32 |
-| Untrained encoder silhouette / effective rank | 0.464 / 1.39 | 0.330 / 2.03 |
-| Trained encoder effective rank | 3.39 | 7.74 |
+### Fibromyalgia — ds004144, 58 scanned, **28 patients**
 
-The two ARI rows are the crux: bootstrap stability computed on one fixed checkpoint (0.68) overstates reproducibility roughly threefold relative to reproducibility across the architecture search (0.23). The standard stability check holds the checkpoint fixed and measures the wrong invariance.
+| Quantity | Value |
+|---|---|
+| Canonical architecture | dModel 119, heads 8, output 15, layers 3 |
+| Clustering | *k* = 4, silhouette 0.2433, **p = 0.6773** |
+| Independent architectures tested | **0 of 7 significant** (p 0.272 – 0.803) |
+| 20-run search-varying protocol | **0 of 20 significant** (min 0.131, median 0.576, max 0.937) |
+| Cross-run agreement (adjusted Rand) | **0.230** |
+| Within-checkpoint bootstrap | 0.568 — twice as high, measuring the wrong variability |
+| Clinical variables surviving FDR | **0 of 10** (smallest corrected p = 0.896) |
+| Untrained vs trained silhouette | 0.4599 vs 0.2433 — silhouette rewards representational collapse |
+| Participation ratio, untrained / trained | 1.585 / 3.703 |
+
+### Depression — ds002748, 72 scanned, **51 patients**
+
+| Quantity | Value |
+|---|---|
+| Canonical architecture | dModel 68, heads 4, output 8, layers 3 (independently searched) |
+| Clustering | *k* = 5, silhouette 0.142, **p = 0.384** |
+| 20-run protocol | **0 of 20 significant** (median 0.590) |
+| Cross-run agreement | **0.226** |
+| Severity gradient | none on any of three scales — every out-of-sample R² is negative |
+
+**Cross-run agreement is 0.230 and 0.226** — a difference of 0.004 across different
+clinical populations, acquisition modalities (task vs resting-state), and independently
+searched architectures.
+
+### Classical baselines (fibromyalgia)
+
+| Method | Value | p |
+|---|---|---|
+| PCA + k-means | silhouette 0.057 | 0.983 |
+| Flat upper-triangle k-means | silhouette 0.060 | 0.886 |
+| Group ICA + k-means | silhouette 0.377 | 0.197 |
+| Supervised SVM (patients vs controls) | 0.503 accuracy | 0.403 — below the majority-class rate |
 
 ---
 
-## Method at a glance
+## What bounds these negative results
 
-- **Data.** OpenNeuro `ds004144` (fibromyalgia, emotion-regulation task-fMRI) and `ds002748` (major depressive disorder, resting-state).
-- **Preprocessing.** fMRIPrep 24.1.0, Schaefer-200 parcellation, Ledoit-Wolf shrinkage on the condition-epoch covariance, Fisher z-transform.
-- **Graphs.** 200-node graphs, edges retained in the top twentieth percentile of absolute Fisher z (global thresholding, signed weights), five signal-derived node features per parcel.
-- **Model.** Three-layer GATv2 encoder (4 heads, per-head hidden width 58, 128-dim embedding), global mean-pool readout, and for fibromyalgia a learned condition-attention pool over the seven task conditions. Trained with NT-Xent contrastive loss. See `canonical_hyperparameters.md` for the exact configuration.
-- **Validation battery.** Silhouette and gap statistic across k in {2..6}; effective rank; covariance-preserving permutation null (1000 draws); bootstrap partition stability (1000 resamples); random-initialization control; a full-pipeline multi-run reproducibility protocol.
+A null result is only meaningful if the test had power to reject. Both checks are in the
+repository.
+
+**Calibration** — `analysis/calibration_run.py`. 200 datasets drawn from the null the
+corrected test itself assumes, structureless by construction. A calibrated test at
+α = 0.05 rejects ~5% of the time. Ours rejects **0.5%** — realized Type I error roughly
+tenfold below nominal. At n = 28 the sample covariance is rank-deficient and overfit, so
+null draws recapitulate more apparent structure than the data does.
+
+**Detection floor** — `analysis/syntheticEmbeddings.py`. 1,440 planted-cluster
+realizations at controlled separation:
+
+| Planting offset | Mean ARI | Power |
+|---|---|---|
+| 0 – 6 | ≤ 0.15 | **0 %** |
+| 8 | 0.39 | 13 % |
+| 10 | 0.62 | 38 % |
+| 12 | 0.81 | **80 %** |
+| 20 | 0.98 | 100 % |
+
+At offset 0 the control reproduces the real result exactly (silhouette 0.2433,
+p = 0.6773) across all 120 cells — the integrity check on the planting machinery.
+
+**The defensible claim is therefore "no subtype structure this method could detect at this
+sample size," not "no subtypes exist."** These analyses exclude structure that would be
+unmistakable and say little about subtler structure.
 
 ---
 
 ## Repository layout
 
 ```
-fm-subtype-discovery/
-├── config.py                       # fixed (non-tuned) constants: seed 42, epochs, k range, edge percentile, etc.
-├── data/
-│   ├── tune/bestParams.json        # canonical tuned config, shared by FM and MDD (see canonical_hyperparameters.md)
-│   ├── Subjects/                   # per-subject connectivity, timeseries
-│   └── checkpoints/results/
-│       └── bestJointModel.pt       # canonical FM checkpoint (dModel = 128)
-├── models/
-│   └── gnn_encoder.py              # GATv2 encoder + condition-attention pool
-├── src/
-│   ├── hyperparameter_search.py    # Optuna / Ray Tune search (unseeded; the source of the instability studied here)
-│   ├── sensitivity_analysis.py     # percentile and (author-defined) config sweeps
-│   ├── train_mdd.py                # depression-cohort training (reuses the FM config)
-│   └── dataset_mdd.py
-├── analysis/
-│   └── figures.py                  # legacy figure set (null histogram, ablation bars, gap curve)
-├── figures.py                      # manuscript figures 1 and 2, generated from on-disk results
-├── figures.ipynb                   # thin notebook wrapper around figures.py
-├── results/
-│   ├── ablation_table.csv          # untrained / mean-pool / trained comparison
-│   ├── bootstrap_stability.csv     # within-checkpoint bootstrap ARI
-│   ├── sensitivity_percentile_sweep.csv
-│   ├── figures/                    # rendered fig1, fig2
-│   ├── fm_fixed_arch_control/      # fixed-architecture, vary-seed control (isolates model-selection vs seed noise)
-│   └── mdd/
-│       ├── mdd_silhouette_by_run.csv
-│       ├── MDD_MULTIRUN_SUMMARY.txt
-│       ├── effective_rank_mdd.csv
-│       ├── confidence_intervals_mdd.csv
-│       └── multirun/by_run/        # per-run params, silhouette, label vectors
-├── FM_20run_stability/             # the central result
-│   ├── by_run/                     # per-run silhouette, k, perm_p, label vectors
-│   ├── FINAL_SUMMARY.txt
-│   └── deterministic/canonical_run/# archived byte-identical FC/timeseries (hash-verified)
-├── canonical_hyperparameters.md    # verbatim FM and MDD config, with provenance and checksums
-└── README.md
+config.py                    Single source of truth for hyperparameters and paths
+figures.py                   Publication figures — entry point
+requirements.txt
+
+preprocessing/               fMRIPrep derivatives → timeseries → FC matrices
+  compute_fc_matrices.py       Ledoit-Wolf shrinkage, Fisher z
+  subject_filter.py            Motion and completeness exclusions
+  verify_setup.py
+
+dataFiltering/               Clinical spreadsheet → clean CSV
+
+models/                      Architecture
+  gnn_encoder.py               3 × GATv2, multi-head graph attention
+  attention_pool.py            Temperature-scaled condition attention
+  contrastive_loss.py          NT-Xent
+  augmentations.py             Node masking, edge noise
+  dataset.py                   Graph construction, normalization
+
+src/                         Training and clustering
+  hyperparameter_search.py     Optuna + ASHA; optimizes NT-Xent loss, never silhouette
+  train.py                     Joint encoder/pool training; persists normStats
+  clustering.py                k-means, size guard, permutation test
+  ablations.py
+
+analysis/                    Evaluation
+  evaluate.py                  ** the corrected permutation null lives here **
+  driver_utils.py              Shared clustering/eval helpers
+  baselines.py, run_baselines.py
+  bootstrap_stability.py       Within-checkpoint resampling
+  syntheticEmbeddings.py       Planted-cluster positive control
+  clinical_validation.py       Kruskal-Wallis + FDR, motion check
+  severity_gradient_regression.py, knn_probe.py, confidence_intervals.py
+  effective_rank.py            Participation ratio
+  sensitivity_analysis.py      Edge-threshold sweep
+  orchestrator.py
+  calibration_run.py           ** the 200-dataset calibration experiment **
+
+experiments/ds002748_mdd/    Depression replication (parallel pipeline)
+tests/                       pytest suite
+docs/                        Data requirements, repository architecture notes
+notebooks/                   Exploratory only — no result depends on these
 ```
+
+Everything under `data/` and `results/` is gitignored and regenerable.
+
+**Presentation material lives outside this repository.** Conference videos, slide
+figures, and the code that generates them were moved to `../presentation/` — they are
+communication artifacts, not part of any result, and they were 400 MB of the repository.
+Publication figures (`figures.py` → `results/figures/fig1…fig3`) remain here.
+
 ---
 
-## Environment
+## Reproducing
 
-```
-python >= 3.10
-torch, torch-geometric        # GATv2 encoder
-nilearn                       # connectivity, Ledoit-Wolf, CanICA baseline
-scikit-learn, scipy, numpy, pandas
-ray[tune], optuna             # hyperparameter search
-matplotlib                    # figures
+```bash
+pip install -r requirements.txt
+export OMP_NUM_THREADS=1        # not optional — see below
 ```
 
-Preprocessing is run separately under fMRIPrep 24.1.0 (Docker). Training was run on Apple Silicon (MPS) and an RTX 5080 (CUDA); the depression multi-run protocol uses a reduced batch (`ebs = 15`) as an MPS resource adaptation, documented in `canonical_hyperparameters.md`.
+```bash
+# 1. preprocessing (assumes fMRIPrep derivatives on disk)
+python preprocessing/verify_setup.py
+python preprocessing/compute_fc_matrices.py
+
+# 2. architecture search      → data/tune/bestParams.json
+python src/hyperparameter_search.py
+
+# 3. train                    → data/checkpoints/results/bestJointModel.pt
+python src/train.py
+
+# 4. cluster + significance   → data/outputs/
+python src/clustering.py
+
+# 5. analyses
+python analysis/ablation_table.py
+python analysis/bootstrap_stability.py
+python analysis/run_baselines.py
+python analysis/clinical_validation.py
+python analysis/effective_rank.py
+python analysis/severity_gradient_regression.py
+
+# 6. positive control and calibration
+python analysis/syntheticEmbeddings.py
+python analysis/calibration_run.py
+
+# 7. figures
+python figures.py
+```
+
+Depression replication is in `experiments/ds002748_mdd/`, same order:
+`hyperparameter_search_mdd.py` → `train_mdd.py` → `clustering_mdd.py`.
+
+> **`OMP_NUM_THREADS=1` is not general advice.** scikit-learn's k-means parallelizes with
+> OpenMP, and on a 28-point problem thread coordination costs more than the arithmetic:
+> 2.90 ms/fit single-threaded against 74.07 ms at 32 threads. ~25× faster, byte-identical
+> output.
 
 ---
 
-## Reproducing the central result
+## Notes for anyone extending this
 
-The claim of this project is a reproducibility claim, so the repository is built to be re-run rather than trusted. The key protocol runs the complete pipeline end to end many times on byte-identical inputs and inspects the distribution of the significance verdict, rather than any single run.
+**The null is in `analysis/evaluate.py`.** `_null_mvn` fits the Gaussian to the
+**L2-normalized** embeddings and re-projects each draw onto the sphere; `perm` runs with
+`match_selection=True` by default, so every draw repeats the full *k*-search under the
+same minimum-cluster-size guard. Both behaviours are load-bearing — reverting either
+reintroduces one of the two errors.
 
-1. **Confirm the canonical configuration.** `data/tune/bestParams.json` and `canonical_hyperparameters.md` define the exact architecture and tuned values. Both cohorts use this same configuration; the depression encoder was not independently tuned.
+**Checkpoints carry `nodeMean`/`nodeStd`.** Inference must normalize with the training
+split's statistics, not all-subject statistics. Checkpoints predating this fix emit a
+fallback warning and are not usable for inference.
 
-2. **Single-checkpoint result.** Train once, cluster the patient embeddings, and compute the covariance-preserving permutation null. This reproduces the k = 4, silhouette 0.306, p = 0.024 fibromyalgia partition.
+**Batch size is fixed, not searched.** NT-Xent's denominator is the batch, so a trial with
+a larger batch solves a harder discrimination problem and records a worse validation loss
+for reasons unrelated to architecture. Searching it ranks batch sizes, not architectures.
 
-3. **Full-pipeline reproducibility protocol (the real result).** Re-run the complete pipeline 20 times with upstream inputs fixed and hash-verified, training and clustering seeded, and only the Optuna search left unseeded. Outputs land in `FM_20run_stability/by_run/`. `FINAL_SUMMARY.txt` reports the permutation-p distribution (min 0.005, median 0.139, max 0.793; 0 of 20 significant after correction), the selected-k distribution, and the cross-run adjusted Rand index (0.23).
+**Open issue — NT-Xent temperature.** The selected temperature pinned at the search-range
+floor in 7 of 7 independent searches, meaning the bound was binding and the optimum lies
+below it. The range is now log-uniform [0.01, 1.0], but **this takes effect only on the
+next search** — every architecture above was selected under the old bound. Related
+symptom: `tests/test_contrastive_loss.py::test_orthonormal_aligned_analytic` fails its
+`q > 0` assertion because at the canonical temperature (0.0505) the analytic loss for
+perfectly-aligned views is 1.5 × 10⁻⁸ and underflows to zero. That is a brittle test
+meeting a very small temperature, not a defect in the loss. 11 of 12 tests pass.
 
-4. **Fixed-architecture control.** To confirm the instability comes from model selection rather than training-seed noise, `results/fm_fixed_arch_control/` holds the architecture fixed at the canonical config and varies only the training seed. Comparing this distribution against the search-varying protocol isolates the source.
-
-5. **Figures.** `figures.py` reads the CSVs above and regenerates manuscript Figures 1 and 2; `figures.ipynb` is a thin wrapper. No result values are hardcoded in the figure code.
-
-Byte-identical FC and timeseries for the fibromyalgia protocol are archived under `FM_20run_stability/deterministic/canonical_run/` and are checksum-verified; see `canonical_hyperparameters.md` for the hashes.
+**Not implemented.** `analysis/interpretability.py` hard-blocks and falls through to a
+synthetic self-test — per-region attention was never wired through the encoder. No claim
+in the paper depends on it.
 
 ---
 
 ## Data availability
 
-Both datasets are public on OpenNeuro: `ds004144` (fibromyalgia; Balducci et al., 2022, *Scientific Data*) and `ds002748` (depression). Clinical variables for the fibromyalgia cohort are drawn from the associated Zenodo deposit. No participant-level data are redistributed in this repository.
+Both datasets are public on OpenNeuro: **ds004144** (fibromyalgia task-fMRI, Balducci et
+al., 2022) and **ds002748** (depression resting-state, Bezmaternykh et al., 2021).
+Derivatives, checkpoints, and per-run outputs are gitignored — regenerate with the
+commands above.
 
----
+## AI usage
 
-## A note on scope
+Generative AI tools were used as editorial and analytical assistants: background research,
+literature synthesis, prose refinement, code debugging and auditing, and figure/slide
+production. All research hypotheses, experimental designs, and scientific conclusions are
+the authors'. All AI-generated output was reviewed and verified, and the authors take full
+responsibility for the integrity of this work.
 
-This work reports a negative, methodological result. It does not claim a fibromyalgia or depression subtype, and it does not claim the underlying model is broken; it claims that the standard validation chain, at these sample sizes, can certify structure that does not reproduce. The recommendation is procedural: report permutation-null significance as a distribution over full-pipeline retrains, assess reproducibility across the architecture search rather than only under resampling, and report effective rank alongside any silhouette.
----
-## Contributions
-Eva Bangsil and Nikhil Joshi 
+## Key references
+
+Dinga R, et al. Evaluating the evidence for biotypes of depression. *NeuroImage Clin.* 2019;22:101796.
+Tozzi L, et al. Personalized brain circuit scores identify clinically distinct biotypes in depression and anxiety. *Nat Med.* 2024;30:2076-2087.
+Grabski IN, Street K, Irizarry RA. Significance analysis for clustering with single-cell RNA-sequencing data. *Nat Methods.* 2023;20:1196-1202.
+Balducci T, et al. A behavioral, clinical and brain imaging dataset with focus on emotion regulation of females with fibromyalgia. *Sci Data.* 2022;9(1).
+Bezmaternykh DD, et al. Resting state with closed eyes for patients with depression and healthy participants. OpenNeuro; 2021.
+Schaefer A, et al. Local-global parcellation of the human cerebral cortex. *Cereb Cortex.* 2018;28(9).
+Brody S, Alon U, Yahav E. How attentive are graph attention networks? *ICLR* 2022.
+Chen T, et al. A simple framework for contrastive learning of visual representations. *ICML* 2020.
