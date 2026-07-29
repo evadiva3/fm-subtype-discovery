@@ -142,7 +142,6 @@ src/                         Training and clustering
   hyperparameter_search.py     Optuna + ASHA; optimizes NT-Xent loss, never silhouette
   train.py                     Joint encoder/pool training; persists normStats
   clustering.py                k-means, size guard, permutation test
-  ablations.py
 
 analysis/                    Evaluation
   evaluate.py                  ** the corrected permutation null lives here **
@@ -243,10 +242,6 @@ symptom: `tests/test_contrastive_loss.py::test_orthonormal_aligned_analytic` fai
 `q > 0` assertion because at the canonical temperature (0.0505) the analytic loss for
 perfectly-aligned views is 1.5 × 10⁻⁸ and underflows to zero. That is a brittle test
 meeting a very small temperature, not a defect in the loss. 11 of 12 tests pass.
-
-**Not implemented.** `analysis/interpretability.py` hard-blocks and falls through to a
-synthetic self-test — per-region attention was never wired through the encoder. No claim
-in the paper depends on it.
 
 ---
 
