@@ -1,70 +1,76 @@
-from config import config;
-import numpy as np;
-import pandas as pd;
-import os;
-import torch;
-import warnings;
+from config import config
+import numpy as np
+import pandas as pd
+import os
+import torch
+import warnings
+
 class syntheticEmbeddings():
-    def __init__(self, path2Embeddings = None):
-        if path2Embeddings is not None:
+    def __init__(self, p=None):
+        if p is not None:
             try:
-                self.embeddings = np.load(path2Embeddings);
+                self.emb=np.load(p)
             except FileNotFoundError:
-                warnings.warn(f"Path Specified: {path2Embeddings} Does Not Exist - Check File Type. Using Default Path");
-                self.embeddings = np.load(config.real2Synth);
+                warnings.warn(f"path {p} not found, using default")
+                self.emb=np.load(config.real2Synth)
         else:
-            self.embeddings = np.load(config.real2Synth);
+            self.emb=np.load(config.real2Synth)
+
     def normCheck(self):
-        check = np.linalg.norm(self.embeddings, axis=1);
-        if(np.any(np.abs(check-1)<=config.normalizedTolerance)):
-              raise RuntimeError(f"These Embeddings Have Already Been Normalized: Terminate");
+        chk=np.linalg.norm(self.emb, axis=1)
+        if(np.all(np.abs(chk-1)<=config.normalizedTolerance)):
+            raise RuntimeError("already normalized")
+
     def splitGroups(self):
-        groupList = [];
-        rng = np.random.default_rng(config.synthSeedG);
-        minSize = max(config.minClusterSizeFloor, round(config.minClusterSizeFraction*config.subjectAmt));
+        gl=[]
+        rng=np.random.default_rng(config.synthSeedG)
+        mn=max(config.minClusterSizeFloor, round(config.minClusterSizeFraction*config.subjectAmt))
         if(config.usePresets):
-            groupList = config.presetGroups.copy();
-        while(len(groupList)<config.numRandGroups):
-            candidate = np.diff(np.insert(np.sort(rng.choice(np.arange(1,config.subjectAmt), size=config.clustersPerGroup-1, replace=False)),[0,config.clustersPerGroup-1], [0,config.subjectAmt])).tolist();
-            if(min(candidate)>=minSize):
-                groupList.append(candidate);
-        return groupList;
+            gl=config.presetGroups.copy()
+        while(len(gl)<config.numRandGroups):
+            c=np.diff(np.insert(np.sort(rng.choice(np.arange(1,config.subjectAmt), size=config.clustersPerGroup-1, replace=False)),[0,config.clustersPerGroup-1], [0,config.subjectAmt])).tolist()
+            if(min(c)>=mn):
+                gl.append(c)
+        return gl
+
     def calculate(self):
-        groups = self.splitGroups();
-        from clustering import cluster as clust;
-        from sklearn.metrics import adjusted_rand_score as randScore;
-        for group in groups:
-            theClustering = clust(None, "nothing", [], []); 
-            for run in range(0,config.runsPerDelta):
-                rng = np.random.default_rng(config.synthSeedG+run);
-                randomMatrix = rng.standard_normal((128,4));
-                Q, R = np.linalg.qr(randomMatrix, mode="reduced");
-                permutationIndex = rng.permutation(len(self.embeddings));
-                unshuffle = np.argsort(permutationIndex);
-                groupedEmbed = np.split(self.embeddings[permutationIndex],np.cumsum(group)[:-1]);
-                sigmas = [np.std(self.embeddings@Q[:,groupIdx]) for groupIdx in range(0,len(groupedEmbed))];
-                clusterList = [];
-                trueLabels = np.repeat(np.arange(len(group)),group);
-                trueLabels = trueLabels[unshuffle];
-                for i in range(0,len(groupedEmbed)):
-                    cluster = np.stack(groupedEmbed[i]);
-                    deltaArray = np.array(config.deltas).reshape(-1, 1, 1);
-                    offset = deltaArray * (sigmas[i]*Q[:,i]).reshape(1,1,128);
-                    clusterList.append(cluster+offset);
-                offsetEmbeds = np.concatenate(clusterList, axis=1)[:,unshuffle,:];
-                for delta in range(0,offsetEmbeds.shape[0]):
-                    package = theClustering.KMeansUse(torch.tensor(offsetEmbeds[delta,:,:]),np.arange(0,len(offsetEmbeds[delta,:,0])));
-                    selectedK = package[0]["k_selected_silhouette"].iloc[0]
-                    silhouetteScore, permP, sizeOk, bestLabels = package[0].loc[(package[0]["k"]==selectedK),"silhouette_score"].iloc[0], package[3], package[4], package[2];
-                    ARI = randScore(trueLabels, bestLabels);
-                    recoveredSizes = np.bincount(bestLabels);
-                    kmeansOut = pd.DataFrame({"silhouetteScore": silhouetteScore, "selectedK": selectedK, "permutationScore": permP, "sizeOk":sizeOk, "ARI": ARI, "recoveredSizes":recoveredSizes, "clustersRecovered":len(recoveredSizes),"group":"/".join(map(str,group)), "delta":config.deltas[delta], "run":run});
-                    target = os.path.join(config.syntheticOutputs,".".join(map(str,group)),str(config.deltas[delta]));
-                    os.makedirs(target, exist_ok=True);
-                    kmeansOut.to_csv(os.path.join(target,f"run{run}.csv"));
+        gs=self.splitGroups()
+        from clustering import cluster as clust
+        from sklearn.metrics import adjusted_rand_score as randScore
+        for g in gs:
+            tc=clust(None, "nothing", [], [])
+            for r in range(0,config.runsPerDelta):
+                rng=np.random.default_rng(config.synthSeedG+r)
+                rm=rng.standard_normal((128,4))
+                Q, R=np.linalg.qr(rm, mode="reduced")
+                pi=rng.permutation(len(self.emb))
+                u=np.argsort(pi)
+                ge=np.split(self.emb[pi],np.cumsum(g)[:-1])
+                sg=[np.std(self.emb@Q[:,gi]) for gi in range(0,len(ge))]
+                cl=[]
+                tl=np.repeat(np.arange(len(g)),g)
+                tl=tl[u]
+                for i in range(0,len(ge)):
+                    cu=np.stack(ge[i])
+                    da=np.array(config.deltas).reshape(-1, 1, 1)
+                    off=da * (sg[i]*Q[:,i]).reshape(1,1,128)
+                    cl.append(cu+off)
+                oe=np.concatenate(cl, axis=1)[:,u,:]
+                for d in range(0,oe.shape[0]):
+                    pk=tc.KMeansUse(torch.tensor(oe[d,:,:]),np.arange(0,len(oe[d,:,0])))
+                    sk=pk[0]["k_selected_silhouette"].iloc[0]
+                    ss, pp, so, bl=pk[0].loc[(pk[0]["k"]==sk),"silhouette_score"].iloc[0], pk[3], pk[4], pk[2]
+                    ari=randScore(tl, bl)
+                    rs=np.bincount(bl)
+                    ko=pd.DataFrame({"silhouetteScore": ss, "selectedK": sk, "permutationScore": pp, "sizeOk":so, "ARI": ari, "recoveredSizes":rs, "clustersRecovered":len(rs),"group":"/".join(map(str,g)), "delta":config.deltas[d], "run":r})
+                    t=os.path.join(config.syntheticOutputs,".".join(map(str,g)),str(config.deltas[d]))
+                    os.makedirs(t, exist_ok=True)
+                    ko.to_csv(os.path.join(t,f"run{r}.csv"))
+
     def main(self):
-        self.normCheck();
-        self.calculate();
+        self.normCheck()
+        self.calculate()
+
 if __name__ == "__main__":
-    synthesize = syntheticEmbeddings(None);
-    synthesize.main();
+    s=syntheticEmbeddings(None)
+    s.main()
