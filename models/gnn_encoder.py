@@ -1,9 +1,7 @@
-import torch;
 import torch.nn as nn;
 from torch_geometric.nn import GATv2Conv, global_mean_pool;
 from torch_geometric.data import Batch;
 from torch_geometric.nn import LayerNorm;
-from torch.nn import ELU;
 from config import config;
 from torch.utils.checkpoint import checkpoint
 class GNNEncoder(nn.Module):
@@ -19,29 +17,18 @@ class GNNEncoder(nn.Module):
             return GATv2Conv(in_channels=head*outChannels, out_channels = outLastChannels, heads=head, concat=concat, edge_dim=edgeDim, dropout=dropout);
     def layerNormal(self, head:int, out:int, mode:str):
         return LayerNorm(in_channels=head*out, mode=mode)
-    def checkpointMethod(self, x, edgeIndex, edgeAttr, batchVec, boolWeights =False):
+    def checkpointMethod(self, x, edgeIndex, edgeAttr, batchVec):
         for i in range(0,max(0,config.layers-1)):
-                if(boolWeights): 
-                   x, (edge, weights) = self.convList[i](x, edgeIndex, edgeAttr, return_attention_weights=boolWeights);
-                else:
-                     x= self.convList[i](x, edgeIndex, edgeAttr, return_attention_weights=boolWeights);
-                x = self.layerNormalList[i](x, batchVec);
-                x = self.elu(x);
-        if(boolWeights):
-            x , (edge,weights) = self.convList[config.layers-1](x, edgeIndex, edgeAttr, return_attention_weights=boolWeights);
-        else:
-            x= self.convList[config.layers-1](x, edgeIndex, edgeAttr, return_attention_weights=boolWeights);
-        if(boolWeights):
-            return weights;
-        else:
-            out = global_mean_pool(x, batchVec);
-            return out;
-    def forward(self, data: Batch, boolWeights = False):
+            x = self.convList[i](x, edgeIndex, edgeAttr);
+            x = self.layerNormalList[i](x, batchVec);
+            x = self.elu(x);
+        x = self.convList[config.layers-1](x, edgeIndex, edgeAttr);
+        return global_mean_pool(x, batchVec);
+    def forward(self, data: Batch):
         edgeAttr = data.edge_attr;
         if edgeAttr.dim() == 1:
             edgeAttr = edgeAttr.unsqueeze(-1);
         edgeIndex = data.edge_index;
         x = data.x;
         batchVec = data.batch;
-        result = checkpoint(self.checkpointMethod, x, edgeIndex, edgeAttr, batchVec, boolWeights, use_reentrant= False);
-        return result;
+        return checkpoint(self.checkpointMethod, x, edgeIndex, edgeAttr, batchVec, use_reentrant= False);

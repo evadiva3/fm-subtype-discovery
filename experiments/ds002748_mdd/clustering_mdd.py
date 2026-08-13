@@ -1,6 +1,4 @@
-#experimental ignore for now
-
-
+import os
 import sys
 import json
 from pathlib import Path
@@ -16,7 +14,7 @@ from config import config
 from clustering import cluster
 import bootstrap_stability as bs
 
-OUT=Path(config.resultsRoot)/"mdd"
+OUT=Path(os.environ.get("MDD_OUT_DIR") or (Path(config.resultsRoot)/"mdd"))
 
 class mddCluster(cluster):
     def deploy(self,subs):

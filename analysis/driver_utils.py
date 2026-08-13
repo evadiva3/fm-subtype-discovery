@@ -22,7 +22,7 @@ from sklearn.model_selection import LeaveOneOut
 from analysis.evaluate import cluster_evaluate
 ALPHAS=np.logspace(-3, 4, 20)
 def fm_subs():
-    ds=datasetPreparation(avgCond=False, fm_only=False)
+    ds=datasetPreparation(fm_only=False)
     ck=torch.load(config.trainSave, map_location="cpu")
     if ck.get("nodeMean") is not None:
         ds.applyNormalization(ck["nodeMean"], ck["nodeStd"])

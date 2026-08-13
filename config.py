@@ -38,7 +38,7 @@ class Config:
     @property
     def kLabelPath(self): return(self.clusterOutput/"K-Means-Labeling.csv");
     @property
-    def anaylsisOrchestrator(self): return(self.dataRoot/"dataAnalysis");
+    def analysisOrchestrator(self): return(self.dataRoot/"dataAnalysis"/"orchestrator_summary.csv");
     @property
     def subjectList(self):
         datafolder = Path(self.subjectDataFolder);
@@ -46,8 +46,6 @@ class Config:
         return subjectList;
     @property
     def rayStorage(self): return (self.dataRoot/"RayTune");
-    @property
-    def saveRayParams(self): return os.path.join(self.dataRoot, "tune", "bestParams.json");
     @property
     def mddRaySavePath(self): return Path(os.path.join(self.dataRoot,"tune","bestParamsMdd.json"));
     @property

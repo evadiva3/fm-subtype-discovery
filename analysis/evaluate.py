@@ -1,8 +1,6 @@
 import numpy as np
-import diptest
 from sklearn.metrics import silhouette_score
 from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
 from config import config
 
 class cluster_evaluate():
@@ -20,7 +18,12 @@ class cluster_evaluate():
         draws=draws/(np.linalg.norm(draws,axis=1,keepdims=True)+1e-8)
         return draws
 
-    def _select_best_silhouette(self,data,random_state=0):
+    def _null_mvn_ambient(self,embedN,rng):
+        mu=embedN.mean(axis=0)
+        cov=np.cov(embedN,rowvar=False)
+        return rng.multivariate_normal(mu,cov,size=embedN.shape[0],method="svd")
+
+    def _select_best_silhouette(self,data,random_state=0,return_k=False):
         n=data.shape[0]
         minSize=max(config.minClusterSizeFloor,round(config.minClusterSizeFraction*n))
         sils=[]
@@ -31,9 +34,12 @@ class cluster_evaluate():
             members.append(int(np.bincount(lab).min()))
         passed=[i for i in range(len(config.kmeansKRange)) if members[i]>=minSize]
         best=max(passed,key=lambda i:sils[i]) if passed else int(np.argmax(sils))
+        if return_k:
+            return sils[best],int(config.kmeansKRange[best])
         return sils[best]
 
-    def perm(self,embed,label,n_permutations=None,random_state=None,match_selection=True):
+    def perm(self,embed,label,n_permutations=None,random_state=None,match_selection=True,
+             match_geometry=True,return_k_counts=False):
         n_permutations=config.nPermutations if n_permutations is None else n_permutations
         embed=np.asarray(embed)
         k=len(np.unique(label))
@@ -42,16 +48,21 @@ class cluster_evaluate():
         seed=config.randomSeed if random_state is None else random_state
         rng=np.random.default_rng(seed)
         c=0
+        kc={int(kk):0 for kk in config.kmeansKRange}
         for i in range(0,n_permutations):
-            null=self._null_mvn(embedN,rng)
+            null=self._null_mvn(embedN,rng) if match_geometry else self._null_mvn_ambient(embedN,rng)
             if match_selection:
-                s=self._select_best_silhouette(null,random_state=i)
+                s,ks=self._select_best_silhouette(null,random_state=i,return_k=True)
             else:
                 lab=KMeans(n_clusters=k,n_init=config.kmeansNInit,random_state=i).fit_predict(null)
                 s=self.silhouette(null,lab)
+                ks=k
+            kc[int(ks)]=kc.get(int(ks),0)+1
             if s>=real:
                 c+=1
         p=(c+1)/(n_permutations+1)
+        if return_k_counts:
+            return p,kc
         return p
     
     def _inertia(self,x,k):
@@ -89,16 +100,3 @@ class cluster_evaluate():
                 return False
         return True
 
-    def dip_pcs(self,embed,n=5):
-        embed=np.asarray(embed)
-        pcs=PCA(n_components=n,random_state=config.randomSeed).fit_transform(embed)
-        out={}
-        for i in range(n):
-            dp,pv=diptest.diptest(pcs[:,i])
-            out[i+1]={"dip":float(dp),"p":float(pv)}
-        return out
-
-        
-
-
-        

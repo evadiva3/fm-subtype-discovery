@@ -8,7 +8,7 @@ import os
 import math
 from torch_geometric.data import Batch
 from config import config
-from ray import tune, train;
+from ray import tune
 def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, tuneSave=None, guardPrimary=False, normStats=None):
     epochs=config.epochs if epochs is None else epochs
     patience=config.patience if patience is None else patience
