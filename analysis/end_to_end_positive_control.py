@@ -81,6 +81,8 @@ def sup(x,su,co):
 
 def main(n=1000):
     x,su,co=build()
+    o.mkdir(parents=True,exist_ok=True)
+    np.save(_R/"data"/"outputs"/"e2e_graph_embeddings.npy",x)
     ns=len(set(su.tolist()))
     print(f"{len(x)} graphs {ns} subj {len(set(co.tolist()))} cond d={x.shape[1]}")
     rows=[ev(x,co,config.nConditions,n,"raw vs condition")]

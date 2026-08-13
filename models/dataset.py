@@ -125,7 +125,7 @@ class datasetPreparation(Dataset):
         clinical["group"] = clinical["group"].map({"FM": 0, "HC": 1});  #pandas3: map instead of int-into-str-dtype assignment
         subjectGraphs = {};
         inc = set(get_included_subjects());  
-        for subfolder in self.datafolderPath.iterdir():
+        for subfolder in sorted(self.datafolderPath.iterdir(), key=lambda d: d.name):
             if subfolder.is_dir() and subfolder.name in inc:
                 if self.fm_only and self.getGroupLabel(subfolder.name) != 0:
                     continue;
