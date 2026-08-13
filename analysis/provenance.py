@@ -8,7 +8,9 @@ _R=Path(__file__).resolve().parents[1]
 if str(_R) not in sys.path:
     sys.path.insert(0,str(_R))
 
-RES=_R/"results"
+from config import config
+
+RES=Path(config.resultsRoot)
 
 KNOWN={
  "sensitivity_percentile_sweep.csv":("other-checkpoint",
@@ -55,13 +57,17 @@ def sha(p):
     return h.hexdigest()
 
 def fingerprint():
-    ps={"checkpoint":_R/"data"/"checkpoints"/"results"/"bestJointModel.pt",
-        "bestParams":_R/"data"/"tune"/"bestParams.json",
-        "embeddings":_R/"data"/"outputs"/"trained_fm_embeddings.npy",
-        "labels":_R/"data"/"outputs"/"K-Means-Labeling.csv"}
+    ps={"checkpoint":Path(config.jointCheckpointPath),
+        "bestParams":Path(config.raySavePath),
+        "embeddings":Path(config.clusterOutput)/"trained_fm_embeddings.npy",
+        "labels":Path(config.kLabelPath)}
     f={}
     for n,p in ps.items():
-        f[n]={"path":str(p.relative_to(_R)),"sha256":sha(p) if p.exists() else None,
+        try:
+            rel=str(p.relative_to(_R))
+        except ValueError:
+            rel=str(p)          
+        f[n]={"path":rel,"sha256":sha(p) if p.exists() else None,
               "exists":p.exists()}
     bp=ps["bestParams"]
     if bp.exists():
@@ -161,7 +167,9 @@ def stamp(out,ins,drv,extra=None):
 if __name__=="__main__":
     d=audit()
     f=d["fingerprint"]
-    print(f"checkpoint {f['checkpoint']['sha256'][:16]}")
+    for n in ("checkpoint","bestParams","embeddings","labels"):
+        e=f.get(n,{})
+        print(f"{n} {(e.get('sha256') or 'MISSING')[:16]}")
     print(f"corrected search {f.get('corrected_search')}")
     print(f"norm stats {f.get('norm_stats')}")
     c={}

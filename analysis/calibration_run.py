@@ -12,7 +12,7 @@ rp=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(rp))
 from analysis.evaluate import cluster_evaluate
 from config import config
-o=rp/"results"/"calibration"
+o=config.resultsRoot/"calibration"
 nd=int(os.environ.get("NDATASETS",200))
 nr=int(os.environ.get("NDRAWS",200))
 sel=os.environ.get("MATCH_SELECTION","1") not in ("0","false","False")

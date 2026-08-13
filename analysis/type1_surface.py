@@ -15,7 +15,7 @@ for _p in (_R,_R/"src",_R/"models",_R/"analysis"):
 from config import config
 from evaluate import cluster_evaluate
 
-o=_R/"results"
+o=config.resultsRoot
 
 CELLS=[(28,119,0.0),(28,119,"real")]
 CELL_NAMES={0.0:"isotropic","real":"real_covariance"}

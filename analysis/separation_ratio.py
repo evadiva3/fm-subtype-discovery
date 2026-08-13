@@ -10,9 +10,9 @@ for _p in (_R,_R/"src",_R/"models",_R/"analysis"):
 
 from config import config
 
-o=_R/"results"
+o=config.resultsRoot
 
-POWER_SRC=(_R/"results"/"handoff_20260802"/"audit_gap_fills"/
+POWER_SRC=(config.resultsRoot/"handoff_20260802"/"audit_gap_fills"/
            "detection_floor_separation_units_selected.csv")
 POWER_COL="detect_rate_p<.05"
 

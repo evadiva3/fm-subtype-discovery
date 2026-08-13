@@ -63,13 +63,13 @@ class Orchestrator():
         clusters = [group["FD"].to_numpy() for _, group in subjectFD.groupby("K")];
         if len(clusters)<2:
             return [float("nan"), float("nan"), len(subjectFD["SubjectId"])];
-        H, HPerm = stats.kruskal(*clusters);
-        return [H, HPerm, len(subjectFD["SubjectId"])];
+        H, kruskalP = stats.kruskal(*clusters);
+        return [H, kruskalP, len(subjectFD["SubjectId"])];
     def main(self):
         package = self.effectiveRank();
         package1 = self.leaveOneOut();
         package2 = self.kToFD();
-        pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "hPerm": package2[1], "nCount": package2[2]}, index=[0]).to_csv(self.savePath);
+        pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "kruskalP": package2[1], "nCount": package2[2]}, index=[0]).to_csv(self.savePath);
 if __name__ == "__main__":
     orchestrate = Orchestrator(None, None, None, None, None);
     orchestrate.main();

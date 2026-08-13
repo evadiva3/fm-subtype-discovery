@@ -12,7 +12,7 @@ for _p in (_R,_R/"src",_R/"models",_R/"analysis"):
 from config import config
 from evaluate import cluster_evaluate
 
-o=_R/"results"/"null_corrected"
+o=config.resultsRoot/"null_corrected"
 
 MODES=[("misspecified",False,False),("geometry",True,False),
        ("selection",False,True),("corrected",True,True)]
