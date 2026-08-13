@@ -5,47 +5,172 @@ neuroimaging.
 
 Eva Bangsil, Nikhil Joshi. Correspondence: eva.bangsil@gmail.com
 
-The directory is still called `fm-subtype-discovery`, which is a historical accident. It
-started as a fibromyalgia subtyping project and turned into a methods paper about when
-small-sample subtyping can be trusted at all. The fibromyalgia pipeline is the case study,
-not the point.
+## AI usage
+
+Generative AI tools were utilized throughout this project as editorial and analytical
+assistants. AI supported contextual background research, literature synthesis, and conceptual
+clarification. It was also used to refine prose, structure the manuscript, assist with code
+debugging and auditing, and to help create figures, videos, and presentation slides. Despite
+this assistance, all core research hypotheses, experimental designs, and scientific
+conclusions remain exclusively our own. We have reviewed and verified all AI-generated
+outputs and take full responsibility for the integrity and content of this work.
+
+## What this is
+
+We tried to find subtypes of fibromyalgia patients from brain connectivity data. We found
+four, they looked clean, and they weren't real. What made them look real was a bug in the
+statistical test, not anything in the scans or the clustering.
+
+So this stopped being a fibromyalgia paper and became a methods one, about how easy it is to
+get a convincing false positive out of a very standard analysis. The repo is still called
+`fm-subtype-discovery` from before we knew that.
+
+You can run the whole argument in your browser without installing anything. Setup for the
+rest is below.
+
+## Try it in your browser
+
+[Live demo](https://evadiva3.github.io/fm-subtype-discovery/). Nothing to install.
+
+[![The four null constructions running in the browser. The null distribution shifts right past the observed silhouette as each correction is applied, and the ladder table fills in.](docs/demo/thumbnail_1600.png)](https://evadiva3.github.io/fm-subtype-discovery/)
+
+The page loads the real 28 x 119 embedding matrix from the paper and does the clustering, the
+silhouette and every null draw in front of you. Nothing is precomputed. Press "Run the full
+ladder" and in about twenty seconds you get this:
+
+| Construction | Geometry matched | Selection matched | Paper *p* |
+|---|---|---|---|
+| Misspecified, as originally implemented | No | No | 0.1698 |
+| Geometry corrected only | Yes | No | 0.4436 |
+| Selection corrected only | No | Yes | 0.3966 |
+| Fully corrected | Yes | Yes | 0.6773 |
+
+Same data, same silhouette, same four clusters in all four rows. The only thing that changes
+is what we compare against, and the result goes from significant to not.
+
+It uses the same 20 k-means restarts the paper does, so you should land within Monte-Carlo
+noise of those numbers. A 1,000-draw run comes back near 0.164, 0.435, 0.410 and 0.694. The
+silhouette agrees with the Python to seven decimals (0.2433061).
+
+Source is `docs/index.html`. One file, no dependencies, no build step.
+
+## Setup
+
+Python 3.10 or newer. Tested on 3.12 and 3.14, macOS and Linux. Nothing on this page needs a
+GPU.
+
+```bash
+git clone https://github.com/evadiva3/fm-subtype-discovery.git
+cd fm-subtype-discovery
+
+python3 -m venv venv
+source venv/bin/activate          # Windows: venv\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+That pulls PyTorch, PyTorch Geometric, scikit-learn, nilearn and Ray Tune. Takes a few
+minutes and about 2 GB, nearly all of it PyTorch.
+
+Check it worked:
+
+```bash
+export OMP_NUM_THREADS=1
+python -m pytest tests/ -q
+```
+
+You want `12 passed`. If you instead get `FileNotFoundError: Tuned hyperparameter 'dModel' is
+unavailable`, your clone is missing `data/tune/bestParams.json`. It is committed, so pull
+again.
+
+## Run it locally
+
+Three things work right after setup. No imaging data, no downloads. The clone ships the
+trained embeddings and the architecture spec, which is all these need.
+
+**Serve the demo yourself** instead of using the hosted one:
+
+```bash
+cd docs && python3 -m http.server 8000
+```
+
+Then open `http://localhost:8000`.
+
+**Rerun the ladder in Python.** Same four constructions as the demo, about two minutes:
+
+```bash
+export OMP_NUM_THREADS=1
+python analysis/null_progression.py 1000
+```
+
+Expect roughly 0.170, 0.444, 0.397 and 0.677, and a file in `results/null_corrected/`.
+
+**Measure how often each construction fires on data with no groups in it.** About three
+minutes:
+
+```bash
+python analysis/type1_surface.py 200 200
+```
+
+Writes `results/type1_surface.json`. The misspecified construction should reject far more than
+the nominal 5 percent. The corrected one should reject far less.
 
 ## What happened
 
-The standard way to validate an unsupervised representation in small-sample neuroimaging is
-to cluster the embeddings, report a silhouette, and test it against a covariance-preserving
-permutation null (Dinga et al., 2019). We built that pipeline, a GATv2 encoder trained with
-NT-Xent, and got a four-cluster fibromyalgia partition at p = 0.024.
+The usual way to claim you have found subtypes is: learn an embedding per patient, cluster
+them, score how separated the clusters are with a silhouette, then check that score against a
+null to show it didn't happen by chance. The null is built by making fake datasets that share
+the real one's covariance but have no actual groups in them, clustering those the same way,
+and counting how often the fake data scores as well as the real data (Dinga et al., 2019).
 
-Then it failed to reproduce. Retraining on byte-identical inputs gave a different answer.
+That is what we built. A GATv2 graph encoder trained with NT-Xent on connectivity graphs from
+28 patients. Four clusters, silhouette 0.24, p = 0.024. It looked publishable.
 
-Chasing that took a while, and the problem turned out not to be the clustering. It was the
-null. There were two independent errors in it, and either one on its own was enough to
-manufacture a significant result. With both corrected the same analysis gives p = 0.68, and
-across two disorders none of 40 runs reaches nominal significance. The reproducibility
-checks, which never invoke a null at all, had been right the whole time.
+Then we retrained it. Same inputs, byte for byte, only the random seed different, and we got
+a different set of clusters. Agreement between runs was 0.23 on the adjusted Rand index,
+where 1.0 means identical and 0 means chance. Real structure doesn't move like that.
+
+Working out why took a while, and it wasn't the clustering. It was the null. Two separate
+mistakes in how we built it, and either one on its own was enough to turn noise into a
+result. Fix both and the same analysis gives p = 0.68. Across two disorders and 40 runs end
+to end, nothing comes out significant.
+
+The uncomfortable part is that the reproducibility checks never touch a null at all, and they
+had it right from the start. The significance test was the broken thing, and it was the thing
+we trusted.
 
 ## The two errors
 
-A permutation null is only valid if every draw goes through the same procedure that produced
-the observed number. Ours failed that twice.
+The rule for a permutation null is that every fake dataset has to go through the exact same
+procedure the real number came out of. Ours broke that in two places.
 
-**Geometry.** The observed embeddings are L2-normalized onto the unit sphere before
-clustering. The null draws were sampled in ambient space and never projected, so they carry
-radial spread the real data cannot have. That makes them harder to cluster, which pushes null
-silhouettes down, which pushes p down.
+**Geometry.** Before clustering we scale every embedding to unit length. That's routine, and
+it means only the direction of an embedding counts, not how long it is. Picture all 28
+patients sitting on the surface of a sphere.
 
-**Selection.** The reported silhouette is a maximum over *k* ∈ {2…6}, picked after seeing the
-data. Each null draw was scored at one fixed *k*, so the selection happened outside the
-resampling loop. Given the same search, 33.8% of null draws maximize at *k* = 2 and only
-25.3% at the *k* = 4 we picked.
+Our null draws never got scaled. They were generated in the full space, so instead of sitting
+on the surface they were scattered through the inside of the sphere. Points spread through a
+volume are harder to group tightly than points on a surface, so the fake data scored lower
+than it should have, and beating it looked easier than it was. We were comparing the real
+result against a null we'd accidentally handicapped.
 
-There was a third, smaller problem: the estimator was `c/n` with a strict inequality, which
-can return a p of exactly 0. It is `(c+1)/(n+1)` now.
+**Selection.** We didn't decide the number of clusters up front. We tried *k* from 2 to 6 and
+kept whichever scored best, which was 4. Choosing after seeing the results inflates the score
+on its own, because the best of five tries beats a single try on average even when there's
+nothing there.
 
-On the checkpoint where we first traced this, the progression runs 0.024, then 0.177 with the
-geometry fixed, then 0.93 with both. On the rebuilt pipeline the corrected value is 0.6773.
+That's fine as long as the null gets the same five tries. Ours didn't. Each fake dataset was
+scored at one fixed *k*. Real data got five shots, the null got one. When you do give the null
+the same search, 33.8% of draws do best at *k* = 2 and only 25.3% at the *k* = 4 we reported,
+which is a decent measure of how much of our result was the search rather than the brains.
 
+There was a third, smaller thing. The p-value used `c/n` with a strict inequality, so it could
+return exactly 0, which isn't a valid p-value. It's `(c+1)/(n+1)` now.
+
+Either of the first two is enough on its own. On the checkpoint where we first caught this, p
+goes 0.024, then 0.177 with the geometry fixed, then 0.93 with the selection fixed as well.
+On the rebuilt pipeline the corrected value is 0.6773. Through all of that the silhouette
+never moves. Only the comparison does.
 
 ## Headline results
 
@@ -90,16 +215,23 @@ versus resting-state), and separately searched architectures.
 
 ## What bounds these negative results
 
-A null result is only meaningful if the test had power to reject. Both checks are in the
-repository.
+Saying we found nothing is only interesting if the test could have found something. A test
+that never fires would give us this exact result on real structure too. So we checked it both
+ways: does it fire when it shouldn't, and does it notice structure we deliberately put there.
 
-*Calibration* (`analysis/calibration_run.py`). 200 datasets drawn from the null the
-corrected test itself assumes, structureless by construction. A calibrated test at
-α = 0.05 rejects ~5% of the time. Ours rejects 0.5%, so the realized Type I error is roughly tenfold below nominal. At n = 28 the sample covariance is rank-deficient and overfit, so
-null draws recapitulate more apparent structure than the data does.
+**Does it fire on nothing?** (`analysis/calibration_run.py`) We made 200 datasets with no
+groups in them at all, ran the corrected test on each, and counted. At α = 0.05 a well-behaved
+test fires about 5% of the time. Ours fires 0.5%, roughly ten times too rarely.
 
-*Detection floor* (`analysis/syntheticEmbeddings.py`). 1,440 planted-cluster
-realizations at controlled separation:
+That's a sample size problem. With 28 patients the estimated covariance is wobbly, so the fake
+datasets come out carrying more apparent structure than the real data has, which pushes the
+bar too high. Good news for our negative result, in that we're definitely not over-claiming.
+Less good in that the test is blunter than its α implies.
+
+**Does it notice real structure?** (`analysis/syntheticEmbeddings.py`) The other direction. We
+took the real embeddings and shoved groups of patients apart by a known amount, so we knew
+structure was there and knew exactly how strong. Then we ran the whole pipeline and watched.
+1,440 of these:
 
 | Planting offset | Mean ARI | Power |
 |---|---|---|
@@ -109,12 +241,19 @@ realizations at controlled separation:
 | 12 | 0.81 | 80 % |
 | 20 | 0.98 | 100 % |
 
-At offset 0 the control reproduces the real result exactly (silhouette 0.2433,
-p = 0.6773) across all 120 cells, which is the integrity check on the planting machinery.
+ARI is how well the recovered clusters match the ones we planted. Power is how often the test
+actually called it. The pipeline is blind until the groups are quite far apart and doesn't
+become reliable until offset 12, at which point you could see the clusters in a scatter plot
+without any of this machinery.
 
-**The defensible claim is therefore "no subtype structure this method could detect at this
-sample size," not "no subtypes exist."** These analyses exclude structure that would be
-unmistakable and say little about subtler structure.
+At offset 0, where nothing is planted, the control lands on the real result exactly
+(silhouette 0.2433, p = 0.6773) across all 120 cells. That's the sanity check on the planting
+code itself: with no offset it should collapse back to the original analysis, and it does.
+
+Together those two put a fence around what we can claim. The honest version is "no subtype
+structure this method could detect at this sample size," not "no subtypes exist." Anything
+obvious, we'd have caught. Anything subtle, we can't speak to, and neither can any paper
+running this design on this many patients.
 
 ---
 
@@ -125,12 +264,11 @@ config.py                    Single source of truth for hyperparameters and path
 figures.py                   Publication figures, entry point
 requirements.txt
 
-preprocessing/               fMRIPrep derivatives → timeseries → FC matrices
+preprocessing/               fMRIPrep derivatives to timeseries to FC matrices
   compute_fc_matrices.py       Ledoit-Wolf shrinkage, Fisher z
   subject_filter.py            Motion and completeness exclusions
+  clinical_to_csv.py           Clinical spreadsheet to clean CSV
   verify_setup.py
-
-dataFiltering/               Clinical spreadsheet → clean CSV
 
 models/                      Architecture
   gnn_encoder.py               3 × GATv2, multi-head graph attention
@@ -156,14 +294,36 @@ analysis/                    Evaluation
   sensitivity_analysis.py      Edge-threshold sweep
   orchestrator.py
   calibration_run.py           ** the 200-dataset calibration experiment **
+  null_progression.py          The four null constructions, end to end
+  type1_surface.py             Type I error by representation geometry
+  separation_ratio.py          Detection floor in interpretable units
+  end_to_end_positive_control.py
+  provenance.py                Hashes every artifact, writes PROVENANCE.md
+  provenance_scripts/          The 14 drivers that produced the shipped artifacts
 
 experiments/ds002748_mdd/    Depression replication (parallel pipeline)
 tests/                       pytest suite
-docs/                        Data requirements, repository architecture notes
+docs/
+  index.html                   The browser demo (single file, no dependencies)
+  demo/                        Embedding matrix and thumbnail the demo loads
+  FM_Research_Data_Requirements.md
+  repo_structure.md
 notebooks/                   Exploratory only; no result depends on these
 ```
 
-Everything under `data/` and `results/` is gitignored and regenerable.
+Most of `data/` and `results/` is gitignored, because it is large and regenerable from the
+commands above. A small set is committed on purpose so the repository is not inert on a fresh
+clone:
+
+| Committed | Why |
+|---|---|
+| `data/tune/bestParams.json` | The chosen architecture. Without it `config` cannot resolve and nothing imports. |
+| `data/outputs/*.npy`, `data/outputs/K-Means-Labeling.csv` | The trained 28 × 119 embeddings and their cluster labels, 60 KB total, enough to rerun every null analysis. |
+| `data/Subjects/*_events.tsv`, `*_confounds.tsv` | Straight from the public OpenNeuro release, small, and needed to rebuild the FC matrices. |
+| `data/schaefer200MNI.nii.gz` | The parcellation atlas. |
+
+The trained checkpoint (1 MB), the per-condition FC matrices, and `data/clinical_clean.csv` are
+not committed. **No subject-level clinical data is in this repository.**
 
 **Presentation material lives outside this repository.** Conference videos, slide
 figures, and the code that generates them were moved to `../presentation/`. They are
@@ -172,51 +332,21 @@ Publication figures (`figures.py` → `results/figures/fig1…fig3`) remain here
 
 ---
 
-## Try it in your browser
-
-[Live demo](https://evadiva3.github.io/fm-subtype-discovery/). No install, no data, nothing to
-download.
-
-[![The four null constructions running in the browser. The null distribution shifts right past the observed silhouette as each correction is applied, and the ladder table fills in.](docs/demo/thumbnail_1600.png)](https://evadiva3.github.io/fm-subtype-discovery/)
-
-The page runs the whole argument client-side on the actual 28 × 119 embedding matrix from the
-paper. Turn the two corrections on and off and watch the same partition stop being
-significant. Nothing is precomputed. The k-means, the silhouette and every null draw are
-computed in the page while you wait.
-
-Hit "Run the full ladder" and it rebuilds the paper's central table live:
-
-| Construction | Geometry matched | Selection matched | Paper *p* |
-|---|---|---|---|
-| Misspecified, as originally implemented | ✗ | ✗ | 0.1698 |
-| Geometry corrected only | ✓ | ✗ | 0.4436 |
-| Selection corrected only | ✗ | ✓ | 0.3966 |
-| Fully corrected | ✓ | ✓ | 0.6773 |
-
-It uses the same 20 k-means restarts as the paper, so it lands within Monte-Carlo noise of
-those numbers. A 1,000-draw run comes back around 0.164, 0.435, 0.410 and 0.694. The null mean
-silhouettes track just as closely: 0.215, 0.240 and 0.258 against 0.216, 0.242 and 0.259. Its
-silhouette matches the Python to seven decimals (0.2433061).
-
-The reason this works with no brain data is that the finding is about the null construction,
-not about fibromyalgia. It needs one embedding matrix. No MRI, no checkpoint, no training.
-Source is `docs/index.html`, a single file with no dependencies.
-
----
-
 ## Reproducing the full pipeline
 
-The demo above needs nothing. Reproducing the *whole* study needs the imaging data, which is
-public but large; see Data availability below. `data/` and `results/` are gitignored, so
-a fresh clone has the code but not the derivatives.
+Everything above runs on files that ship with the repo. Rebuilding the study from the raw
+scans is a much bigger job. You need both OpenNeuro datasets, fMRIPrep, and a GPU for the
+architecture search, and it takes days rather than minutes. Downloads are under Data
+availability below, and `docs/FM_Research_Data_Requirements.md` spells out which files you
+need and how to lay them out.
 
 ```bash
-pip install -r requirements.txt
 export OMP_NUM_THREADS=1        # not optional, see below
 ```
 
 ```bash
 # 1. preprocessing (assumes fMRIPrep derivatives on disk)
+python preprocessing/clinical_to_csv.py
 python preprocessing/verify_setup.py
 python preprocessing/compute_fc_matrices.py
 
@@ -245,8 +375,13 @@ python analysis/calibration_run.py
 python figures.py
 ```
 
-Depression replication is in `experiments/ds002748_mdd/`, same order:
-`hyperparameter_search_mdd.py` → `train_mdd.py` → `clustering_mdd.py`.
+The depression replication lives in `experiments/ds002748_mdd/` and runs in the same order:
+
+```bash
+cd experiments/ds002748_mdd
+./run_mdd_pipeline.sh        # search, train, cluster
+./run_mdd_analysis.sh        # severity regression, ablations
+```
 
 > **`OMP_NUM_THREADS=1` is not general advice.** scikit-learn's k-means parallelizes with
 > OpenMP, and on a 28-point problem thread coordination costs more than the arithmetic:
@@ -286,16 +421,9 @@ meeting a very small temperature, not a defect in the loss. 11 of 12 tests pass.
 
 Both datasets are public on OpenNeuro: **ds004144** (fibromyalgia task-fMRI, Balducci et
 al., 2022) and **ds002748** (depression resting-state, Bezmaternykh et al., 2021).
-Derivatives, checkpoints, and per-run outputs are gitignored; regenerate with the
-commands above.
-
-## AI usage
-
-Generative AI tools were used as editorial and analytical assistants: background research,
-literature synthesis, prose refinement, code debugging and auditing, and figure/slide
-production. All research hypotheses, experimental designs, and scientific conclusions are
-the authors'. All AI-generated output was reviewed and verified, and the authors take full
-responsibility for the integrity of this work.
+Preprocessed derivatives, the trained checkpoint, and per-run outputs are gitignored;
+regenerate them with the commands above. The small artifacts needed to run the analyses
+without a full rebuild are committed, listed under Repository layout.
 
 ## Key references
 
