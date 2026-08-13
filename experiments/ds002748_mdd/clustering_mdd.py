@@ -21,9 +21,10 @@ class mddCluster(cluster):
         self.subjectEmbeddings={}
         self.groupLabels={}
         self.GNNEncoder.eval()
+        device=next(self.GNNEncoder.parameters()).device
         with torch.no_grad():
             for s in subs:
-                b=Batch.from_data_list(s["graphs"])
+                b=Batch.from_data_list(s["graphs"]).to(device)
                 e=self.GNNEncoder(b)
                 sid=s["subject_id"]
                 self.subjectEmbeddings[sid]=e.view(-1)

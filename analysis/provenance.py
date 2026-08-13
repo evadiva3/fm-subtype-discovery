@@ -43,6 +43,10 @@ KNOWN={
   "condition-graph clustering with the canonical encoder"),
  "type1_surface.json":("canonical",
   "type I error by geometry; anchor cell uses the canonical covariance"),
+ "e2e_calibration.json":("canonical",
+  "Type I calibration of the fixed-k null at n=406 on the canonical graph embeddings"),
+ "e2e_calibration_pvalues.npy":("canonical",
+  "Type I calibration of the fixed-k null at n=406 on the canonical graph embeddings"),
  "stability_summary.csv":("other-checkpoint",
   "14 independently searched architectures; none is the canonical checkpoint"),
 }

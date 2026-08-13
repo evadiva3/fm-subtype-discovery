@@ -38,9 +38,10 @@ class cluster():
         self.subjectEmbeddings = {};
         self.groupLabels = {};
         self.GNNEncoder.eval();
+        device = next(self.GNNEncoder.parameters()).device;
         with torch.no_grad():
             for subject in dataloader:
-                batch = Batch.from_data_list(subject['graphs']);
+                batch = Batch.from_data_list(subject['graphs']).to(device);
                 embeddings = self.GNNEncoder(batch);
                 subjectId = subject['subject_id'];
                 self.subjectEmbeddings[subjectId] = embeddings;

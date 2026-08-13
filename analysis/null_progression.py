@@ -20,7 +20,7 @@ MODES=[("misspecified",False,False),("geometry",True,False),
 def main(n=None):
     n=int(n) if n else config.nPermutations
     x=np.load(_R/"data"/"outputs"/"trained_fm_embeddings.npy").astype(float)
-    lb=pd.read_csv(_R/"data"/"outputs"/"K-Means-Labeling.csv")["Label"].to_numpy()
+    lb=pd.read_csv(_R/"data"/"outputs"/"K-Means-Labeling.csv").sort_values("Subject_Id")["Label"].to_numpy()
     ev=cluster_evaluate()
     xn=x/(np.linalg.norm(x,axis=1,keepdims=True)+1e-8)
     r=ev.silhouette(xn,lb)

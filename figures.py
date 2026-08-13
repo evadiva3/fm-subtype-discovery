@@ -214,6 +214,145 @@ def plot_silhouette_vs_participation(results_dir=DEFAULT_RESULTS):
     fig.tight_layout(rect=(0,0,1,0.95))
     return fig
 
+def plot_ladder(results_dir=DEFAULT_RESULTS):
+    _style()
+    rd=Path(results_dir)
+    fm=json.load(open(rd/"null_corrected"/"null_progression_1000.json"))["p_by_construction"]
+    md=json.load(open(rd/"mdd"/"canonical_single"/"null_progression_mdd_20000.json"))["p_by_construction"]
+    tw=json.load(open(rd/"handoff_20260802"/"audit_gap_fills"/"three_way_null_canonical.json"))
+
+    labs=["misspecified","geometry\ncorrected","selection\ncorrected","fully\ncorrected"]
+    fmv=[fm["misspecified"],fm["geometry"],fm["selection"],fm["corrected"]]
+    mdv=[md["misspecified"],md["geometry_only"],md["selection_only"],md["corrected"]]
+    x=np.arange(4); w=.38
+
+    fig,ax=plt.subplots(1,2,figsize=(12.8,4.8))
+    a=ax[0]
+    a.axhspan(0,ALPHA,color=HIGHLIGHT,alpha=.09,zorder=0)
+    a.axhline(ALPHA,color=BLACK,ls="--",lw=1.1,zorder=2)
+    a.text(3.58,ALPHA+.008,f"p = {ALPHA:g}",color=BLACK,ha="right",va="bottom",fontsize=8)
+    b1=a.bar(x-w/2,fmv,w,color=COFFEE,edgecolor="white",linewidth=.7,zorder=3)
+    b2=a.bar(x+w/2,mdv,w,color=PINK,edgecolor="white",linewidth=.7,zorder=3)
+    for xs,vs,c in ((x-w/2,fmv,COFFEE),(x+w/2,mdv,PINK)):
+        for xi,vi in zip(xs,vs):
+            a.text(xi,vi+.012,f"{vi:.3f}",ha="center",fontsize=8,color=c)
+    a.axvspan(.5,2.5,color=BLACK,alpha=.035,zorder=1)
+    a.text(1.5,.755,"either correction alone",ha="center",fontsize=8.5,color=LATTE)
+    a.set_xticks(x); a.set_xticklabels(labs,fontsize=9)
+    a.set_xlim(-.62,3.62); a.set_ylim(0,.80)
+    a.set_ylabel("permutation p")
+    a.set_title("A  each correction alone lifts p; both together lift it furthest",
+                fontsize=10,loc="left")
+    a.legend([b1,b2],["fibromyalgia (1,000 draws)","depression (20,000 draws)"],
+             frameon=False,fontsize=8,loc="upper left")
+    a.grid(axis="x",visible=False)
+
+    b=ax[1]
+    prog=tw["progression"]
+    nm=[r["null_mean_sil"] for r in prog]
+    obs=tw["observed_sil_normalized"]
+    xs=np.arange(len(nm))
+    b.plot(xs,nm,color=SECONDARY,lw=2.2,marker="o",ms=7,zorder=3)
+    for xi,vi in zip(xs,nm):
+        b.annotate(f"{vi:.4f}",(xi,vi),textcoords="offset points",xytext=(0,-16),
+                   ha="center",fontsize=8,color=SECONDARY)
+    b.axhline(obs,color=HIGHLIGHT,lw=2.0,zorder=4)
+    b.text(0,obs+.0015,f"observed {obs:.4f}, identical under every construction",
+           color=HIGHLIGHT,ha="left",va="bottom",fontsize=8.5)
+    b.set_xticks(xs)
+    b.set_xticklabels(["misspecified","geometry\ncorrected","fully\ncorrected"],fontsize=9)
+    b.set_xlim(-.35,2.35)
+    b.set_ylim(min(nm)-.010,max(max(nm),obs)+.008)
+    b.set_ylabel("silhouette")
+    b.set_title("B  the data never moved, the reference did (fibromyalgia, 20,000 draws)",
+                fontsize=10,loc="left")
+    b.grid(axis="x",visible=False)
+    fig.tight_layout()
+    return fig
+
+
+def plot_type1(results_dir=DEFAULT_RESULTS):
+    _style()
+    rd=Path(results_dir)
+    c=json.load(open(rd/"handoff_20260802"/"calibration_paired"/"calibration_paired_summary.json"))
+    mis,cor=c["misspecified"],c["corrected"]
+    disc=c["mcnemar_discordant"]
+
+    fig,ax=plt.subplots(1,2,figsize=(11.4,4.4),gridspec_kw={"width_ratios":[1.25,1]})
+    a=ax[0]
+    names=["misspecified","fully corrected"]
+    vals=[mis["rejection_rate_05"],cor["rejection_rate_05"]]
+    los=[v-d["wilson95_lo"] for v,d in zip(vals,(mis,cor))]
+    his=[d["wilson95_hi"]-v for v,d in zip(vals,(mis,cor))]
+    cols=[SECONDARY,PRIMARY]
+    a.bar(names,vals,color=cols,edgecolor="white",linewidth=.8,width=.55,zorder=3)
+    a.errorbar(names,vals,yerr=[los,his],fmt="none",ecolor=BLACK,elinewidth=1.2,capsize=6,zorder=4)
+    a.axhline(ALPHA,color=BLACK,ls="--",lw=1.2,zorder=2)
+    a.text(1.42,ALPHA+.004,f"nominal {ALPHA:g}",color=BLACK,ha="right",va="bottom",fontsize=8)
+    for i,(v,d) in enumerate(zip(vals,(mis,cor))):
+        a.text(i,d["wilson95_hi"]+.008,f"{v:.3f}\n[{d['wilson95_lo']:.3f}, {d['wilson95_hi']:.3f}]",
+               ha="center",va="bottom",fontsize=8.5,color=BLACK)
+    a.set_ylim(0,0.27); a.set_ylabel("rejection rate on structureless data")
+    a.set_title(f"A  realized Type I error ({c['n_datasets']:,} datasets x {c['n_draws']:,} draws)",
+                fontsize=10,loc="left")
+    a.grid(axis="x",visible=False)
+
+    b=ax[1]
+    b.bar(["misspecified\nonly","corrected\nonly"],[disc["mis_only"],disc["corr_only"]],
+          color=[SECONDARY,PRIMARY],edgecolor="white",linewidth=.8,width=.5,zorder=3)
+    b.text(0,disc["mis_only"]+4,str(disc["mis_only"]),ha="center",fontsize=13,color=BLACK)
+    b.text(1,4,str(disc["corr_only"]),ha="center",fontsize=13,color=BLACK)
+    b.set_ylim(0,disc["mis_only"]*1.25)
+    b.set_ylabel("discordant rejections")
+    b.set_title("B  the inflation is one-directional",fontsize=10,loc="left")
+    b.grid(axis="x",visible=False)
+    fig.tight_layout()
+    return fig
+
+
+def plot_end_to_end(results_dir=DEFAULT_RESULTS):
+    _style()
+    rd=Path(results_dir)
+    e=json.load(open(rd/"end_to_end_positive_control.json"))["supervised_diagnostic"]
+    fvp=rd/"handoff_20260802"/"feature_validity"/"feature_validity.json"
+    ci={}
+    if fvp.exists():
+        fv=json.load(open(fvp))
+        ci["condition"]=fv["task condition (7-way)"]["ci95"]
+        ci["identity"]=fv["subject identity"]["ci95"]
+
+    tasks=[("task condition, 7-way","condition"),("subject identity, 58-way","identity")]
+    fig,ax=plt.subplots(1,2,figsize=(11.6,4.8))
+    for i,(title,key) in enumerate(tasks):
+        a=ax[i]
+        raw=e[f"{key}_from_raw_edges"]; emb=e[f"{key}_from_embeddings"]; ch=e[f"{key}_chance"]
+        a.bar([0,1],[raw,emb],color=[SECONDARY,PRIMARY],edgecolor="white",
+              linewidth=.8,width=.5,zorder=3)
+        top=[raw,emb]
+        if key in ci:
+            lo,hi=ci[key]
+            a.errorbar([0],[raw],yerr=[[raw-lo],[hi-raw]],fmt="none",
+                       ecolor=BLACK,elinewidth=1.2,capsize=6,zorder=4)
+            top[0]=hi
+        for xi,(v,t) in enumerate(zip((raw,emb),top)):
+            a.text(xi,t+.035,f"{v*100:.1f}%",ha="center",fontsize=12,color=BLACK,zorder=5)
+        a.axhline(ch,color=BLACK,ls="--",lw=1.2,zorder=2)
+        a.text(-.5,ch+.022,f"chance {ch*100:.1f}%",color=BLACK,ha="left",va="bottom",fontsize=8)
+        retained=(emb-ch)/max(raw-ch,1e-9)
+        a.annotate("",xy=(.74,emb+.10),xytext=(.26,raw+.10),
+                   arrowprops=dict(arrowstyle="-|>",color=HIGHLIGHT,lw=1.6,
+                                   shrinkA=6,shrinkB=6),zorder=6)
+        a.text(.5,max(raw,emb)+.115,f"retains {retained*100:.0f}% of the\nabove-chance signal",
+               color=HIGHLIGHT,ha="center",va="bottom",fontsize=9,zorder=6)
+        a.set_xticks([0,1]); a.set_xticklabels(["raw\nconnectivity","trained\nembeddings"],fontsize=9.5)
+        a.set_xlim(-.55,1.55); a.set_ylim(0,1.22)
+        a.set_ylabel("decoding accuracy" if i==0 else "")
+        a.set_title(f"{'AB'[i]}  {title}",fontsize=10,loc="left")
+        a.grid(axis="x",visible=False)
+    fig.tight_layout()
+    return fig
+
+
 def save_all(results_dir=DEFAULT_RESULTS,dpi=200):
     out=Path(results_dir)/"figures"
     out.mkdir(parents=True,exist_ok=True)
@@ -223,9 +362,17 @@ def save_all(results_dir=DEFAULT_RESULTS,dpi=200):
     f1.savefig(p1,dpi=dpi,bbox_inches="tight")
     written.append(p1)
     f3=plot_silhouette_vs_participation(results_dir)
-    p3=out/"fig3_silhouette_vs_participation.png"
+    p3=out/"fig4_silhouette_vs_participation.png"
     f3.savefig(p3,dpi=dpi,bbox_inches="tight")
     written.append(p3)
+    for fn,name in ((plot_ladder,"fig5_null_ladder.png"),
+                    (plot_type1,"fig6_realized_type1_error.png"),
+                    (plot_end_to_end,"fig3_end_to_end_decoding.png")):
+        f=fn(results_dir)
+        q=out/name
+        f.savefig(q,dpi=dpi,bbox_inches="tight")
+        plt.close(f)
+        written.append(q)
     p2=out/"fig2_reproducibility_crosscohort.png"
     if not p2.exists():
         print(f"{p2.name} absent; run results/figures/make_fig2_crosscohort.py")
