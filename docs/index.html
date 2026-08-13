@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Significance Without Structure: live permutation-null demo</title>
+<meta name="description" content="Run the misspecified and corrected permutation nulls live, in your browser, on the real canonical embeddings from the paper.">
+<style>
+:root{
+  --bg:#faf8f7; --fg:#1a1718; --dim:#6b6162; --line:#e0d8d7; --card:#fff;
+  --pink:#DDA7A5; --brown:#B88E8C; --coffee:#734F50; --latte:#966B6D;
+  --good:#2e7d5b; --bad:#a33d3d;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#171415; --fg:#f2ecec; --dim:#a09596; --line:#332c2d; --card:#1f1b1c; }
+}
+:root[data-theme="dark"]{ --bg:#171415; --fg:#f2ecec; --dim:#a09596; --line:#332c2d; --card:#1f1b1c; }
+:root[data-theme="light"]{ --bg:#faf8f7; --fg:#1a1718; --dim:#6b6162; --line:#e0d8d7; --card:#fff; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:16px/1.6 ui-serif,Georgia,"Palatino Linotype",Palatino,serif;}
+.wrap{max-width:920px;margin:0 auto;padding:32px 20px 64px}
+h1{font-size:1.85rem;line-height:1.25;margin:0 0 6px}
+h2{font-size:1.1rem;margin:34px 0 10px;letter-spacing:.01em}
+.sub{color:var(--dim);margin:0 0 4px}
+.lede{margin:18px 0 0;font-size:1.05rem}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0}
+.row{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+.row>*{flex:0 0 auto}
+label.ck{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+input[type=checkbox]{width:17px;height:17px;accent-color:var(--coffee);cursor:pointer}
+input[type=range]{width:190px;accent-color:var(--coffee);cursor:pointer}
+button{font:inherit;font-size:.95rem;padding:9px 18px;border-radius:7px;cursor:pointer;
+  border:1px solid var(--coffee);background:var(--coffee);color:#fff}
+button.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.obs{font-size:.92rem;color:var(--dim)}
+.obs b{color:var(--fg);font-size:1.05rem}
+canvas{width:100%;height:280px;display:block}
+.pv{display:flex;gap:26px;flex-wrap:wrap;margin-top:12px}
+.pv div{flex:1 1 190px}
+.pv .lab{font-size:.82rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.pv .num{font-size:1.7rem;font-variant-numeric:tabular-nums}
+.swatch{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:baseline}
+table{width:100%;border-collapse:collapse;margin-top:6px;font-size:.94rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--dim);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+td.n{font-variant-numeric:tabular-nums;text-align:right}
+tr.done td{color:var(--fg)} tr.pending td{color:var(--dim)}
+.bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;width:0;background:var(--coffee);transition:width .12s linear}
+.status{font-size:.87rem;color:var(--dim);margin-top:8px;min-height:1.4em}
+.note{font-size:.88rem;color:var(--dim)}
+a{color:var(--coffee)} :root[data-theme="dark"] a,@media (prefers-color-scheme:dark){a{color:var(--pink)}}
+footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:.88rem;color:var(--dim)}
+.scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Significance Without Structure</h1>
+<p class="sub">Null misspecification and non-reproducible subtypes in small-sample
+self-supervised neuroimaging</p>
+<p class="sub" style="font-size:.9rem">Eva Bangsil, Nikhil Joshi</p>
+
+<p class="lede">
+We clustered fibromyalgia patients' brain-connectivity embeddings, got four clean subtypes at
+p&nbsp;=&nbsp;0.024, and then could not reproduce them. The problem was not the clustering. It
+was the significance test. The permutation null had two independent errors in it, and either
+one alone was enough to manufacture a discovery.
+</p>
+<p>
+This page runs that null in your browser, on the actual 28&nbsp;×&nbsp;119 embedding matrix
+from the paper. Nothing here is precomputed. The k-means, the silhouette and the null draws
+are all computed as you watch. Turn the two corrections on and off and the same data stops
+being significant.
+</p>
+
+<div class="card">
+  <div class="obs">Observed statistic, held fixed throughout.
+    Silhouette <b id="obs">…</b> at <b>k = 4</b>, n = 28 patients, d = 119.
+    <span class="mono" id="dims"></span></div>
+
+  <h2 style="margin-top:18px">Null construction</h2>
+  <div class="row">
+    <label class="ck"><input type="checkbox" id="geo" checked>
+      <span>Match <b>geometry</b>: project null draws onto the unit sphere</span></label>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <label class="ck"><input type="checkbox" id="sel" checked>
+      <span>Match <b>selection</b>: let each draw search k ∈ {2…6}</span></label>
+  </div>
+
+  <div class="row" style="margin-top:16px">
+    <span>Draws: <b id="nlab" class="mono">300</b></span>
+    <input type="range" id="ndraws" min="50" max="1000" step="50" value="300">
+    <button id="run">Run</button>
+    <button id="ladder" class="ghost">Run the full ladder</button>
+    <button id="reset" class="ghost">Reset</button>
+  </div>
+  <div class="bar"><i id="prog"></i></div>
+  <div class="status" id="status">Ready. Both corrections on = the corrected null.</div>
+</div>
+
+<div class="card">
+  <canvas id="plot" width="880" height="280"></canvas>
+  <div class="pv">
+    <div><div class="lab"><span class="swatch" style="background:var(--brown)"></span>Null mean silhouette</div>
+         <div class="num" id="nullmean">·</div></div>
+    <div><div class="lab">p-value</div><div class="num" id="pval">·</div></div>
+    <div><div class="lab">Verdict at α = 0.05</div><div class="num" id="verdict">·</div></div>
+  </div>
+</div>
+
+<h2>The ladder</h2>
+<p class="note">The paper's central result. Same data, same observed silhouette, same
+k&nbsp;=&nbsp;4 partition. Only the null's construction changes. Press "Run the full ladder"
+to fill this in. Reference values come from the paper at 1,000 draws, so yours will differ a
+little by Monte-Carlo noise.</p>
+<div class="scroll">
+<table id="tbl">
+  <thead><tr><th>Construction</th><th>Geometry</th><th>Selection</th>
+    <th class="n">Null mean</th><th class="n">p (yours)</th><th class="n">p (paper)</th></tr></thead>
+  <tbody>
+    <tr class="pending" data-k="mis"><td>Misspecified, as originally implemented</td><td>✗</td><td>✗</td><td class="n v">·</td><td class="n p">·</td><td class="n">0.1698</td></tr>
+    <tr class="pending" data-k="geo"><td>Geometry corrected only</td><td>✓</td><td>✗</td><td class="n v">·</td><td class="n p">·</td><td class="n">0.4436</td></tr>
+    <tr class="pending" data-k="sel"><td>Selection corrected only</td><td>✗</td><td>✓</td><td class="n v">·</td><td class="n p">·</td><td class="n">0.3966</td></tr>
+    <tr class="pending" data-k="cor"><td><b>Fully corrected</b></td><td>✓</td><td>✓</td><td class="n v">·</td><td class="n p">·</td><td class="n">0.6773</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>What you just did</h2>
+<p>
+A permutation null is only valid if every draw goes through the same procedure that produced
+the observed number. Ours failed that twice.
+</p>
+<p>
+<b>Geometry.</b> The observed embeddings are L2-normalized onto the unit sphere before
+clustering. The null draws were sampled in ambient space and never projected, so they carry
+radial spread the real data cannot have. That makes them harder to cluster, which pushes null
+silhouettes down, which pushes p down.
+</p>
+<p>
+<b>Selection.</b> The reported silhouette is a maximum over k ∈ {2…6}, picked after seeing the
+data, but each null draw was scored at one fixed k. The null never got the same search the
+observed statistic did. Given it, 33.8% of null draws maximize at k = 2 and only 25.3% at the
+k = 4 we picked.
+</p>
+<p>
+Neither error is exotic, and both are easy to write by accident. Measured against 1,000
+structureless datasets, the misspecified construction rejects 20.5% of the time against a
+nominal 5%. Corrected, it rejects 0.4% of the time. Across 1,000 paired comparisons the
+misspecified test produced 201 rejections the corrected test did not, and none the other way.
+</p>
+
+<h2>Why this exists</h2>
+<p>
+This started as a fibromyalgia subtyping project. The subtypes did not survive retraining on
+byte-identical inputs, and chasing that turned it into a methods paper. The reproducibility
+checks never invoke a null at all, and they were right the whole time while the significance
+test was not. Across two disorders and 40 end-to-end runs, nothing reaches nominal significance
+once the null is built correctly.
+</p>
+
+<footer>
+  <p><b>Method note.</b> Draws come from a Gaussian fitted to the normalized embedding. The
+  covariance is Σ = AᵀA with A the centered matrix over √(n−1), so a draw is just μ + zA for
+  z ~ N(0, I₂₈). No eigendecomposition, which is why this runs in a browser at all.
+  k-means uses the same 20 restarts as the paper, so the only difference from the published
+  values is Monte-Carlo noise from the draw count. The Python and JavaScript silhouettes agree
+  to seven decimals on the observed partition (0.2433061).</p>
+  <p><a href="https://github.com/evadiva3/fm-subtype-discovery">Source, paper and full pipeline on GitHub</a></p>
+</footer>
+
+</div>
+<script>
+const $=s=>document.querySelector(s);
+let D=null, running=false, lastHists=[];
+
+function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;
+  let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;
+  return ((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+function normRows(M){return M.map(row=>{let s=0;for(const v of row)s+=v*v;
+  s=Math.sqrt(s)+1e-8;return row.map(v=>v/s);});}
+
+function dist(a,b){let s=0;for(let i=0;i<a.length;i++){const d=a[i]-b[i];s+=d*d;}return Math.sqrt(s);}
+
+function kmeans(X,k,nInit,r){
+  const n=X.length,d=X[0].length;let best=null,bestI=Infinity;
+  for(let init=0;init<nInit;init++){
+    const cen=[];const first=Math.floor(r()*n);cen.push(X[first].slice());
+    while(cen.length<k){
+      const dd=X.map(p=>Math.min(...cen.map(c=>dist(p,c)**2)));
+      const tot=dd.reduce((a,b)=>a+b,0)||1;let t=r()*tot,idx=0;
+      for(let i=0;i<n;i++){t-=dd[i];if(t<=0){idx=i;break;}idx=i;}
+      cen.push(X[idx].slice());
+    }
+    let lab=new Array(n).fill(0),prev=null;
+    for(let it=0;it<40;it++){
+      for(let i=0;i<n;i++){let bd=Infinity,bj=0;
+        for(let j=0;j<k;j++){const dd2=dist(X[i],cen[j]);if(dd2<bd){bd=dd2;bj=j;}}
+        lab[i]=bj;}
+      const key=lab.join(",");if(key==prev)break;prev=key;
+      const sum=Array.from({length:k},()=>new Float64Array(d)),cnt=new Array(k).fill(0);
+      for(let i=0;i<n;i++){cnt[lab[i]]++;const s=sum[lab[i]];for(let j=0;j<d;j++)s[j]+=X[i][j];}
+      for(let j=0;j<k;j++){if(!cnt[j]){cen[j]=X[Math.floor(r()*n)].slice();continue;}
+        for(let q=0;q<d;q++)cen[j][q]=sum[j][q]/cnt[j];}
+    }
+    let inert=0;for(let i=0;i<n;i++)inert+=dist(X[i],cen[lab[i]])**2;
+    if(inert<bestI){bestI=inert;best=lab.slice();}
+  }
+  return best;
+}
+
+function silhouette(X,lab){
+  const n=X.length;const D=[];for(let i=0;i<n;i++){D.push(new Float64Array(n));}
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const v=dist(X[i],X[j]);D[i][j]=v;D[j][i]=v;}
+  const ks=[...new Set(lab)];if(ks.length<2)return -1;
+  let tot=0;
+  for(let i=0;i<n;i++){
+    const own=lab[i];let a=0,ac=0,b=Infinity;
+    for(const k of ks){
+      let s=0,c=0;
+      for(let j=0;j<n;j++)if(lab[j]==k&&j!=i){s+=D[i][j];c++;}
+      if(k==own){a=c?s/c:0;ac=c;} else if(c){b=Math.min(b,s/c);}
+    }
+    tot += (!ac||!isFinite(b))?0:(b-a)/Math.max(a,b);
+  }
+  return tot/n;
+}
+
+const KR=[2,3,4,5,6];
+const NINIT=20;
+function statFor(draw,matchSel,r,minSize){
+  if(!matchSel) return silhouette(draw,kmeans(draw,4,NINIT,r));
+  let best=-Infinity,bestOk=-Infinity;
+  for(const k of KR){
+    const lab=kmeans(draw,k,NINIT,r);const s=silhouette(draw,lab);
+    const cnt={};for(const l of lab)cnt[l]=(cnt[l]||0)+1;
+    const mn=Math.min(...Object.values(cnt));
+    if(s>best)best=s;
+    if(mn>=minSize&&s>bestOk)bestOk=s;
+  }
+  return bestOk>-Infinity?bestOk:best;
+}
+
+function makeDraw(r){
+  const {n,d,mu,A}=D.fit;const out=[];
+  for(let i=0;i<n;i++){
+    const z=new Float64Array(n);for(let q=0;q<n;q++)z[q]=gauss(r);
+    const row=new Array(d);
+    for(let j=0;j<d;j++){let s=0;for(let q=0;q<n;q++)s+=z[q]*A[q][j];row[j]=mu[j]+s;}
+    out.push(row);
+  }
+  return out;
+}
+
+function draw(hists){
+  lastHists=hists;
+  const c=$("#plot"),g=c.getContext("2d");
+  const W=c.width,H=c.height,P=42;
+  const cs=getComputedStyle(document.documentElement);
+  const dim=cs.getPropertyValue("--dim").trim(),
+        line=cs.getPropertyValue("--line").trim(),
+        coffee=cs.getPropertyValue("--coffee").trim();
+  g.clearRect(0,0,W,H);
+  const all=hists.flatMap(h=>h.vals).concat([D.obs]);
+  if(all.length<2){g.fillStyle=dim;g.font="14px ui-serif,Georgia,serif";
+    g.fillText("Press Run to sample the null distribution.",P,H/2);return;}
+  const lo=Math.min(...all)-.02, hi=Math.max(...all)+.02;
+  const B=44,bins=hists.map(h=>{const b=new Array(B).fill(0);
+    for(const v of h.vals){let i=Math.floor((v-lo)/(hi-lo)*B);i=Math.max(0,Math.min(B-1,i));b[i]++;}
+    return b;});
+  const peak=Math.max(1,...bins.flat());
+  const x=v=>P+(v-lo)/(hi-lo)*(W-P-16), y=v=>H-30-v/peak*(H-58);
+  g.strokeStyle=line;g.lineWidth=1;g.beginPath();g.moveTo(P,H-30);g.lineTo(W-16,H-30);g.stroke();
+  g.fillStyle=dim;g.font="12px ui-monospace,monospace";
+  for(let t=0;t<=4;t++){const v=lo+(hi-lo)*t/4;g.fillText(v.toFixed(2),x(v)-13,H-12);}
+  hists.forEach((h,hi2)=>{
+    const b=bins[hi2];g.beginPath();
+    for(let i=0;i<B;i++){const xv=x(lo+(hi-lo)*(i+.5)/B);const yv=y(b[i]);
+      i?g.lineTo(xv,yv):g.moveTo(xv,yv);}
+    g.strokeStyle=h.color;g.lineWidth=2;g.stroke();
+    g.lineTo(x(hi),H-30);g.lineTo(x(lo),H-30);g.closePath();
+    g.globalAlpha=.16;g.fillStyle=h.color;g.fill();g.globalAlpha=1;
+    g.fillStyle=h.color;g.font="13px ui-serif,Georgia,serif";
+    g.fillText(h.name,P+6,20+hi2*18);
+  });
+  g.strokeStyle=coffee;g.lineWidth=2;g.beginPath();
+  g.moveTo(x(D.obs),12);g.lineTo(x(D.obs),H-30);g.stroke();
+  g.fillStyle=coffee;g.font="12px ui-serif,Georgia,serif";
+  g.fillText("observed "+D.obs.toFixed(4),Math.min(x(D.obs)+7,W-150),H-40);
+}
+
+function runNull(geo,sel,N,seed,onTick){
+  return new Promise(res=>{
+    const r=rng(seed),vals=[],minSize=Math.max(4,Math.round(0.15*D.n));
+    let i=0;
+    (function step(){
+      const t0=performance.now();
+      while(i<N&&performance.now()-t0<55){
+        let dr=makeDraw(r);
+        if(geo)dr=normRows(dr);
+        vals.push(statFor(dr,sel,r,minSize));
+        i++;
+      }
+      onTick(i,N,vals);
+      if(i<N)requestAnimationFrame(step);
+      else{const c=vals.filter(v=>v>=D.obs).length;res({vals,p:(c+1)/(N+1),
+        mean:vals.reduce((a,b)=>a+b,0)/vals.length});}
+    })();
+  });
+}
+
+function setReadout(p,mean){
+  $("#nullmean").textContent=mean.toFixed(4);
+  $("#pval").textContent=p.toFixed(4);
+  const sig=p<0.05;
+  $("#verdict").textContent=sig?"significant":"not significant";
+  $("#verdict").style.color=sig?"var(--bad)":"var(--good)";
+}
+
+const STEPS=[["mis",false,false,"misspecified"],["geo",true,false,"geometry only"],
+             ["sel",false,true,"selection only"],["cor",true,true,"fully corrected"]];
+const COLS=["--brown","--latte","--pink","--coffee"];
+function colour(i){return getComputedStyle(document.documentElement).getPropertyValue(COLS[i]).trim();}
+
+function fillRow(key,mean,p){
+  const row=document.querySelector('tr[data-k="'+key+'"]');
+  row.querySelector(".v").textContent=mean.toFixed(4);
+  row.querySelector(".p").textContent=p.toFixed(4);
+  row.className="done";
+}
+
+async function go(){
+  if(running)return;running=true;
+  $("#run").disabled=$("#ladder").disabled=true;
+  const geo=$("#geo").checked,sel=$("#sel").checked,N=+$("#ndraws").value;
+  const name=(geo&&sel)?"corrected":(!geo&&!sel)?"misspecified":geo?"geometry corrected only":"selection corrected only";
+  const col=getComputedStyle(document.documentElement).getPropertyValue("--brown").trim();
+  const res=await runNull(geo,sel,N,42,(i,n,vals)=>{
+    $("#prog").style.width=(i/n*100)+"%";
+    $("#status").textContent=name+": "+i+" / "+n+" draws";
+    draw([{name:name+" null",vals,color:col}]);
+  });
+  setReadout(res.p,res.mean);
+  $("#status").textContent=name+", "+N+" draws. Null mean "+res.mean.toFixed(4)+" vs observed "+D.obs.toFixed(4)+".";
+  $("#run").disabled=$("#ladder").disabled=false;running=false;
+}
+
+async function ladder(){
+  if(running)return;running=true;
+  $("#run").disabled=$("#ladder").disabled=true;
+  const N=+$("#ndraws").value,hists=[];
+  for(let s=0;s<STEPS.length;s++){
+    const [key,geo,sel,label]=STEPS[s],col=colour(s);
+    const res=await runNull(geo,sel,N,42,(i,n,vals)=>{
+      $("#prog").style.width=((s+i/n)/STEPS.length*100)+"%";
+      $("#status").textContent=label+": "+i+" / "+n+" draws  ("+(s+1)+" of 4)";
+      draw(hists.concat([{name:label,vals,color:col}]));
+    });
+    hists.push({name:label,vals:res.vals,color:col});
+    fillRow(key,res.mean,res.p);
+    setReadout(res.p,res.mean);
+  }
+  $("#status").textContent="Ladder complete at "+N+" draws. The observed silhouette never moved. Only the null did.";
+  $("#run").disabled=$("#ladder").disabled=false;running=false;
+}
+
+function autorun(N){
+  const hists=[],minSize=Math.max(4,Math.round(0.15*D.n));
+  let last=null;
+  STEPS.forEach(([key,geo,sel,label],s)=>{
+    const col=colour(s),r=rng(42),vals=[];
+    for(let i=0;i<N;i++){
+      let dr=makeDraw(r); if(geo)dr=normRows(dr);
+      vals.push(statFor(dr,sel,r,minSize));
+    }
+    const c=vals.filter(v=>v>=D.obs).length;
+    const p=(c+1)/(N+1), mean=vals.reduce((a,b)=>a+b,0)/vals.length;
+    hists.push({name:label,vals,color:col});
+    fillRow(key,mean,p);
+    last={p,mean};
+  });
+  draw(hists);
+  setReadout(last.p,last.mean);
+  $("#prog").style.width="100%";
+  $("#status").textContent="Ladder complete at "+N+" draws. The observed silhouette never moved. Only the null did.";
+  document.body.dataset.ready="1";
+}
+
+fetch("demo/data.json").then(r=>r.json()).then(j=>{
+  const Xn=j.Xn,n=j.n,d=j.d;
+  const mu=new Array(d).fill(0);
+  for(const row of Xn)for(let k=0;k<d;k++)mu[k]+=row[k]/n;
+  const A=Xn.map(row=>row.map((v,k)=>(v-mu[k])/Math.sqrt(n-1)));
+  D={n,d,obs:j.observed_silhouette,fit:{n,d,mu,A}};
+  $("#obs").textContent=D.obs.toFixed(4);
+  $("#dims").textContent="("+n+" × "+d+" matrix loaded)";
+  draw([]);
+  const q=new URLSearchParams(location.search);
+  if(q.has("autorun")){
+    const N=Math.max(50,Math.min(1000,parseInt(q.get("autorun"))||300));
+    $("#ndraws").value=N; $("#nlab").textContent=N;
+    $("#status").textContent="Running";
+    setTimeout(()=>autorun(N),30);
+  }
+}).catch(e=>{$("#status").textContent="Could not load demo/data.json: "+e;});
+
+$("#ndraws").addEventListener("input",e=>$("#nlab").textContent=e.target.value);
+$("#run").addEventListener("click",go);
+$("#ladder").addEventListener("click",ladder);
+$("#reset").addEventListener("click",()=>{
+  document.querySelectorAll("#tbl tbody tr").forEach(t=>{t.className="pending";
+    t.querySelector(".v").textContent="·";t.querySelector(".p").textContent="·";});
+  $("#nullmean").textContent=$("#pval").textContent=$("#verdict").textContent="·";
+  $("#verdict").style.color="";$("#prog").style.width="0";
+  $("#status").textContent="Reset.";lastHists=[];draw([]);
+});
+window.addEventListener("resize",()=>draw(lastHists));
+</script>
+</body>
+</html>

@@ -1,11 +1,13 @@
-# FM Subtype Discovery — Data Requirements Master Reference
+# Data requirements
 
-## 1. PRIMARY DATA SOURCES
+What to download to rebuild this study from scratch, and what the files actually contain.
 
-### 1.1 OpenNeuro ds004144 (Imaging)
-- **URL:** https://openneuro.org/datasets/ds004144/versions/1.0.2
-- **Access:** No account, approval, or DUA required — immediate download
-- **Format:** BIDS
+## 1. Primary data sources
+
+### 1.1 OpenNeuro ds004144 (imaging)
+
+URL: https://openneuro.org/datasets/ds004144/versions/1.0.2
+Access: no account, approval or DUA. Download it directly. Format is BIDS.
 
 | Field | Value |
 |---|---|
@@ -14,30 +16,46 @@
 | Recruitment site | Mexico |
 | Total subjects | 66 |
 
-**Modalities to download:**
-- `T1w` — structural MRI (all subjects)
-- `T2w` — structural MRI (all subjects)
-- `bold` resting-state fMRI — standard EPI
-- `bold` task-fMRI — emotion processing/regulation task (EPRT)
-  - Duration: 27.8 minutes
-  - Volumes per subject: 834
-  - TR: check dataset header
-  - Task conditions: **Attend**, **Reappraise**, **Suppress**
-  - Stimulus valences: **positive**, **negative**, **neutral**
-  - Total condition cells: 3 strategies × 3 valences = **9 FC matrices per subject**
-- `events.tsv` files — trial-level condition/timing labels (required for GLM contrasts and condition-level FC extraction)
-- `participants.tsv` — subject-level metadata in BIDS root
+Modalities to download:
 
-**What NOT to download (not needed for this study):**
-- Field maps (only needed if fMRIPrep flags them — grab if preprocessing fails without them)
+- `T1w`, structural MRI, all subjects
+- `T2w`, structural MRI, all subjects
+- `bold` resting-state fMRI, standard EPI
+- `bold` task-fMRI, the emotion processing and regulation task (EPRT). 27.8 minutes,
+  834 volumes per subject, TR 2 s.
+- `events.tsv`, trial-level condition and timing labels. Required for condition-level FC
+  extraction.
+- `participants.tsv`, subject-level metadata in the BIDS root.
+
+The task design is worth reading carefully, because it is not a full crossing and an earlier
+version of this document described it wrongly. There are **seven** conditions, not nine. Three
+valences (Neutral, Negativo, Happy) are crossed with four regulation strategies (OBSERVAR,
+REDUCIR, SUPRIMIR, INCREMENTAR), but only seven of the twelve cells were actually run:
+
+| Condition (as it appears in `events.tsv`) | Trials | Seconds each |
+|---|---|---|
+| Neutral - OBSERVAR | 12 | 8 |
+| Negativo - OBSERVAR | 12 | 8 |
+| Negativo - REDUCIR | 12 | 8 |
+| Negativo - SUPRIMIR | 12 | 8 |
+| Happy - OBSERVAR | 12 | 8 |
+| Happy - SUPRIMIR | 12 | 8 |
+| Happy - INCREMENTAR | 12 | 8 |
+
+Neutral only ever appears with OBSERVAR, and Happy is never paired with REDUCIR. So you get
+**seven FC matrices per subject**, one per condition, each built from 12 trials × 4 volumes =
+48 volumes concatenated. The trial-type strings are in Spanish and the code matches them
+literally, so do not translate them.
+
+Field maps are not needed. Grab them only if fMRIPrep fails without them.
 
 ---
 
-### 1.2 Zenodo Clinical/Behavioral Data
-- **DOI:** https://doi.org/10.5281/zenodo.6554870
-- **Access:** Free download, no approval required
+### 1.2 Zenodo clinical and behavioural data
+- DOI: https://doi.org/10.5281/zenodo.6554870
+- Access: Free download, no approval required
 
-**Required variables — keep all of these:**
+Required variables, all of them:
 
 | Variable | Instrument | Used For |
 |---|---|---|
@@ -45,79 +63,94 @@
 | Depression | Beck Depression Inventory (BDI) | Clinical validation |
 | Anxiety | Beck Anxiety Inventory (BAI) | Clinical validation |
 | Alexithymia | Toronto Alexithymia Scale (TAS-20) | Clinical validation |
-| Emotion regulation | Emotion Regulation Questionnaire (ERQ) — subscales: Cognitive Reappraisal, Expressive Suppression | Clinical validation, maps to task conditions |
+| Emotion regulation | Emotion Regulation Questionnaire (ERQ), subscales Cognitive Reappraisal, Expressive Suppression | Clinical validation, maps to task conditions |
 | Age | Sociodemographic | Covariate control |
 | Education (years) | Sociodemographic | Covariate control |
 | Disease duration | Sociodemographic | Clinical validation |
 | Number of medications | Sociodemographic | Clinical validation |
-| Subject ID | — | Merge key with imaging data |
-| Group label (FM / HC) | — | Permutation testing, baseline SVM |
+| Subject ID | n/a | Merge key with imaging data |
+| Group label (FM / HC) | n/a | Permutation testing, baseline SVM |
 
-**Merge strategy:** Join Zenodo CSV to participants.tsv on subject ID. Verify ID format alignment (sub-XXXX in BIDS vs. numeric IDs in Zenodo — may need a crosswalk).
+Merge strategy: join Zenodo CSV to participants.tsv on subject ID. Verify ID format alignment (sub-XXXX in BIDS against numeric IDs in Zenodo, so you may need a crosswalk).
 
 ---
 
-## 2. DERIVED / PROCESSED DATA (outputs of pipeline, not downloaded)
+## 2. Derived data (produced by the pipeline, not downloaded)
 
-These are computed from raw data — do not need to download externally.
+These are computed from the raw data. Nothing here needs downloading.
 
-### 2.1 fMRIPrep Outputs (per subject)
-- `*_space-MNI152NLin2009cAsym_res-2_desc-preproc_bold.nii.gz` — preprocessed BOLD
-- `*_confounds_timeseries.tsv` — motion + physiological confounds
-- `*_space-MNI152NLin2009cAsym_res-2_desc-brain_mask.nii.gz` — brain mask
-- `*_T1w_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz` — normalized T1
+### 2.1 fMRIPrep outputs (per subject)
+- `*_space-MNI152NLin2009cAsym_res-2_desc-preproc_bold.nii.gz`, preprocessed BOLD
+- `*_confounds_timeseries.tsv`, motion and physiological confounds
+- `*_space-MNI152NLin2009cAsym_res-2_desc-brain_mask.nii.gz`, brain mask
+- `*_T1w_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz`, normalized T1
 
-**What fMRIPrep applies:**
+What fMRIPrep applies:
 - Motion correction (6-parameter rigid body)
 - Slice timing correction
 - Spatial normalization to MNI152 (2mm³ resolution)
 - Confound regression (24 motion params + WM/CSF signals minimum)
 
-**Expected dropout:** 10–15% from excessive motion (>0.5mm FD threshold). Target: ≥28 FM subjects post-QC.
+Expected dropout is 10–15% from excessive motion (>0.5mm FD threshold). Target: ≥28 FM subjects post-QC.
 
 ---
 
 ### 2.2 Atlas
-- **Schaefer 200-parcel, 7-network parcellation** — fetched via `nilearn.datasets.fetch_atlas_schaefer_2018(n_rois=200)`
+- Schaefer 200-parcel, 7-network parcellation, fetched via `nilearn.datasets.fetch_atlas_schaefer_2018(n_rois=200)`
 - Produces 200 ROI time series per subject per condition block
 
 ---
 
-### 2.3 Functional Connectivity Matrices
-- Shape: `200 × 200` Pearson correlation matrix
-- One matrix per condition cell (3 strategies × 3 valences = **9 per subject**)
-- Also compute 1 resting-state FC matrix per subject (for ablation Study 3)
-- Total matrices: 66 subjects × 10 conditions = **660 FC matrices**
-- Storage estimate: each matrix at float32 = 200×200×4 bytes ≈ 160KB → total ~105MB
+### 2.3 Functional connectivity matrices
+
+- Shape: `200 × 200`, Ledoit-Wolf shrunk correlation, Fisher z-transformed with the diagonal
+  zeroed.
+- One matrix per condition, so seven per subject. See the condition table in 1.1.
+- Optionally one resting-state matrix per subject as well, for the ablation.
+- That comes to 66 subjects × 8 matrices = 528 in total if you build the resting-state ones,
+  462 without.
+- At float32 each matrix is 200 × 200 × 4 bytes, about 160 KB, so budget roughly 85 MB.
+
+Ledoit-Wolf rather than a plain Pearson correlation is not optional here. Each condition gives
+48 volumes against 200 parcels, so the sample covariance is rank-deficient and a raw
+correlation matrix is unstable.
 
 ---
 
-### 2.4 Graph Dataset (PyTorch Geometric)
+### 2.4 Graph dataset (PyTorch Geometric)
 Per subject graph node features (200 nodes × 5 features):
 
 | Feature | Description |
 |---|---|
 | Mean BOLD signal | Per parcel, per condition block |
 | BOLD variance | Per parcel, per condition block |
-| Spectral power band 1 | Low frequency (0.01–0.08 Hz) |
-| Spectral power band 2 | Mid frequency (0.08–0.15 Hz) |
-| Spectral power band 3 | High frequency (0.15–0.25 Hz) |
+| Spectral power band 1 | 0.01–0.04 Hz |
+| Spectral power band 2 | 0.04–0.1 Hz |
+| Spectral power band 3 | 0.1–0.25 Hz |
 
 Edge weights: pairwise FC correlation values (200×200 adjacency).
 
 ---
 
-### 2.5 Model Outputs
-- **Per-subject per-condition embeddings:** shape `(subjects × 9 conditions, 64)` — output of GAT encoder
-- **Pooled subject embeddings:** shape `(subjects, 64)` — after attention pooling across conditions
-- **Attention weights:** shape `(subjects, 200, 9)` — GAT node attention per parcel per condition
-- **Cluster assignments:** shape `(33_FM_subjects,)` — k-means labels (k=2,3,4 runs)
-- **Silhouette scores:** scalar per k
-- **Null distribution:** 1000 permuted silhouette scores (permutation test)
+### 2.5 Model outputs
+
+Shapes below are what the canonical run actually produces, with dModel 119 from the corrected
+architecture search. Earlier drafts of this file quoted 64 and nine conditions; both were wrong.
+
+- Per-condition graph embeddings: `(7, 119)` per subject, straight out of the GATv2 encoder.
+- Pooled subject embeddings: `(28, 119)` for the FM patients, after the condition-attention
+  pool. Saved as `data/outputs/Embeddings.npy`.
+- Attention weights: `(28, 7)`, one softmax weight per condition per subject. These are the
+  pooling weights, not per-parcel node attention.
+- Cluster assignments: `(28,)`, k-means labels. k is searched over 2–6 and selected by
+  silhouette under a minimum-cluster-size guard.
+- Silhouette: one scalar per k.
+- Null distribution: 1,000 draws by default. Read `analysis/evaluate.py` before changing how
+  these are generated; the construction is the subject of the paper.
 
 ---
 
-## 3. DATA FILES TO CREATE / MAINTAIN LOCALLY
+## 3. Data files to create / maintain locally
 
 ```
 data/
@@ -150,7 +183,7 @@ data/
 
 ---
 
-## 4. CLINICAL DATA COLUMNS — subjects_master.csv
+## 4. Clinical data columns (subjects_master.csv)
 
 Minimum required schema for the merged master file:
 
@@ -177,18 +210,18 @@ cluster_label     | int   | Assigned post-clustering (FM only; NaN for HC)
 
 ---
 
-## 5. WHAT THIS STUDY DOES NOT NEED
+## 5. What this study does not need
 
-- Paid datasets (e.g., UK Biobank, ABCD) — not used
-- Additional data collection — no participants to recruit
-- External validation cohort — noted as Year 2 goal only
-- DWI/DTI data — not in ds004144, not needed
-- EEG/MEG — not collected
-- Pharmacological trial data — not applicable
+- Paid datasets (UK Biobank, ABCD): not used
+- Additional data collection: no participants to recruit
+- External validation cohort: a year-two goal only
+- DWI/DTI: not in ds004144, not needed
+- EEG/MEG: not collected
+- Pharmacological trial data: not applicable
 
 ---
 
-## 6. ANALYSIS INPUTS BY PIPELINE STAGE
+## 6. Analysis inputs by pipeline stage
 
 | Stage | Input Data | Output |
 |---|---|---|
@@ -196,7 +229,7 @@ cluster_label     | int   | Assigned post-clustering (FM only; NaN for HC)
 | ROI extraction | Preprocessed BOLD + Schaefer atlas | 200 × T timeseries per condition |
 | FC computation | ROI timeseries + events.tsv (condition blocking) | 9 × 200×200 FC matrices per subject |
 | Graph dataset | FC matrices + node features | PyG Data objects |
-| GAT training | Graph dataset (FM+HC or FM only — decide) | Trained encoder weights |
+| GAT training | Graph dataset (FM+HC or FM only, decide) | Trained encoder weights |
 | Embedding extraction | Trained encoder + all subject graphs | 64-dim embeddings |
 | Attention pooling | Per-condition embeddings | 1 pooled embedding per subject |
 | Clustering | FM-only pooled embeddings | Cluster labels |
@@ -206,7 +239,7 @@ cluster_label     | int   | Assigned post-clustering (FM only; NaN for HC)
 
 ---
 
-## 7. QUICK DOWNLOAD CHECKLIST
+## 7. Quick download checklist
 
 - [ ] Download ds004144 via `openneuro.org` or `aws s3 sync --no-sign-request s3://openneuro.org/ds004144 ds004144/`
 - [ ] Download Zenodo clinical data: `wget https://zenodo.org/record/6554870/files/<filename>`
@@ -221,8 +254,8 @@ cluster_label     | int   | Assigned post-clustering (FM only; NaN for HC)
 
 ## 8. KEY PRIOR PAPERS USING THIS DATASET (to read before writing)
 
-1. Balducci et al. (2022) *Scientific Data* — original dataset descriptor
-2. Garza-Villarreal et al. (2024) *Human Brain Mapping* — functional neurocircuitry in FM (likely used resting-state GLM)
-3. Two other undisclosed papers using ds004144 — find via Google Scholar: `ds004144 OR "Balducci 2022 fibromyalgia"`
+1. Balducci et al. (2022), *Scientific Data*. The original dataset descriptor.
+2. Garza-Villarreal et al. (2024), *Human Brain Mapping*. Functional neurocircuitry in FM, probably a resting-state GLM.
+3. Two other undisclosed papers use ds004144. Find them via Google Scholar: `ds004144 OR "Balducci 2022 fibromyalgia"`
 
-**Confirmed gap:** None of the 3 prior papers applied ML to task-fMRI. Task-fMRI analyzed only with GLM. No unsupervised subtype discovery in any modality.
+Confirmed gap: None of the 3 prior papers applied ML to task-fMRI. Task-fMRI analyzed only with GLM. No unsupervised subtype discovery in any modality.
