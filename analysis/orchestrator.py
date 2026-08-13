@@ -1,4 +1,5 @@
 from config import config;
+from pathlib import Path;
 import pandas as pd;
 import numpy as np;
 import driver_utils as driverUtils;
@@ -38,14 +39,8 @@ class Orchestrator():
                 self.clinicalCSV = pd.read_csv(config.clinicalCsv).set_index("subject_id", drop=False);
         else:
             self.clinicalCSV = pd.read_csv(config.clinicalCsv).set_index("subject_id", drop=False);
-        if dumpPath is not None:
-            try:
-                self.savePath = dumpPath;
-            except FileNotFoundError:
-                warnings.warn(f"Path Specified: {dumpPath} Does Not Exist - Check File Type. Using Default Path");
-                self.savePath = config.anaylsisOrchestrator;
-        else:
-            self.savePath = config.anaylsisOrchestrator;
+        self.savePath = Path(dumpPath) if dumpPath is not None else config.analysisOrchestrator;
+        self.savePath.parent.mkdir(parents=True, exist_ok=True);
     def effectiveRank(self):
         effectiveRank, pc1 = driverUtils.eff_rank(self.embeddings);
         return [effectiveRank, pc1];
