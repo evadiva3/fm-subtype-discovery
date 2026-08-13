@@ -1,4 +1,5 @@
 from config import config;
+from pathlib import Path;
 import pandas as pd;
 import numpy as np;
 import driver_utils as driverUtils;
@@ -38,14 +39,8 @@ class Orchestrator():
                 self.clinicalCSV = pd.read_csv(config.clinicalCsv).set_index("subject_id", drop=False);
         else:
             self.clinicalCSV = pd.read_csv(config.clinicalCsv).set_index("subject_id", drop=False);
-        if dumpPath is not None:
-            try:
-                self.savePath = dumpPath;
-            except FileNotFoundError:
-                warnings.warn(f"Path Specified: {dumpPath} Does Not Exist - Check File Type. Using Default Path");
-                self.savePath = config.anaylsisOrchestrator;
-        else:
-            self.savePath = config.anaylsisOrchestrator;
+        self.savePath = Path(dumpPath) if dumpPath is not None else config.analysisOrchestrator;
+        self.savePath.parent.mkdir(parents=True, exist_ok=True);
     def effectiveRank(self):
         effectiveRank, pc1 = driverUtils.eff_rank(self.embeddings);
         return [effectiveRank, pc1];
@@ -68,13 +63,13 @@ class Orchestrator():
         clusters = [group["FD"].to_numpy() for _, group in subjectFD.groupby("K")];
         if len(clusters)<2:
             return [float("nan"), float("nan"), len(subjectFD["SubjectId"])];
-        H, HPerm = stats.kruskal(*clusters);
-        return [H, HPerm, len(subjectFD["SubjectId"])];
+        H, kruskalP = stats.kruskal(*clusters);
+        return [H, kruskalP, len(subjectFD["SubjectId"])];
     def main(self):
         package = self.effectiveRank();
         package1 = self.leaveOneOut();
         package2 = self.kToFD();
-        pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "hPerm": package2[1], "nCount": package2[2]}, index=[0]).to_csv(self.savePath);
+        pd.DataFrame({"effectiveRank": package[0], "pc1": package[1], "severityR": package1[0], "severityR2": package1[1], "severityPermutations": package1[2], "hStat": package2[0], "kruskalP": package2[1], "nCount": package2[2]}, index=[0]).to_csv(self.savePath);
 if __name__ == "__main__":
     orchestrate = Orchestrator(None, None, None, None, None);
     orchestrate.main();

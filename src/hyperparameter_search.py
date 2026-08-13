@@ -1,4 +1,4 @@
-from ray import tune, train as rayTrain;
+from ray import tune;
 import torch;
 import os;
 import sys;
@@ -15,7 +15,6 @@ import pandas as pd;
 from config import config;
 def runscript(config1, dataset):
     from config import config;
-    import train;
     from gnn_encoder import GNNEncoder
     from contrastive_loss import NTXentLoss
     from attention_pool import condition_attention_pool as conditionAttentionPool
@@ -45,9 +44,9 @@ def runscript(config1, dataset):
     size = len(data);
     partial = int(size*config.valFractionForTune);
     split = size-partial;
-    train, test = randomSplit(data, [split, partial], generator = splitGeneration);
-    dataset.normalizeData(train.indices);
-    training = DataLoader(train, batch_size=config.batchSize, shuffle = True, collate_fn = lambda b:b, drop_last=True);
+    trainSplit, test = randomSplit(data, [split, partial], generator = splitGeneration);
+    dataset.normalizeData(trainSplit.indices);
+    training = DataLoader(trainSplit, batch_size=config.batchSize, shuffle = True, collate_fn = lambda b:b, drop_last=True);
     testing = DataLoader(test, batch_size = len(test), shuffle = False, collate_fn=lambda b:b);
     tuneName = os.path.basename(direct);
     encodeOut, attentionOut, trainLoss, valLoss = jointTrain(encoder, attentionPooling, NTXLoss, training, testing, augmentation, config.device, direct,config.tuneEpochs, None, None, None,tuneName);
