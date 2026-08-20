@@ -4,7 +4,6 @@ Every module imports the shared instance:
 """
 
 import os
-import torch
 from pathlib import Path
 import pandas as pd;
 
@@ -144,6 +143,7 @@ class Config:
     # Device
     @property
     def device(self):
+        import torch
         if torch.cuda.is_available(): return torch.device("cuda")
         if torch.backends.mps.is_available(): return torch.device("mps")
         return torch.device("cpu")
