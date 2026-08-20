@@ -25,215 +25,283 @@ So this stopped being a fibromyalgia paper and became a methods one, about how e
 get a convincing false positive out of a very standard analysis. The repo is still called
 `fm-subtype-discovery` from before we knew that.
 
-You can run the whole argument in your browser without installing anything. Setup for the
-rest is below.
-
 ## Try it in your browser
 
 [Live demo](https://evadiva3.github.io/fm-subtype-discovery/). Nothing to install.
 
-[![The four null constructions running in the browser. The null distribution shifts right past the observed silhouette as each correction is applied, and the ladder table fills in.](docs/demo/thumbnail_1600.png)](https://evadiva3.github.io/fm-subtype-discovery/)
+[![The four null constructions running in the browser.](docs/demo/thumbnail_1600.png)](https://evadiva3.github.io/fm-subtype-discovery/)
 
-The page loads the real 28 x 119 embedding matrix from the paper and does the clustering, the
-silhouette and every null draw in front of you. Nothing is precomputed. Press "Run the full
-ladder" and in about twenty seconds you get this:
+It loads the real 28 x 119 embedding matrix and does the clustering, the silhouette and every
+null draw in front of you. Nothing is precomputed. Press "Run the full ladder", wait twenty
+seconds:
 
-| Construction | Geometry matched | Selection matched | Paper *p* |
+| Construction | Geometry matched | Selection matched | *p* |
 |---|---|---|---|
 | Misspecified, as originally implemented | No | No | 0.1698 |
 | Geometry corrected only | Yes | No | 0.4436 |
 | Selection corrected only | No | Yes | 0.3966 |
 | Fully corrected | Yes | Yes | 0.6773 |
 
-Same data, same silhouette, same four clusters in all four rows. The only thing that changes
-is what we compare against, and the result goes from significant to not.
+Same data, same silhouette, same four clusters in every row. Only the comparison changes, and
+the result goes from significant to not.
 
-It uses the same 20 k-means restarts the paper does, so you should land within Monte-Carlo
-noise of those numbers. A 1,000-draw run comes back near 0.164, 0.435, 0.410 and 0.694. The
-silhouette agrees with the Python to seven decimals (0.2433061).
+Those are 1,000-draw values; at 20,000 they read 0.1685 / 0.4630 / 0.4033 / 0.7009. Silhouette
+agrees with the Python to seven decimals (0.2433061).
 
 Source is `docs/index.html`. One file, no dependencies, no build step.
 
+---
+
 ## Setup
 
-Python 3.10 or newer. Tested on 3.12 and 3.14, macOS and Linux. Nothing on this page needs a
-GPU.
+Python 3.10+. Tested on 3.12, 3.13, 3.14.
 
 ```bash
 git clone https://github.com/evadiva3/fm-subtype-discovery.git
 cd fm-subtype-discovery
-
-python3 -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
-
+python3 -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-```
 
-That pulls PyTorch, PyTorch Geometric, scikit-learn, nilearn and Ray Tune. Takes a few
-minutes and about 2 GB, nearly all of it PyTorch.
-
-Check it worked:
-
-```bash
 export OMP_NUM_THREADS=1
 python -m pytest tests/ -q
 ```
 
-You want `12 passed`. If you instead get `FileNotFoundError: Tuned hyperparameter 'dModel' is
-unavailable`, your clone is missing `data/tune/bestParams.json`. It is committed, so pull
-again.
+You want `12 passed`. If you get `FileNotFoundError: Tuned hyperparameter 'dModel'`, your clone
+is missing `data/tune/bestParams.json`. It is committed, so pull again.
 
-## Run it locally
+Four things that will otherwise cost you an hour:
 
-Three things work right after setup. No imaging data, no downloads. The clone ships the
-trained embeddings and the architecture spec, which is all these need.
+- **`OMP_NUM_THREADS=1` is not general advice.** scikit-learn's k-means parallelizes with
+  OpenMP, and on a 28-point problem thread coordination costs more than the arithmetic:
+  2.90 ms/fit single-threaded against 74.07 ms at 32 threads. ~25x faster, byte-identical.
+  Parallelize across processes, keep each single-threaded.
+- **`ray` has no wheel for Python 3.13+.** `src/train.py` imports it at module load and only
+  uses it inside the hyperparameter search. A stub whose `tune.report` raises is enough.
+- **`umap-learn` is imported by `src/clustering.py`** even though no null analysis uses it.
+- **The depression data must be a sibling of the repo**, not inside it. See tier 2.
 
-**Serve the demo yourself** instead of using the hosted one:
+---
 
-```bash
-cd docs && python3 -m http.server 8000
-```
+## Reproducing
 
-Then open `http://localhost:8000`.
+Three tiers by what each needs.
 
-**Rerun the ladder in Python.** Same four constructions as the demo, about two minutes:
+### Tier 1 — clean clone, CPU only
 
 ```bash
 export OMP_NUM_THREADS=1
-python analysis/null_progression.py 1000
+export FM_RESULTS_ROOT=/tmp/fmresults    # optional, keeps outputs out of the tree
 ```
 
-Expect roughly 0.170, 0.444, 0.397 and 0.677, and a file in `results/null_corrected/`.
+| Command | Reproduces | Time |
+|---|---|---|
+| `python analysis/null_progression.py 1000` | the four-rung ladder, Tables 2A / 13 | 2 min |
+| `python analysis/null_progression.py 20000` | same at the headline count | 35 min |
+| `NDATASETS=1000 NDRAWS=1000 MATCH_SELECTION=0 MATCH_GEOMETRY=0 python analysis/calibration_run.py` | misspecified Type I error, 0.205 | 5 min |
+| `NDATASETS=1000 NDRAWS=1000 MATCH_SELECTION=1 MATCH_GEOMETRY=1 python analysis/calibration_run.py` | corrected Type I error, 0.004 | 20 min |
+| `python analysis/type1_surface.py 200 200` | inflation tracks geometry, not n | 3 min |
+| `python analysis/syntheticEmbeddings.py` | planted-cluster control, Table 15 | 30 min |
+| `python analysis/separation_ratio.py` | separation-ratio conversion, 0.584 / 1.166 / 1.725 | <1 min |
+| `cd docs && python3 -m http.server 8000` | the demo on localhost:8000 | instant |
 
-**Measure how often each construction fires on data with no groups in it.** About three
-minutes:
+Run `syntheticEmbeddings.py` before `separation_ratio.py`: the latter converts offsets to
+separation ratios on its own, but pinning those to the 1.166 and 1.725 power anchors needs the
+detection curve the positive control writes. Without it you get the conversion table and a
+"floor anchors unavailable" note.
+
+Times are for 24 cores at `OMP_NUM_THREADS=1`. The ladder at 1,000 draws lands near
+0.170 / 0.444 / 0.397 / 0.677. k-means init on the sphere is mildly scikit-learn-version
+sensitive, so the two sphere rungs can move a few draws in a thousand. No verdict moves.
+
+### Tier 2 — needs the depression timeseries (5.6 MB)
+
+`dataset_mdd.py` hardcodes its data directory as a repo sibling, with no config override:
+
+```
+UTD-PROJECT/
+├── fm-subtype-discovery/       <- this repo
+└── resting_state_dep_data/     <- 72 *_rest_ts.npy + participants.tsv
+```
+
+Check before running anything:
 
 ```bash
-python analysis/type1_surface.py 200 200
+python3 -c "
+import sys; sys.path.insert(0,'experiments/ds002748_mdd')
+from dataset_mdd import MDD_ROOT
+print(MDD_ROOT, MDD_ROOT.exists())
+"
 ```
 
-Writes `results/type1_surface.json`. The misspecified construction should reject far more than
-the nominal 5 percent. The corrected one should reject far less.
+`subject_filter_mdd.py` needs fMRIPrep confounds that are not shipped. Without them it returns
+an empty cohort and `mddDataset()` dies on `stack expects a non-empty TensorList`. All 72
+participants passed the motion rule and none was excluded (paper §3.1), so the filter has no
+work to do; the scripts under `experiments/ds002748_mdd/propagated_null/` override it and
+assert 72 = 51 depressed + 21 control before proceeding.
 
-## What happened
+Needs GPU torch and `torch_geometric`; `mdd_validate_forward.py` also needs `nilearn`.
 
-The usual way to claim you have found subtypes is: learn an embedding per patient, cluster
-them, score how separated the clusters are with a silhouette, then check that score against a
-null to show it didn't happen by chance. The null is built by making fake datasets that share
-the real one's covariance but have no actual groups in them, clustering those the same way,
-and counting how often the fake data scores as well as the real data (Dinga et al., 2019).
+| Command | Reproduces | Time |
+|---|---|---|
+| `python experiments/ds002748_mdd/propagated_null/mdd_validate_forward.py` | forward-path validation, run this first | 2 min |
+| `python experiments/ds002748_mdd/propagated_null/mdd_propagated_null.py observed` | the observed statistic on real data | 30 s |
+| `python experiments/ds002748_mdd/propagated_null/mdd_propagated_null.py 0 500` | the propagated null, *p* = 0.8124 | 3.5 h serial |
+| `python experiments/ds002748_mdd/propagated_null/mdd_fixed_arch_control.py 0 20` | 20-seed fixed-architecture control | 1 h |
 
-That is what we built. A GATv2 graph encoder trained with NT-Xent on connectivity graphs from
-28 patients. Four clusters, silhouette 0.24, p = 0.024. It looked publishable.
+The null is parallel across draws. Give each worker its own `MDD_NULL_ROOT` or they overwrite
+each other's surrogate cohorts, run disjoint ranges, merge the `draws/` dirs. Ten workers on one
+GPU did 500 draws in 2.5 hours — the model is small enough that the GPU saturates on kernel
+launches, so ten workers buy well under 10x.
 
-Then we retrained it. Same inputs, byte for byte, only the random seed different, and we got
-a different set of clusters. Agreement between runs was 0.23 on the adjusted Rand index,
-where 1.0 means identical and 0 means chance. Real structure doesn't move like that.
+### Tier 3 — needs preprocessed imaging we cannot ship
 
-Working out why took a while, and it wasn't the clustering. It was the null. Two separate
-mistakes in how we built it, and either one on its own was enough to turn noise into a
-result. Fix both and the same analysis gives p = 0.68. Across two disorders and 40 runs end
-to end, nothing comes out significant.
+Both OpenNeuro datasets, fMRIPrep, and a GPU for the search. Days, not hours.
+`docs/FM_Research_Data_Requirements.md` has the file layout.
 
-The uncomfortable part is that the reproducibility checks never touch a null at all, and they
-had it right from the start. The significance test was the broken thing, and it was the thing
-we trusted.
+```bash
+python preprocessing/clinical_to_csv.py
+python preprocessing/verify_setup.py
+python preprocessing/compute_fc_matrices.py
+python src/hyperparameter_search.py        # -> data/tune/bestParams.json
+python src/train.py                        # -> data/checkpoints/results/bestJointModel.pt
+python src/clustering.py                   # -> data/outputs/
+python analysis/ablation_table.py
+python analysis/bootstrap_stability.py
+python analysis/run_baselines.py
+python analysis/clinical_validation.py
+python analysis/effective_rank.py
+python analysis/severity_gradient_regression.py
+python analysis/raw_feature_ladder.py
+python figures.py
+```
 
-## The two errors
+`raw_feature_ladder.py` is tier 3 because it reads the per-condition FC matrices, which are
+gitignored. Its result is committed at `results/raw_feature_ladder.json`.
 
-The rule for a permutation null is that every fake dataset has to go through the exact same
-procedure the real number came out of. Ours broke that in two places.
+Depression pipeline: `experiments/ds002748_mdd/run_mdd_pipeline.sh`, then `run_mdd_analysis.sh`.
 
-**Geometry.** Before clustering we scale every embedding to unit length. That's routine, and
-it means only the direction of an embedding counts, not how long it is. Picture all 28
-patients sitting on the surface of a sphere.
+---
 
-Our null draws never got scaled. They were generated in the full space, so instead of sitting
-on the surface they were scattered through the inside of the sphere. Points spread through a
-volume are harder to group tightly than points on a surface, so the fake data scored lower
-than it should have, and beating it looked easier than it was. We were comparing the real
-result against a null we'd accidentally handicapped.
-
-**Selection.** We didn't decide the number of clusters up front. We tried *k* from 2 to 6 and
-kept whichever scored best, which was 4. Choosing after seeing the results inflates the score
-on its own, because the best of five tries beats a single try on average even when there's
-nothing there.
-
-That's fine as long as the null gets the same five tries. Ours didn't. Each fake dataset was
-scored at one fixed *k*. Real data got five shots, the null got one. When you do give the null
-the same search, 33.8% of draws do best at *k* = 2 and only 25.3% at the *k* = 4 we reported,
-which is a decent measure of how much of our result was the search rather than the brains.
-
-There was a third, smaller thing. The p-value used `c/n` with a strict inequality, so it could
-return exactly 0, which isn't a valid p-value. It's `(c+1)/(n+1)` now.
-
-Either of the first two is enough on its own. On the checkpoint where we first caught this, p
-goes 0.024, then 0.177 with the geometry fixed, then 0.93 with the selection fixed as well.
-On the rebuilt pipeline the corrected value is 0.6773. Through all of that the silhouette
-never moves. Only the comparison does.
-
-## Headline results
+## Results
 
 ### Fibromyalgia (ds004144): 58 scanned, 28 patients
 
-| Quantity | Value |
+| | |
 |---|---|
 | Canonical architecture | dModel 119, heads 8, output 15, layers 3 |
-| Clustering | *k* = 4, silhouette 0.2433, p = 0.6773 |
-| Independent architectures tested | 0 of 7 significant (p 0.272 – 0.803) |
-| 20-run search-varying protocol | 0 of 20 significant (min 0.131, median 0.576, max 0.937) |
-| Cross-run agreement (adjusted Rand) | 0.230 |
-| Within-checkpoint bootstrap | 0.568, twice as high, and measuring the wrong variability |
-| Clinical variables surviving FDR | 0 of 10 (smallest corrected p = 0.896) |
-| Untrained vs trained silhouette | 0.4599 vs 0.2433 (silhouette rewards collapse) |
+| Clustering | *k* = 4, silhouette 0.2433, p = 0.6773 (1,000 draws) / 0.7009 (20,000) |
+| Propagated null, simulated in the raw data space | **p = 0.9062** (500 draws) |
+| Independent architectures | 0 of 15 significant (p 0.272 – 0.825) |
+| Fixed-architecture control, seed only | 0 of 20 (p 0.083 – 0.974) |
+| 20-run search-varying protocol | 0 of 20 (min 0.131, median 0.576) |
+| Cross-run agreement (ARI) | 0.289 (14 runs) / 0.230 (20 runs) |
+| Within-checkpoint bootstrap | 0.5676, twice as high, measuring the wrong variability |
+| Clinical variables surviving FDR | 0 of 10 (every corrected p = 0.896) |
+| Untrained vs trained silhouette | 0.4600 vs 0.2433 |
 | Participation ratio, untrained / trained | 1.585 / 3.703 |
 
 ### Depression (ds002748): 72 scanned, 51 patients
 
-| Quantity | Value |
+| | |
 |---|---|
 | Canonical architecture | dModel 68, heads 4, output 8, layers 3 (independently searched) |
-| Clustering | *k* = 5, silhouette 0.142, p = 0.384 |
-| 20-run protocol | 0 of 20 significant (median 0.590) |
-| Cross-run agreement | 0.226 |
-| Severity gradient | none on any of three scales; every out-of-sample R² is negative |
+| Clustering | *k* = 5, silhouette 0.142, p = 0.3843 |
+| Propagated null | **p = 0.8124** (500 draws) |
+| 20-run protocol | 0 of 20 (median 0.590) |
+| Fixed-architecture control, seed only | 0 of 20 (p 0.086 – 0.927) |
+| Cross-run agreement | 0.226 (20 runs); 0.233 across seeds at fixed architecture |
+| Severity gradient | none on three scales; every out-of-sample R² negative |
 
-Cross-run agreement comes out at 0.230 in one cohort and 0.226 in the other. That is a gap
-of 0.004 between different clinical populations, different acquisition modalities (task
-versus resting-state), and separately searched architectures.
+Cross-retrain agreement lands between 0.226 and 0.289 across both cohorts, two search spaces
+and four protocols. A reproducible subtype needs 0.7.
 
-### Classical baselines (fibromyalgia)
+### Baselines (fibromyalgia)
 
 | Method | Value | p |
 |---|---|---|
 | PCA + k-means | silhouette 0.057 | 0.983 |
 | Flat upper-triangle k-means | silhouette 0.060 | 0.886 |
 | Group ICA + k-means | silhouette 0.377 | 0.197 |
-| Supervised SVM (patients vs controls) | 0.503 accuracy | 0.403, below the majority-class rate |
+| Supervised SVM (patients vs controls) | 0.503 accuracy | 0.403, below majority class |
 
 ---
 
-## What bounds these negative results
+## What happened
 
-Saying we found nothing is only interesting if the test could have found something. A test
-that never fires would give us this exact result on real structure too. So we checked it both
-ways: does it fire when it shouldn't, and does it notice structure we deliberately put there.
+The usual way to claim subtypes: learn an embedding per patient, cluster, report a silhouette,
+test it against a null built from fake datasets that share the real covariance but have no
+groups in them (Dinga et al., 2019).
 
-**Does it fire on nothing?** (`analysis/calibration_run.py`) We made 200 datasets with no
-groups in them at all, ran the corrected test on each, and counted. At α = 0.05 a well-behaved
-test fires about 5% of the time. Ours fires 0.5%, roughly ten times too rarely.
+That is what we built. GATv2 encoder, NT-Xent, 28 patients. Four clusters, silhouette 0.24,
+p = 0.024. It looked publishable.
 
-That's a sample size problem. With 28 patients the estimated covariance is wobbly, so the fake
-datasets come out carrying more apparent structure than the real data has, which pushes the
-bar too high. Good news for our negative result, in that we're definitely not over-claiming.
-Less good in that the test is blunter than its α implies.
+Then we retrained it. Same inputs byte for byte, different seed, different clusters. Agreement
+across runs was 0.23 on the adjusted Rand index. Real structure doesn't move like that.
 
-**Does it notice real structure?** (`analysis/syntheticEmbeddings.py`) The other direction. We
-took the real embeddings and shoved groups of patients apart by a known amount, so we knew
-structure was there and knew exactly how strong. Then we ran the whole pipeline and watched.
-1,440 of these:
+It wasn't the clustering. It was the null, in two places, either of which alone turns noise
+into a result.
 
-| Planting offset | Mean ARI | Power |
+**Geometry.** We L2-normalize embeddings before clustering, so all 28 patients sit on the
+surface of a sphere. The null draws never got normalized — they were scattered through the
+inside. Points in a volume are harder to group tightly than points on a surface, so the fake
+data scored low and beating it looked easy.
+
+**Selection.** We tried *k* from 2 to 6 and kept the best, which was 4. Each null draw was
+scored at one fixed *k*. Real data got five shots, the null got one. Give the null the same
+search and 33.8% of draws do best at *k* = 2, only 25.3% at our *k* = 4.
+
+A third, smaller thing: the p-value used `c/n` with a strict inequality and could return
+exactly 0. It's `(c+1)/(n+1)` now.
+
+Fix both and that checkpoint goes to p = 0.93; the canonical checkpoint this repo ships goes
+from 0.1685 to 0.7009. Those are two different models — the 0.024 belongs only to the first.
+Across two disorders and 40 end-to-end runs nothing is significant. The silhouette never moves,
+only the comparison does.
+
+The uncomfortable part is that the reproducibility checks never touch a null, and they had it
+right from the start. The significance test was the broken thing, and it was the thing we
+trusted.
+
+## Correcting the null isn't enough
+
+Every rung above still builds the null downstream of the representation, so connectivity
+estimation, graph construction, training and pooling never enter it.
+
+So we replaced it: surrogate cohorts simulated in the raw data space from a group-level
+cross-spectral model, written to disk in the real subject layout, run through the unmodified
+pipeline 500 times per cohort. Fibromyalgia **p = 0.9062**, depression **p = 0.8124**, and in
+both the propagated null's mean silhouette exceeds the corrected embedding-space null's.
+
+A propagated null retrains on every draw, so its spread mixes data variability with whatever
+training nondeterminism the pipeline amplifies — 80% of the variance in fibromyalgia,
+essentially none in depression. Run the paired check that separates them: re-run ~30 draws at
+identical seeds and see whether the selected *k* holds.
+
+## It only bites collapsed representations
+
+Run the same four constructions on the raw connectivity edges — participation ratio 20.5
+against the embedding's 4.37 — and the ladder disappears: p = 0.991 / 0.996 / 0.995 / 0.998,
+null means agreeing to 0.004 against 0.043 in the embedding.
+
+So covariance-preserving nulls aren't broken. They break on the anisotropic, effectively
+low-dimensional representations contrastive encoders produce, which is where this literature
+is heading. `results/raw_feature_ladder.json`.
+
+## What bounds the negative result
+
+**Does the test fire on nothing?** 1,000 structureless datasets under both constructions on
+the same data. Misspecified rejects at **20.5%** against a nominal 5%, corrected at **0.4%**.
+Of the discordant pairs, 201 were misspecified-only and **zero** corrected-only. The inflation
+is one-directional.
+
+The corrected test is conservative by 12.5x on the reported run, 95% CI 4.9x–31x. That point
+estimate rests on four rejection events and comes back as 10x on re-execution, so quote the
+interval, not the number.
+
+**Does it notice real structure?** 1,440 realizations with clusters planted at known
+separation:
+
+| Offset | Mean ARI | Power |
 |---|---|---|
 | 0 – 6 | ≤ 0.15 | 0 % |
 | 8 | 0.39 | 13 % |
@@ -241,191 +309,109 @@ structure was there and knew exactly how strong. Then we ran the whole pipeline 
 | 12 | 0.81 | 80 % |
 | 20 | 0.98 | 100 % |
 
-ARI is how well the recovered clusters match the ones we planted. Power is how often the test
-actually called it. The pipeline is blind until the groups are quite far apart and doesn't
-become reliable until offset 12, at which point you could see the clusters in a scatter plot
-without any of this machinery.
+In transferable units: structureless sits at 0.584, power starts at 1.166, hits 80% at 1.725.
+At offset 0 the control lands on the real result exactly (0.2433, p = 0.6773) across all 120
+cells.
 
-At offset 0, where nothing is planted, the control lands on the real result exactly
-(silhouette 0.2433, p = 0.6773) across all 120 cells. That's the sanity check on the planting
-code itself: with no offset it should collapse back to the original analysis, and it does.
+**And the pipeline can't retrieve structure that is present in its own inputs.** The
+connectivity features identify subjects at 93.1% against 1.7% chance and decode task condition
+at twice chance. Clustering the encoder's embeddings of the same graphs recovers neither (ARI
+0.000 and 0.061); supervised decoding from those embeddings falls to 18.3% and 11.8%. The loss
+is in the encoder, not the clustering.
 
-Together those two put a fence around what we can claim. The honest version is "no subtype
-structure this method could detect at this sample size," not "no subtypes exist." Anything
-obvious, we'd have caught. Anything subtle, we can't speak to, and neither can any paper
-running this design on this many patients.
+So: no subtype structure this method could detect at this sample size. Not: no subtypes exist.
+Anything obvious we'd have caught. Anything subtle we can't speak to, and neither can any
+paper running this design on this many patients.
 
 ---
 
-## Repository layout
+## Layout
 
 ```
-config.py                    Single source of truth for hyperparameters and paths
-figures.py                   Publication figures, entry point
-requirements.txt
+config.py                    hyperparameters and paths, single source of truth
+figures.py                   publication figures
 
-preprocessing/               fMRIPrep derivatives to timeseries to FC matrices
-  compute_fc_matrices.py       Ledoit-Wolf shrinkage, Fisher z
-  subject_filter.py            Motion and completeness exclusions
-  clinical_to_csv.py           Clinical spreadsheet to clean CSV
-  verify_setup.py
+preprocessing/               fMRIPrep derivatives -> timeseries -> FC matrices
+models/                      GATv2 encoder, attention pool, NT-Xent, augmentations
+src/                         hyperparameter_search.py, train.py, clustering.py
 
-models/                      Architecture
-  gnn_encoder.py               3 × GATv2, multi-head graph attention
-  attention_pool.py            Temperature-scaled condition attention
-  contrastive_loss.py          NT-Xent
-  augmentations.py             Node masking, edge noise
-  dataset.py                   Graph construction, normalization
-
-src/                         Training and clustering
-  hyperparameter_search.py     Optuna + ASHA; optimizes NT-Xent loss, never silhouette
-  train.py                     Joint encoder/pool training; persists normStats
-  clustering.py                k-means, size guard, permutation test
-
-analysis/                    Evaluation
-  evaluate.py                  ** the corrected permutation null lives here **
-  driver_utils.py              Shared clustering/eval helpers
-  baselines.py, run_baselines.py
-  bootstrap_stability.py       Within-checkpoint resampling
-  syntheticEmbeddings.py       Planted-cluster positive control
-  clinical_validation.py       Kruskal-Wallis + FDR, motion check
-  severity_gradient_regression.py, knn_probe.py, confidence_intervals.py
-  effective_rank.py            Participation ratio
-  sensitivity_analysis.py      Edge-threshold sweep
-  orchestrator.py
-  calibration_run.py           ** the 200-dataset calibration experiment **
-  null_progression.py          The four null constructions, end to end
+analysis/
+  evaluate.py                  ** the corrected permutation null **
+  null_progression.py          the four constructions, end to end
+  calibration_run.py           ** the 1,000 x 1,000 paired calibration **
   type1_surface.py             Type I error by representation geometry
-  separation_ratio.py          Detection floor in interpretable units
-  end_to_end_positive_control.py
-  provenance.py                Hashes every artifact, writes PROVENANCE.md
-  provenance_scripts/          The 14 drivers that produced the shipped artifacts
+  raw_feature_ladder.py        ** the ladder in the raw connectivity space **
+  separation_ratio.py          detection floor in interpretable units
+  syntheticEmbeddings.py       planted-cluster positive control
+  baselines.py, bootstrap_stability.py, clinical_validation.py,
+  severity_gradient_regression.py, knn_probe.py, effective_rank.py,
+  sensitivity_analysis.py, e2e_calibration.py, provenance.py, orchestrator.py
 
-experiments/ds002748_mdd/    Depression replication (parallel pipeline)
-tests/                       pytest suite
-docs/
-  index.html                   The browser demo (single file, no dependencies)
-  demo/                        Embedding matrix and thumbnail the demo loads
-  FM_Research_Data_Requirements.md
-  repo_structure.md
-notebooks/                   Exploratory only; no result depends on these
+experiments/ds002748_mdd/    depression replication
+  propagated_null/             ** the raw-data-space null for this cohort **
+    mdd_propagated_null.py, mdd_validate_forward.py,
+    mdd_fixed_arch_control.py, mdd_params.json
+
+results/
+  figures/                     fig1..fig8 as cited in the paper
+  stability_summary.csv        the 14 stability runs behind Table 5
+  raw_feature_ladder.json
+  mdd/
+    canonical_single/          checkpoint, bestParamsMdd.json, embeddings, labels
+    multirun_v2/               20-run protocol, per-run embeddings and labels
+    propagated_null/           500 draws, summary, paired re-run
+    fixed_arch_control/        20 seeds, per-seed embeddings, permutation p
+
+tests/                       pytest suite, 12 tests
+docs/index.html              the browser demo
 ```
 
-Most of `data/` and `results/` is gitignored, because it is large and regenerable from the
-commands above. A small set is committed on purpose so the repository is not inert on a fresh
-clone:
+Most of `data/` and the fibromyalgia half of `results/` is gitignored — large and regenerable.
+Committed on purpose so a fresh clone isn't inert:
 
 | Committed | Why |
 |---|---|
-| `data/tune/bestParams.json` | The chosen architecture. Without it `config` cannot resolve and nothing imports. |
-| `data/outputs/*.npy`, `data/outputs/K-Means-Labeling.csv` | The trained 28 × 119 embeddings and their cluster labels, 60 KB total, enough to rerun every null analysis. |
-| `data/Subjects/*_events.tsv`, `*_confounds.tsv` | Straight from the public OpenNeuro release, small, and needed to rebuild the FC matrices. |
-| `data/schaefer200MNI.nii.gz` | The parcellation atlas. |
+| `data/tune/bestParams.json` | the chosen architecture; without it `config` cannot resolve |
+| `data/outputs/*.npy`, `K-Means-Labeling.csv`, `silhouette-scores.csv` | trained embeddings and labels, 60 KB, enough for every tier-1 analysis |
+| `data/Subjects/*_events.tsv`, `*_confounds.tsv` | from the OpenNeuro release, needed to rebuild FC matrices |
+| `data/schaefer200MNI.nii.gz` | the parcellation atlas |
+| `results/mdd/**`, `results/figures/**`, `results/raw_feature_ladder.json`, `results/stability_summary.csv` | each needs retraining to regenerate |
 
-The trained checkpoint (1 MB), the per-condition FC matrices, and `data/clinical_clean.csv` are
-not committed. **No subject-level clinical data is in this repository.**
+The fibromyalgia checkpoint, the FC matrices and `data/clinical_clean.csv` are not committed.
+**No subject-level clinical data is in this repository.**
 
-**Presentation material lives outside this repository.** Conference videos, slide
-figures, and the code that generates them were moved to `../presentation/`. They are
-communication artifacts, not part of any result, and they were 400 MB of the repository.
-Publication figures (`figures.py` → `results/figures/fig1…fig3`) remain here.
+## Data
 
----
+Both datasets are public on OpenNeuro: **ds004144** (fibromyalgia task-fMRI, Balducci et al.,
+2022) and **ds002748** (depression resting-state, Bezmaternykh et al., 2021).
 
-## Reproducing the full pipeline
+The depression pipeline reads only the parcellated timeseries — 72 `*_rest_ts.npy` plus
+`participants.tsv`, 5.6 MB. That is what the sibling `resting_state_dep_data/` needs to hold.
+The raw BIDS NIfTI is archival; re-parcellating would need the fMRIPrep derivatives, not the
+raw scans.
 
-Everything above runs on files that ship with the repo. Rebuilding the study from the raw
-scans is a much bigger job. You need both OpenNeuro datasets, fMRIPrep, and a GPU for the
-architecture search, and it takes days rather than minutes. Downloads are under Data
-availability below, and `docs/FM_Research_Data_Requirements.md` spells out which files you
-need and how to lay them out.
-
-```bash
-export OMP_NUM_THREADS=1        # not optional, see below
-```
-
-```bash
-# 1. preprocessing (assumes fMRIPrep derivatives on disk)
-python preprocessing/clinical_to_csv.py
-python preprocessing/verify_setup.py
-python preprocessing/compute_fc_matrices.py
-
-# 2. architecture search      → data/tune/bestParams.json
-python src/hyperparameter_search.py
-
-# 3. train                    → data/checkpoints/results/bestJointModel.pt
-python src/train.py
-
-# 4. cluster + significance   → data/outputs/
-python src/clustering.py
-
-# 5. analyses
-python analysis/ablation_table.py
-python analysis/bootstrap_stability.py
-python analysis/run_baselines.py
-python analysis/clinical_validation.py
-python analysis/effective_rank.py
-python analysis/severity_gradient_regression.py
-
-# 6. positive control and calibration
-python analysis/syntheticEmbeddings.py
-python analysis/calibration_run.py
-
-# 7. figures
-python figures.py
-```
-
-The depression replication lives in `experiments/ds002748_mdd/` and runs in the same order:
-
-```bash
-cd experiments/ds002748_mdd
-./run_mdd_pipeline.sh        # search, train, cluster
-./run_mdd_analysis.sh        # severity regression, ablations
-```
-
-> **`OMP_NUM_THREADS=1` is not general advice.** scikit-learn's k-means parallelizes with
-> OpenMP, and on a 28-point problem thread coordination costs more than the arithmetic:
-> 2.90 ms/fit single-threaded against 74.07 ms at 32 threads. ~25× faster, byte-identical
-> output.
-
----
-
-## Notes for anyone extending this
+## If you extend this
 
 **The null is in `analysis/evaluate.py`.** `_null_mvn` fits the Gaussian to the
-**L2-normalized** embeddings and re-projects each draw onto the sphere; `perm` runs with
-`match_selection=True` by default, so every draw repeats the full *k*-search under the
-same minimum-cluster-size guard. Both behaviours are load-bearing, and reverting either
-reintroduces one of the two errors.
+**L2-normalized** embeddings and re-projects each draw onto the sphere; `perm` defaults to
+`match_selection=True`, so every draw repeats the full *k*-search under the same guard. Both
+are load-bearing. Reverting either reintroduces one of the two errors.
 
-**Checkpoints carry `nodeMean`/`nodeStd`.** Inference must normalize with the training
-split's statistics, not all-subject statistics. Checkpoints predating this fix emit a
-fallback warning and are not usable for inference.
+**Checkpoints carry `nodeMean`/`nodeStd`.** Inference must normalize with the training split's
+statistics. Older checkpoints emit a fallback warning and are not usable for inference.
 
-**Batch size is fixed, not searched.** NT-Xent's denominator is the batch, so a trial with
-a larger batch solves a harder discrimination problem and records a worse validation loss
-for reasons unrelated to architecture. Searching it ranks batch sizes, not architectures.
+**Batch size is fixed, not searched.** NT-Xent's denominator is the batch, so a larger batch
+records a worse validation loss for reasons unrelated to architecture. Searching it ranks
+batch sizes, not architectures.
 
-**Open issue: NT-Xent temperature.** The selected temperature pinned at the search-range
-floor in 7 of 7 independent searches, meaning the bound was binding and the optimum lies
-below it. The range is now log-uniform [0.01, 1.0], but **this takes effect only on the
-next search**. Every architecture above was selected under the old bound. Related
-symptom: `tests/test_contrastive_loss.py::test_orthonormal_aligned_analytic` fails its
-`q > 0` assertion because at the canonical temperature (0.0505) the analytic loss for
-perfectly-aligned views is 1.5 × 10⁻⁸ and underflows to zero. That is a brittle test
-meeting a very small temperature, not a defect in the loss. 11 of 12 tests pass.
+**Open issue: NT-Xent temperature.** Across the 14 stability searches plus the canonical run,
+the selected temperature spans 0.0501 to 0.0668 and lands within 20% of the 0.05 floor in 13
+of 15. The bound is binding and the optimum is below it. The range is now log-uniform
+[0.01, 1.0], but that only takes effect on the next search — every architecture in the paper
+was selected under the old bound. No conclusion depends on it: the null result is stable
+across all fifteen architectures, dModel 19 to 119.
 
----
-
-## Data availability
-
-Both datasets are public on OpenNeuro: **ds004144** (fibromyalgia task-fMRI, Balducci et
-al., 2022) and **ds002748** (depression resting-state, Bezmaternykh et al., 2021).
-Preprocessed derivatives, the trained checkpoint, and per-run outputs are gitignored;
-regenerate them with the commands above. The small artifacts needed to run the analyses
-without a full rebuild are committed, listed under Repository layout.
-
-## Key references
+## References
 
 Dinga R, et al. Evaluating the evidence for biotypes of depression. *NeuroImage Clin.* 2019;22:101796.
 Tozzi L, et al. Personalized brain circuit scores identify clinically distinct biotypes in depression and anxiety. *Nat Med.* 2024;30:2076-2087.

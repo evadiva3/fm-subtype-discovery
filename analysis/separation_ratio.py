@@ -28,6 +28,13 @@ def _norm(x):
     return x/(np.linalg.norm(x,axis=1,keepdims=True)+1e-8)
 
 
+def _rel(p):
+    try:
+        return str(Path(p).relative_to(_R))
+    except ValueError:
+        return str(p)
+
+
 def ratio(x,lab):
     us=np.unique(lab)
     if len(us)<2:
@@ -119,7 +126,7 @@ def main():
          "floor_unavailable_reason":err,
          "estimator":"mean pairwise centroid distance / RMS within-cluster radius",
          "labels":"true planted labels, measured after L2 normalization",
-         "power_source":str(POWER_SRC.relative_to(_R)) if POWER_SRC.exists() else None},
+         "power_source":(_rel(POWER_SRC) if POWER_SRC.exists() else None)},
         indent=2))
 
     print(agg.to_string(index=False))
