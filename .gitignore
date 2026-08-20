@@ -1,4 +1,5 @@
 __pycache__/
+.pytest_cache/
 *.nii
 *.pyc
 .DS_Store
@@ -14,6 +15,22 @@ prerun_archive_20260726-155229/
 results/*
 !results/.gitkeep
 !results/subject_exclusions.csv
+!results/stability_summary.csv
+!results/raw_feature_ladder.json
+
+# figures cited by the paper
+!results/figures/
+results/figures/_*
+
+# depression artifacts: each needs retraining to regenerate, so they are committed
+!results/mdd/
+# ...but not the scratch directories the runners write into
+results/mdd/**/_run/
+results/mdd/**/work/
+results/mdd/**/ckpt/
+# the depression canonical checkpoint (100 KB) overrides the global *.pt rule above;
+# this negation must come after both *.pt and results/* to take effect
+!results/mdd/canonical_single/bestMddModel.pt
 
 data/*
 !data/README.md
