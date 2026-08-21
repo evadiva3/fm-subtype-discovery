@@ -17,6 +17,13 @@ results/*
 !results/subject_exclusions.csv
 !results/stability_summary.csv
 !results/raw_feature_ladder.json
+!results/clinical_validation_results.csv
+!results/e2e_calibration.json
+!results/e2e_calibration_pvalues.npy
+!results/fm_fixed_arch_control/
+results/fm_fixed_arch_control/*
+!results/fm_fixed_arch_control/fixed_arch_control_runs.csv
+!results/fm_fixed_arch_control/fixed_arch_control_summary.json
 
 # figures cited by the paper
 !results/figures/
@@ -28,6 +35,8 @@ results/figures/_*
 results/mdd/**/_run/
 results/mdd/**/work/
 results/mdd/**/ckpt/
+results/mdd/**/_scratch/
+results/mdd/**/nohup.out
 # the depression canonical checkpoint (100 KB) overrides the global *.pt rule above;
 # this negation must come after both *.pt and results/* to take effect
 !results/mdd/canonical_single/bestMddModel.pt
@@ -48,3 +57,4 @@ data/outputs/*
 !data/outputs/untrained_fm_embeddings.npy
 !data/outputs/K-Means-Labeling.csv
 !data/outputs/silhouette-scores.csv
+!data/outputs/e2e_graph_embeddings.npy

@@ -1,0 +1,31 @@
+{
+  "n_runs": 20,
+  "architecture": [
+    119,
+    8,
+    15,
+    3
+  ],
+  "null": "fully corrected, embedding space",
+  "significant_at_05": 0,
+  "perm_p": {
+    "min": 0.0829170829170829,
+    "median": 0.30119880119880116,
+    "max": 0.974025974025974
+  },
+  "silhouette": {
+    "min": 0.2030215412378311,
+    "median": 0.2876211404800415,
+    "max": 0.3801295161247253,
+    "mean": 0.288670714199543,
+    "sd": 0.041670008746933974
+  },
+  "selected_k_counts": {
+    "2": 7,
+    "3": 4,
+    "4": 6,
+    "5": 2,
+    "6": 1
+  },
+  "canonical_percentile": 10.0
+}

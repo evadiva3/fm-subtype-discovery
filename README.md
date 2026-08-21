@@ -316,7 +316,8 @@ cells.
 **And the pipeline can't retrieve structure that is present in its own inputs.** The
 connectivity features identify subjects at 93.1% against 1.7% chance and decode task condition
 at twice chance. Clustering the encoder's embeddings of the same graphs recovers neither (ARI
-0.000 and 0.061); supervised decoding from those embeddings falls to 18.3% and 11.8%. The loss
+0.061 for identity, 0.000 for condition); supervised decoding from those embeddings falls to
+11.8% and 18.3% respectively. The loss
 is in the encoder, not the clustering.
 
 So: no subtype structure this method could detect at this sample size. Not: no subtypes exist.
@@ -405,7 +406,7 @@ records a worse validation loss for reasons unrelated to architecture. Searching
 batch sizes, not architectures.
 
 **Open issue: NT-Xent temperature.** Across the 14 stability searches plus the canonical run,
-the selected temperature spans 0.0501 to 0.0668 and lands within 20% of the 0.05 floor in 13
+the selected temperature spans 0.0501 to 0.0668 and lands within 20% of the 0.05 floor in 12
 of 15. The bound is binding and the optimum is below it. The range is now log-uniform
 [0.01, 1.0], but that only takes effect on the next search — every architecture in the paper
 was selected under the old bound. No conclusion depends on it: the null result is stable
