@@ -238,7 +238,7 @@ re-parcellating would need the fMRIPrep derivatives, not the raw scans.
 ## AI usage
 
 Generative AI was used as an editorial and analytical assistant: background research,
-literature synthesis, prose and structural editing, code debugging and auditing, figures and
+literature synthesis, prose and structural editing, assistance in manuscript writing, code debugging and auditing, figures and
 slides. All hypotheses, designs and conclusions are the authors', who reviewed and verified all
 outputs and take responsibility for the content.
 
