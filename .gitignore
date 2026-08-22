@@ -1,11 +1,60 @@
 __pycache__/
+.pytest_cache/
 *.nii
 *.pyc
 .DS_Store
 wandb/
 *.pt
 .vscode/
-data/
 venv/
 tune_out.log
 *.bak
+_*archive_*/
+prerun_archive_20260726-155229/
+
+results/*
+!results/.gitkeep
+!results/subject_exclusions.csv
+!results/stability_summary.csv
+!results/raw_feature_ladder.json
+!results/clinical_validation_results.csv
+!results/e2e_calibration.json
+!results/e2e_calibration_pvalues.npy
+!results/fm_fixed_arch_control/
+results/fm_fixed_arch_control/*
+!results/fm_fixed_arch_control/fixed_arch_control_runs.csv
+!results/fm_fixed_arch_control/fixed_arch_control_summary.json
+
+# figures cited by the paper
+!results/figures/
+results/figures/_*
+
+# depression artifacts: each needs retraining to regenerate, so they are committed
+!results/mdd/
+# ...but not the scratch directories the runners write into
+results/mdd/**/_run/
+results/mdd/**/work/
+results/mdd/**/ckpt/
+results/mdd/**/_scratch/
+results/mdd/**/nohup.out
+# the depression canonical checkpoint (100 KB) overrides the global *.pt rule above;
+# this negation must come after both *.pt and results/* to take effect
+!results/mdd/canonical_single/bestMddModel.pt
+
+data/*
+!data/README.md
+!data/Clinical_fm_66.xlsx
+!data/schaefer200MNI.nii.gz
+
+!data/tune/
+data/tune/*
+!data/tune/bestParams.json
+
+!data/outputs/
+data/outputs/*
+!data/outputs/Embeddings.npy
+!data/outputs/trained_fm_embeddings.npy
+!data/outputs/untrained_fm_embeddings.npy
+!data/outputs/K-Means-Labeling.csv
+!data/outputs/silhouette-scores.csv
+!data/outputs/e2e_graph_embeddings.npy

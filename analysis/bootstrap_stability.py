@@ -1,6 +1,7 @@
 #remove dev comments since this is done.
 import os
 import sys
+import warnings
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -57,6 +58,11 @@ def run_real(conds):
     enc, att=model
     try:
         ds=datasetPreparation(fm_only=False)
+        ck=torch.load(config.jointCheckpointPath, map_location="cpu")
+        if ck.get("nodeMean") is not None:
+            ds.applyNormalization(ck["nodeMean"], ck["nodeStd"])
+        else:
+            warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)")
         runner=cluster(enc, str(config.checkpointDir), conds, ds.subjectList)
         runner.deploy(ds.subjectData)
         runner.setAttention(att)

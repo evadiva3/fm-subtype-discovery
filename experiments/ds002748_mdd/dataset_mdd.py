@@ -34,6 +34,17 @@ TS_PAT="{s}/{s}_rest_ts.npy"
 PART_OK=True
 PART_TSV=MDD_ROOT/"participants.tsv"
 
+def load_mdd_params():
+    p=Path(config.mddRaySavePath)
+    if not p.exists():
+        return False
+    tp=pd.read_json(p)
+    for k in ("dModel","heads","output","layers"):
+        setattr(config,k,int(tp.at[0,k]))
+    for k in ("dropout","lr","weightDecay","maskRate","ntXentTemp"):
+        setattr(config,k,float(tp.at[0,k]))
+    return True
+
 class mddDataset(Dataset):
     def __init__(self):
         super().__init__()
@@ -44,6 +55,8 @@ class mddDataset(Dataset):
         self.subjectList=[]
         self.subjectData=[]
         self.rawX=None
+        self.mu=None
+        self.sig=None
         self.DataList=self.execute()
 
     def bands(self,x):
@@ -121,8 +134,20 @@ class mddDataset(Dataset):
         st=torch.stack([self.DataList[i].x for i in idx])
         mu=st.mean(dim=0)
         sig=st.std(dim=0)
+        self.mu=mu
+        self.sig=sig
         for g in self.DataList:
             g.x=(g.x-mu)/(sig+1e-8)
+
+    def applyNormalization(self,mu,sig):
+        if self.rawX is None:
+            self.rawX=[g.x.clone() for g in self.DataList]
+        for g,r in zip(self.DataList,self.rawX):
+            g.x=r.clone()
+            g.x[:,2:5]=torch.log1p(g.x[:,2:5])
+            g.x=(g.x-mu)/(sig+1e-8)
+        self.mu=mu
+        self.sig=sig
 
     def __len__(self):
         return len(self.DataList)

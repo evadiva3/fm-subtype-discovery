@@ -1,6 +1,4 @@
-#experimental ignore for now
-
-
+import os
 import sys
 import json
 from pathlib import Path
@@ -16,16 +14,17 @@ from config import config
 from clustering import cluster
 import bootstrap_stability as bs
 
-OUT=Path(config.resultsRoot)/"mdd"
+OUT=Path(os.environ.get("MDD_OUT_DIR") or (Path(config.resultsRoot)/"mdd"))
 
 class mddCluster(cluster):
     def deploy(self,subs):
         self.subjectEmbeddings={}
         self.groupLabels={}
         self.GNNEncoder.eval()
+        device=next(self.GNNEncoder.parameters()).device
         with torch.no_grad():
             for s in subs:
-                b=Batch.from_data_list(s["graphs"])
+                b=Batch.from_data_list(s["graphs"]).to(device)
                 e=self.GNNEncoder(b)
                 sid=s["subject_id"]
                 self.subjectEmbeddings[sid]=e.view(-1)
@@ -52,9 +51,15 @@ class mddCluster(cluster):
 
 if __name__=="__main__":
     from gnn_encoder import GNNEncoder
-    from dataset_mdd import mddDataset
+    from dataset_mdd import mddDataset,load_mdd_params
+    import warnings
+    load_mdd_params()
     ds=mddDataset()
     ck=torch.load(config.checkpointDir/"bestMddModel.pt",map_location="cpu")
+    if ck.get("mu") is not None:
+        ds.applyNormalization(ck["mu"],ck["sig"])
+    else:
+        warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)")
     enc=GNNEncoder()
     enc.load_state_dict(ck["enc"])
     r=mddCluster(enc,str(config.checkpointDir),[],ds.subjectList)
