@@ -4,8 +4,6 @@ Type I error of covariance-preserving cluster nulls on learned representations.
 
 Eva Bangsil, Nikhil Joshi. Correspondence: eva.bangsil@gmail.com
 
-Manuscript: `PAPER_v5.md`. Supplement: `PAPER_v5_SUPPLEMENT.md`.
-
 The repository name predates the result. No subtype structure was recovered in either cohort;
 the work reports the properties of the null.
 
