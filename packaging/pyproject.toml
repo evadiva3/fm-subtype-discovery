@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nullcal"
+version = "0.1.0"
+description = "Covariance-preserving permutation nulls for cluster validation, with the two common misspecifications made switchable and measurable."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Eva Bangsil", email = "eva.bangsil@gmail.com" },
+    { name = "Nikhil Joshi", email = "nikhilravijoshi@gmail.com" },
+]
+keywords = [
+    "cluster validation", "permutation test", "type I error",
+    "selective inference", "silhouette", "representation geometry",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = [
+    "numpy>=1.23",
+    "scikit-learn>=1.1",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.urls]
+Homepage = "https://github.com/evadiva3/fm-subtype-discovery"
+Source = "https://github.com/evadiva3/fm-subtype-discovery"
+
+[tool.setuptools]
+py-modules = ["nullcal"]
