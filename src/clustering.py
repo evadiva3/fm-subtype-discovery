@@ -5,8 +5,8 @@
 #no hardcode
 
 
-import os;
 import json;
+import warnings;
 import torch;
 import pandas as pd;
 import numpy as np;
@@ -21,7 +21,6 @@ for _p in (_ROOT, _ROOT / "src", _ROOT / "models"):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p));
 
-from torch.utils.data import Dataset;
 from torch_geometric.data import Batch;
 from dataset import datasetPreparation;
 from analysis.evaluate import cluster_evaluate;
@@ -39,13 +38,10 @@ class cluster():
         self.subjectEmbeddings = {};
         self.groupLabels = {};
         self.GNNEncoder.eval();
+        device = next(self.GNNEncoder.parameters()).device;
         with torch.no_grad():
             for subject in dataloader:
-                batch = Batch.from_data_list(subject['graphs']);
-                # GNNEncoder.forward does data.edge_attr.unsqueeze(-1) internally so
-                # if edge_attr arrives as [E, 1] from preprocessBOLD, this will make it [E, 1, 1] and it will crash
-                # we need to verify edge_attr shape before running so could u either remove unsqueeze in encoder or ensure
-                # preprocessBOLD saves edge_attr as [E] not [E, 1].
+                batch = Batch.from_data_list(subject['graphs']).to(device);
                 embeddings = self.GNNEncoder(batch);
                 subjectId = subject['subject_id'];
                 self.subjectEmbeddings[subjectId] = embeddings;
@@ -81,8 +77,9 @@ class cluster():
         ids = list(self.attentionEmbeddings.keys());
         embeddings = torch.stack([self.attentionEmbeddings[i] for i in ids]).detach().cpu().numpy();
         labels = np.array([self.groupLabels[i] for i in ids]);
+        embeddings = embeddings / (np.linalg.norm(embeddings, axis=1, keepdims=True) + 1e-8);
         self.hcSepSilh = silhouette_score(embeddings, labels);
-        self.hcSepPermP = cluster_evaluate().perm(embeddings, labels);
+        self.hcSepPermP = cluster_evaluate().perm(embeddings, labels, match_selection=False);
         return self.hcSepSilh;
 
     def project_ortho(self, fmEmbeddings, hcEmbeddings):
@@ -144,9 +141,11 @@ class cluster():
         if skip_gap: 
             gapDict = {kk: {"gap": np.nan, "s": np.nan} for kk in config.kmeansKRange};
             kGap = np.nan;
+            kGapBoundary = np.nan;
         else:
             gapDict = evaluator.gap_stat(takeTensor, k=config.kmeansKRange);  
             kGap = evaluator.gap_k(gapDict, config.kmeansKRange);  
+            kGapBoundary = evaluator.gap_k_at_boundary(gapDict, config.kmeansKRange);
         if skip_perm: 
             permP = np.nan;
         else:
@@ -154,7 +153,7 @@ class cluster():
         permColumn = [np.nan for _ in config.kmeansKRange]
         permColumn[bestIdx] = permP;
         trialFrame = pd.DataFrame({"Subject_Id": subjectIds, "Label": bestLabels});
-        trialSave = pd.DataFrame({"k": config.kmeansKRange, "silhouette_score": trialSave, "gap_stat": [gapDict[kk]["gap"] for kk in config.kmeansKRange], "gap_se": [gapDict[kk]["s"] for kk in config.kmeansKRange], "permutation_p": permColumn, "k_selected_silhouette": kSil, "k_selected_gap": kGap});
+        trialSave = pd.DataFrame({"k": config.kmeansKRange, "silhouette_score": trialSave, "gap_stat": [gapDict[kk]["gap"] for kk in config.kmeansKRange], "gap_se": [gapDict[kk]["s"] for kk in config.kmeansKRange], "permutation_p": permColumn, "k_selected_silhouette": kSil, "k_selected_gap": kGap, "k_gap_at_boundary": kGapBoundary, "min_cluster_size": members, "min_cluster_size_required": minClusterSize, "passes_size_guard": boolList});
         return [trialSave, trialFrame, bestLabels, permP, sizeOk];
 
     def UMAPPING(self, array):
@@ -186,13 +185,13 @@ class cluster():
         self.validate_hc_sep();
         bestTrial = self.KMeansUse();
         self.fmClusterPermP=bestTrial[3]  # perm p for ORIGINAL FM-only
-        bestTrial[0]["passes_guard"] = not((not bestTrial[4]) or bestTrial[3] >= config.fdrAlpha);
+        bestTrial[0]["significant_at_alpha"] = bool(bestTrial[3] < config.fdrAlpha);
         fmTensor, fmIds = self._stack(self.fmEmbed);
         hcTensor, hcIds = self._stack(self.hcEmbed);
         fmProjected = self.project_ortho(fmTensor, hcTensor);
         orthoTrial = self.KMeansUse(fmProjected, fmIds);
         self.orthoClusterPermP=orthoTrial[3]  # perm p for ORTHOGONAL-PROJECTED
-        orthoTrial[0]["passes_guard"] = not((not orthoTrial[4]) or orthoTrial[3] >= config.fdrAlpha);
+        orthoTrial[0]["significant_at_alpha"] = bool(orthoTrial[3] < config.fdrAlpha);
         self.centroidDistances = self.compute_centroid_distances(fmProjected, orthoTrial[2], self.hcC);  # projected
         self.hcCUnprojDistances = self.compute_centroid_distances(fmTensor, bestTrial[2], hcTensor.mean(dim=0));  # unproj severity continuum
         coordinateVisuals = self.UMAPPING(fmTensor);
@@ -202,14 +201,17 @@ class cluster():
 if __name__ == "__main__":
     from gnn_encoder import GNNEncoder;
     from models.attention_pool import condition_attention_pool;
-    from torch.utils.data import DataLoader;
-    conditionList = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"];  # paper events.tsv order
+    conditionList =["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"];  # paper events.tsv order
     dataset = datasetPreparation(fm_only=False);
     dataList = dataset.subjectList;
     data = dataset.subjectData; 
     attention = condition_attention_pool(d_model=config.dModel, num_cons=config.nConditions);  #no hardcode
     encoder = GNNEncoder();
     checkpoint = torch.load(config.trainSave, map_location='cpu');
+    if checkpoint.get('nodeMean') is not None:
+        dataset.applyNormalization(checkpoint['nodeMean'], checkpoint['nodeStd']);
+    else:
+        warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)");
     encoder.load_state_dict(checkpoint['model']);
     attention.load_state_dict(checkpoint['pool']);
     runCluster = cluster(encoder, config.trainSave, conditionList, dataList);

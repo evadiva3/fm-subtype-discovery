@@ -11,7 +11,7 @@ for _p in (Path(__file__).resolve().parent,_R,_R/"src",_R/"models",_R/"analysis"
         sys.path.insert(0,str(_p))
 from config import config
 from torch_geometric.data import Batch
-from dataset_mdd import mddDataset,COLUMN_MAP,PART_TSV
+from dataset_mdd import mddDataset,COLUMN_MAP,PART_TSV,load_mdd_params
 from gnn_encoder import GNNEncoder
 from severity_gradient_regression import make_folds,loo_predictions,score,permutation_p
 SEED=config.randomSeed
@@ -60,11 +60,16 @@ def run_scale(tag,key,enc,subs,pf):
     print(pd.DataFrame(res).to_string(index=False))
     return res
 def main():
+    load_mdd_params()
     ds=mddDataset()
     subs=ds.subjectData
     pf=pd.read_csv(PART_TSV,sep="\t")
     pf[COLUMN_MAP["subject_id"]]=pf[COLUMN_MAP["subject_id"]].astype(str)
     ck=torch.load(config.checkpointDir/"bestMddModel.pt",map_location="cpu")
+    if ck.get("mu") is not None:
+        ds.applyNormalization(ck["mu"],ck["sig"])
+    else:
+        warnings.warn("checkpoint has no saved normalization stats; falling back to all-subject statistics (train/inference mismatch)")
     enc=GNNEncoder()
     enc.load_state_dict(ck["enc"])
     print("PRIMARY: Zung_SDS")

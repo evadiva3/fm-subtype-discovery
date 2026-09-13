@@ -4,7 +4,6 @@ Every module imports the shared instance:
 """
 
 import os
-import torch
 from pathlib import Path
 import pandas as pd;
 
@@ -34,6 +33,12 @@ class Config:
     @property
     def clusterOutput(self): return (self.dataRoot/"outputs");
     @property
+    def embeddingPath(self): return(self.clusterOutput/"Embeddings.npy");
+    @property
+    def kLabelPath(self): return(self.clusterOutput/"K-Means-Labeling.csv");
+    @property
+    def analysisOrchestrator(self): return(self.dataRoot/"dataAnalysis"/"orchestrator_summary.csv");
+    @property
     def subjectList(self):
         datafolder = Path(self.subjectDataFolder);
         subjectList = [subfolder.name for subfolder in datafolder.iterdir() if subfolder.is_dir() and not subfolder.name.startswith("top_") and subfolder.name != "excluded"];
@@ -41,7 +46,7 @@ class Config:
     @property
     def rayStorage(self): return (self.dataRoot/"RayTune");
     @property
-    def saveRayParams(self): return os.path.join(self.dataRoot, "tune", "bestParams.json");
+    def mddRaySavePath(self): return Path(os.path.join(self.dataRoot,"tune","bestParamsMdd.json"));
     @property
     def trainSave(self): return os.path.join(self.dataRoot, "checkpoints", "results","bestJointModel.pt");
     @property
@@ -50,6 +55,10 @@ class Config:
     def tuneTrainSave(self): return os.path.join(self.dataRoot, "checkpoints", "results");
     @property
     def checkpointDir(self): return Path(self.trainSave).parent;
+    @property
+    def real2Synth(self): return os.path.join(self.dataRoot,"synthetic", "modelEmbeddings.npy");
+    @property
+    def syntheticOutputs(self): return os.path.join(self.dataRoot,"synthetic");
     # Pipeline constants
     raySavePath = Path(os.path.join(dataRoot,"tune","bestParams.json"));
     conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]  # paper events.tsv order
@@ -61,6 +70,7 @@ class Config:
     # Confound regressors
     confoundColumns = ["global_signal", "white_matter", "csf", "trans_x", "trans_x_derivative1", "trans_x_derivative1_power2", "trans_x_power2", "trans_y", "trans_y_derivative1", "trans_y_power2", "trans_y_derivative1_power2", "trans_z", "trans_z_derivative1", "trans_z_derivative1_power2", "trans_z_power2", "rot_x", "rot_x_derivative1", "rot_x_power2", "rot_x_derivative1_power2", "rot_y", "rot_y_derivative1", "rot_y_power2", "rot_y_derivative1_power2", "rot_z", "rot_z_derivative1", "rot_z_power2", "rot_z_derivative1_power2"]
     noiseStd=0.1;
+    tuneBatchSize = 12;
     _tunedParamNames=("dModel","heads","output","layers","dropout","lr",
                       "weightDecay","maskRate","ntXentTemp","batchSize")
     if raySavePath.exists():
@@ -75,14 +85,14 @@ class Config:
         maskRate=float(tuneParams.at[0,"maskRate"]);
         noiseStd=float(tuneParams.at[0,"noiseStd"]) if "noiseStd" in tuneParams.columns else 0.1;
         ntXentTemp=float(tuneParams.at[0,"ntXentTemp"]);
-        batchSize=int(tuneParams.at[0,"batchSize"]);
+        batchSize=int(tuneParams.at[0,"batchSize"]) if "batchSize" in tuneParams.columns else tuneBatchSize;
     # Augmentation apply probs (per view, independent of strength)
     maskApplyProb=0.5
     noiseApplyProb=0.5
 
    #Tuning Hypers:
     tuneEpochs = 100;
-    maxConcurrents = 15;
+    maxConcurrents = 12;
     sampleNum = 100;
     # Training
     epochs=200
@@ -103,7 +113,8 @@ class Config:
     # Motion / QC (verify_setup.py)
     fdThreshold=0.5
     fdFractionThreshold=0.25
-
+    cMeanFDStartIdx = 5;
+    cMeanFDEndIdx = 12; #this is for slicing the subject exclusion csv and is specific to it. 
     # Statistics
     fdrAlpha=0.05
 
@@ -118,10 +129,21 @@ class Config:
     
     #gap
     gapB=10
-
+    #Synthetic Data Parms
+    synthSeedG = 5; #group assignment
+    offsetSeed = 5;
+    deltas = [0, 1.0, 3.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 15.0, 20.0];
+    normalizedTolerance = 1e-4;
+    numRandGroups = 6;
+    presetGroups = [[5,9,7,7], [7,7,7,7]]; #for 28 subjects. note, even across is easier and gives best case.
+    usePresets = True; #if False, will randomly generate x groups. if true, will run along x-2 groups. 
+    subjectAmt = 28;
+    clustersPerGroup = 4;
+    runsPerDelta = 20;
     # Device
     @property
     def device(self):
+        import torch
         if torch.cuda.is_available(): return torch.device("cuda")
         if torch.backends.mps.is_available(): return torch.device("mps")
         return torch.device("cpu")

@@ -23,9 +23,10 @@ def _guard(label):
     mn=max(config.minClusterSizeFloor, round(config.minClusterSizeFraction*n))
     _, cnt=np.unique(label, return_counts=True)
     return bool((cnt>=mn).all())
-def _perm(X, label, seed=None):
+def _perm(X, label, seed=None, match_selection=False, k_range=None):
     seed=config.randomSeed if seed is None else seed
     X=np.asarray(X, dtype=float)
+    X=X/(np.linalg.norm(X, axis=1, keepdims=True)+1e-8)
     kk=len(np.unique(label))
     real=silhouette_score(X, label)
     n=len(X)
@@ -34,10 +35,15 @@ def _perm(X, label, seed=None):
     c=0
     for i in range(config.nPermutations):
         nul=mu+(rng.standard_normal((n, n))@Xc)/sc
-        lab=KMeans(n_clusters=kk, n_init=config.kmeansNInit, random_state=i).fit_predict(nul)
-        if silhouette_score(nul, lab)>real:
+        nul=nul/(np.linalg.norm(nul, axis=1, keepdims=True)+1e-8)
+        if match_selection:
+            s=max(silhouette_score(nul, KMeans(n_clusters=kj, n_init=config.kmeansNInit, random_state=i).fit_predict(nul)) for kj in k_range)
+        else:
+            lab=KMeans(n_clusters=kk, n_init=config.kmeansNInit, random_state=i).fit_predict(nul)
+            s=silhouette_score(nul, lab)
+        if s>=real:
             c+=1
-    return c/config.nPermutations
+    return (c+1)/(config.nPermutations+1)
 def _acc_perm(X, y, acc, seed=None):
     seed=config.randomSeed if seed is None else seed
     rng=np.random.default_rng(seed)
@@ -128,7 +134,7 @@ def main():
 
     try:
         lab, s, bk, X=bl.group_ica_kmeans()
-        pp=_perm(X, lab); g=_guard(lab)
+        pp=_perm(X, lab, match_selection=True, k_range=(2,3,4)); g=_guard(lab)
         rows.append({"baseline": "group_ica_kmeans", "metric": "silhouette", "value": float(s),
                      "k": int(bk), "n_subjects": int(len(bl._fm_subject_ids)), "perm_p": pp, "passes_guard": g,
                      "note": "FM only, task-epr CanICA best-of-k in {2,3,4}"})

@@ -26,7 +26,7 @@ def _views(subs,aug,dev):
         b.append(v2)
     return Batch.from_data_list(a).to(dev),Batch.from_data_list(b).to(dev)
 
-def train_mdd(enc,loss,tr,vl,aug,dev,dire,epochs=None,patience=None,lr=None,wd=None):
+def train_mdd(enc,loss,tr,vl,aug,dev,dire,epochs=None,patience=None,lr=None,wd=None,normStats=None):
     epochs=config.epochs if epochs is None else epochs
     patience=config.patience if patience is None else patience
     lr=config.lr if lr is None else lr
@@ -79,7 +79,7 @@ def train_mdd(enc,loss,tr,vl,aug,dev,dire,epochs=None,patience=None,lr=None,wd=N
             torch.cuda.empty_cache()
         if avl<best:
             best=avl
-            torch.save({"enc":enc.state_dict()},ck)
+            torch.save({"enc":enc.state_dict(),"mu":None if normStats is None else normStats[0],"sig":None if normStats is None else normStats[1]},ck)
             cnt=0
         else:
             cnt+=1
@@ -93,8 +93,9 @@ if __name__=="__main__":
     from gnn_encoder import GNNEncoder
     from contrastive_loss import NTXentLoss
     from augmentations import graph_augmentor
-    from dataset_mdd import mddDataset
+    from dataset_mdd import mddDataset,load_mdd_params
     from torch.utils.data import DataLoader,random_split
+    load_mdd_params()
     torch.manual_seed(config.randomSeed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(config.randomSeed)
@@ -113,10 +114,11 @@ if __name__=="__main__":
     gen=torch.Generator().manual_seed(config.randomSeed)
     ts,vs=random_split(gd,[nt,nv],generator=gen)
     ds.normalize(ts.indices)
+    normStats=(ds.mu,ds.sig)
     ebs=max(2,nt//4)
     tl=DataLoader(ts,batch_size=ebs,shuffle=True,collate_fn=lambda b:b,drop_last=True)
     vld=DataLoader(vs,batch_size=ebs,shuffle=False,collate_fn=lambda b:b)
     enc=GNNEncoder().to(config.device)
     loss=NTXentLoss()
     aug=graph_augmentor()
-    train_mdd(enc,loss,tl,vld,aug,config.device,config.checkpointDir)
+    train_mdd(enc,loss,tl,vld,aug,config.device,config.checkpointDir,normStats=normStats)

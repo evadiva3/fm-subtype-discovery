@@ -26,13 +26,18 @@ class baselines():
         else:
             self._fm_subject_ids=None 
 
+    @staticmethod
+    def _l2(M):
+        M=np.asarray(M, dtype=float)
+        return M/(np.linalg.norm(M, axis=1, keepdims=True)+1e-8)
+
     def pca_kmeans(self,k,n_comp=config.pcaComponents):
         flat=self.fc_matrices.reshape(len(self.fc_matrices),-1)
         n_samples, n_features=flat.shape
         effective_components=min(n_comp, n_samples, n_features)
         pca=PCA(n_components=effective_components)
-        reduce=pca.fit_transform(flat)
-        km=KMeans(n_clusters=k, random_state=config.randomSeed)
+        reduce=self._l2(pca.fit_transform(flat))
+        km=KMeans(n_clusters=k, n_init=config.kmeansNInit, random_state=config.randomSeed)
         a=km.fit(reduce)
         label=a.labels_
         score=silhouette_score(reduce,label)
@@ -45,7 +50,8 @@ class baselines():
         flat=np.array([m[rows, cols] for m in self.fc_matrices])  
         expected_dim=n*(n-1)//2  
         assert flat.shape[1]==expected_dim, f"expected {expected_dim}-dim vectors, got {flat.shape[1]}"
-        km=KMeans(n_clusters=k, random_state=config.randomSeed)
+        flat=self._l2(flat)
+        km=KMeans(n_clusters=k, n_init=config.kmeansNInit, random_state=config.randomSeed)
         a=km.fit(flat)
         label=a.labels_
         score=silhouette_score(flat,label)
@@ -89,10 +95,10 @@ class baselines():
         for img in subject_imgs: 
             time_courses=canica.transform([img])[0]
             features.append(np.abs(time_courses).mean(axis=0))
-        features=np.array(features)
-        best_label, best_score, best_k=None, -1.0, None 
+        features=self._l2(np.array(features))  
+        best_label, best_score, best_k=None, -1.0, None
         for k in (2, 3, 4):
-            km=KMeans(n_clusters=k, random_state=config.randomSeed)
+            km=KMeans(n_clusters=k, n_init=config.kmeansNInit, random_state=config.randomSeed) 
             label=km.fit_predict(features)
             score=silhouette_score(features, label) 
             if score>best_score:

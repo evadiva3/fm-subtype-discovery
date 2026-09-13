@@ -17,7 +17,8 @@ def test_orthonormal_aligned_analytic():
     s=1.0/t
     e=math.log(math.exp(s)+(2*b-2))-s
     assert abs(q-e)<1e-4
-    assert q>0
+    assert e < 1e-6
+    assert 0.0 <= q < 1e-6
 
 def test_all_identical_max_confusion():
     b=4

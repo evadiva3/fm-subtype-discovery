@@ -8,77 +8,8 @@ import os
 import math
 from torch_geometric.data import Batch
 from config import config
-from ray import tune, train;
-class trainer():
-
-    def __init__(self,model,loss,optimize,schedule,device,dire):
-        self.model=model
-        self.loss=loss
-        self.optimize=optimize
-        self.schedule=schedule
-        self.device=device
-        self.dire=dire
-        self.best_val_loss=float('inf')
-        os.makedirs(self.dire, exist_ok=True)
-
-    def train_epoch(self, dataloader, augmentor):
-        self.model.train()
-        i=0
-        total_loss=0
-        for k in dataloader:
-            k=k.to(self.device)
-            view1,view2=augmentor.augment(k)
-            self.optimize.zero_grad()
-            a=self.model(view1)
-            b=self.model(view2)
-            loss=self.loss(a,b)
-            loss.backward()
-            self.optimize.step()
-            total_loss+=loss.item()
-            i+=1
-        self.schedule.step()
-        return(total_loss/i)
-    
-    def validate(self, dataloader, augmentor):
-        self.model.eval()
-        i=0
-        total_loss=0
-        with torch.no_grad():
-            for k in dataloader:
-                k=k.to(self.device)
-                view1,view2=augmentor.augment(k)
-                a=self.model(view1)
-                b=self.model(view2)
-                loss=self.loss(a,b)
-                total_loss+=loss.item()
-                i+=1
-        return(total_loss/i)
-    
-    def fit(self, train_load, val_load, augmentor, epochs=None, patience=None):
-        # remeber no hardcoding
-        epochs=config.epochs if epochs is None else epochs
-        patience=config.patience if patience is None else patience
-        c=0
-        path=os.path.join(self.dire, 'best_model.pt')
-        for i in range(epochs):
-            a=self.train_epoch(train_load,augmentor)
-            b=self.validate(val_load,augmentor)
-            if b<self.best_val_loss:
-                self.best_val_loss=b
-                torch.save(self.model.state_dict(), path)
-                c=0
-            else:
-                c+=1
-                if c>=patience:
-                    print('model has stopped learning :(')
-                    break;
-            print(f"Epoch {i}: train={a:.4f} val={b:.4f}")
-        self.load_best()
-    def load_best(self):
-        path=os.path.join(self.dire, 'best_model.pt')
-        self.model.load_state_dict(torch.load(path, map_location=self.device))  
-
-def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, tuneSave=None, guardPrimary=False):
+from ray import tune
+def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor,device,save_dir,epochs=None,patience=None,lr=None,weight_decay=None, tuneSave=None, guardPrimary=False, normStats=None):
     epochs=config.epochs if epochs is None else epochs
     patience=config.patience if patience is None else patience
     lr=config.lr if lr is None else lr
@@ -192,7 +123,9 @@ def joint_train(model,attention_pool,loss_fn,dataloader,val_dataloader,augmentor
             best_val_loss=avg_val_loss
             torch.save({
                 'model': model.state_dict(),
-                'pool': attention_pool.state_dict()
+                'pool': attention_pool.state_dict(),
+                'nodeMean': None if normStats is None else normStats[0],
+                'nodeStd': None if normStats is None else normStats[1]
             }, checkpoint_path)
             patience_counter=0
         else:
@@ -232,6 +165,7 @@ if __name__ == "__main__":
     train_split, val_split=random_split(grouped_dataset, [n_train, n_val], generator=split_generator)
 
     dataset.normalizeData(train_split.indices)
+    normStats=(dataset.nodeMean, dataset.nodeStd)
 
     train_loader=DataLoader(train_split, batch_size=config.batchSize, shuffle=True, collate_fn=lambda b: b, drop_last=True)
     val_loader=DataLoader(val_split, batch_size=config.batchSize, shuffle=False, collate_fn=lambda b: b)
@@ -245,5 +179,5 @@ if __name__ == "__main__":
 
     model, attention, train_losses, val_losses=joint_train(
         encoder, attention, loss_fn, train_loader, val_loader,
-        augmentor, device, config.checkpointDir
+        augmentor, device, config.checkpointDir, normStats=normStats
     )
