@@ -15,10 +15,10 @@ def test_orthonormal_aligned_analytic():
     v=torch.eye(b)
     q=NTXentLoss(temperature=t)(v,v).item()
     s=1.0/t
-    e=math.log(math.exp(s)+(2*b-2))-s
-    assert abs(q-e)<1e-4
-    assert e < 1e-6
-    assert 0.0 <= q < 1e-6
+    e=math.log(math.exp(s)+ (2*b-2))-s
+    assert abs(q-e)<0.0001
+    assert e<1e-06
+    assert 0.0<=q<1e-06
 
 def test_all_identical_max_confusion():
     b=4
@@ -26,7 +26,7 @@ def test_all_identical_max_confusion():
     v=torch.ones(b,8)
     q=NTXentLoss(temperature=t)(v,v).item()
     e=math.log(2*b-1)
-    assert abs(q-e)<1e-4
+    assert abs(q-e)<0.0001
 
 def test_aligned_below_confused():
     b=4
@@ -42,5 +42,5 @@ def test_scale_invariant():
     f=NTXentLoss()
     a=f(z1,z2).item()
     b=f(z1*7.5,z2*7.5).item()
-    assert abs(a-b)<1e-4
+    assert abs(a-b)<0.0001
     assert math.isfinite(a)
