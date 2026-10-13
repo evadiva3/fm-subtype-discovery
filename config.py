@@ -1,162 +1,73 @@
-"""
-Every module imports the shared instance:
-    from config import config
-"""
-
+"""Every module imports the shared instance:"""
 import os
 from pathlib import Path
-import pandas as pd;
-
+import pandas as pd
 class Config:
-    repoRoot=Path(__file__).parent.resolve()
-    dataRoot=Path(os.environ.get("FM_DATA_ROOT", repoRoot / "data"))
-    resultsRoot=Path(os.environ.get("FM_RESULTS_ROOT", repoRoot / "results"))
+    repoRoot=Path(__file__).parent.resolve();dataRoot=Path(os.environ.get('FM_DATA_ROOT',repoRoot/'data'));resultsRoot=Path(os.environ.get('FM_RESULTS_ROOT',repoRoot/'results'))
     @property
-    def figuresDir(self): return self.dataRoot / "figures"
+    def figuresDir(self):return self.dataRoot/'figures'
     @property
-    def exclusionManifestPath(self): return self.resultsRoot / "subject_exclusions.csv"
-
+    def exclusionManifestPath(self):return self.resultsRoot/'subject_exclusions.csv'
     @property
-    def fcDataFolder(self): return self.dataRoot / "FCData"
-
+    def fcDataFolder(self):return self.dataRoot/'FCData'
     @property
-    def clinicalXlsx(self): return self.dataRoot / "Clinical_fm_66.xlsx"
-
+    def clinicalXlsx(self):return self.dataRoot/'Clinical_fm_66.xlsx'
     @property
-    def clinicalCsv(self): return self.dataRoot / "clinical_clean.csv"
-
+    def clinicalCsv(self):return self.dataRoot/'clinical_clean.csv'
     @property
-    def subjectDataFolder(self): return self.dataRoot / "Subjects"
-
+    def subjectDataFolder(self):return self.dataRoot/'Subjects'
     @property
-    def masker(self): return str(self.dataRoot / "schaefer200MNI.nii.gz")
+    def masker(self):return str(self.dataRoot/'schaefer200MNI.nii.gz')
     @property
-    def clusterOutput(self): return (self.dataRoot/"outputs");
+    def clusterOutput(self):return self.dataRoot/'outputs'
     @property
-    def embeddingPath(self): return(self.clusterOutput/"Embeddings.npy");
+    def embeddingPath(self):return self.clusterOutput/'Embeddings.npy'
     @property
-    def kLabelPath(self): return(self.clusterOutput/"K-Means-Labeling.csv");
+    def kLabelPath(self):return self.clusterOutput/'K-Means-Labeling.csv'
     @property
-    def analysisOrchestrator(self): return(self.dataRoot/"dataAnalysis"/"orchestrator_summary.csv");
+    def analysisOrchestrator(self):return self.dataRoot/'dataAnalysis'/'orchestrator_summary.csv'
     @property
     def subjectList(self):
-        datafolder = Path(self.subjectDataFolder);
-        subjectList = [subfolder.name for subfolder in datafolder.iterdir() if subfolder.is_dir() and not subfolder.name.startswith("top_") and subfolder.name != "excluded"];
-        return subjectList;
+        d=Path(self.subjectDataFolder);st=[s.name for s in d.iterdir()if s.is_dir()and(not s.name.startswith('top_'))and(s.name!='excluded')];return st
     @property
-    def rayStorage(self): return (self.dataRoot/"RayTune");
+    def rayStorage(self):return self.dataRoot/'RayTune'
     @property
-    def mddRaySavePath(self): return Path(os.path.join(self.dataRoot,"tune","bestParamsMdd.json"));
+    def mddRaySavePath(self):return Path(os.path.join(self.dataRoot,'tune','bestParamsMdd.json'))
     @property
-    def trainSave(self): return os.path.join(self.dataRoot, "checkpoints", "results","bestJointModel.pt");
+    def trainSave(self):return os.path.join(self.dataRoot,'checkpoints','results','bestJointModel.pt')
     @property
-    def jointCheckpointPath(self): return Path(self.trainSave);
+    def jointCheckpointPath(self):return Path(self.trainSave)
     @property
-    def tuneTrainSave(self): return os.path.join(self.dataRoot, "checkpoints", "results");
+    def tuneTrainSave(self):return os.path.join(self.dataRoot,'checkpoints','results')
     @property
-    def checkpointDir(self): return Path(self.trainSave).parent;
+    def checkpointDir(self):return Path(self.trainSave).parent
     @property
-    def real2Synth(self): return os.path.join(self.dataRoot,"synthetic", "modelEmbeddings.npy");
+    def real2Synth(self):return os.path.join(self.dataRoot,'synthetic','modelEmbeddings.npy')
     @property
-    def syntheticOutputs(self): return os.path.join(self.dataRoot,"synthetic");
-    # Pipeline constants
-    raySavePath = Path(os.path.join(dataRoot,"tune","bestParams.json"));
-    conditions = ["Neutral - OBSERVAR", "Negativo - OBSERVAR", "Negativo - REDUCIR", "Negativo - SUPRIMIR", "Happy - OBSERVAR", "Happy - SUPRIMIR", "Happy - INCREMENTAR"]  # paper events.tsv order
-    nConditions=7
-    nNodes=200
-    tr=2.0
+    def syntheticOutputs(self):return os.path.join(self.dataRoot,'synthetic')
+    raySavePath=Path(os.path.join(dataRoot,'tune','bestParams.json'))
+    conditions=['Neutral - OBSERVAR','Negativo - OBSERVAR','Negativo - REDUCIR','Negativo - SUPRIMIR','Happy - OBSERVAR','Happy - SUPRIMIR','Happy - INCREMENTAR'];nConditions=7;nNodes=200;tr=2.0
     highPassCutoff=0.01
-
-    # Confound regressors
-    confoundColumns = ["global_signal", "white_matter", "csf", "trans_x", "trans_x_derivative1", "trans_x_derivative1_power2", "trans_x_power2", "trans_y", "trans_y_derivative1", "trans_y_power2", "trans_y_derivative1_power2", "trans_z", "trans_z_derivative1", "trans_z_derivative1_power2", "trans_z_power2", "rot_x", "rot_x_derivative1", "rot_x_power2", "rot_x_derivative1_power2", "rot_y", "rot_y_derivative1", "rot_y_power2", "rot_y_derivative1_power2", "rot_z", "rot_z_derivative1", "rot_z_power2", "rot_z_derivative1_power2"]
-    noiseStd=0.1;
-    tuneBatchSize = 12;
-    _tunedParamNames=("dModel","heads","output","layers","dropout","lr",
-                      "weightDecay","maskRate","ntXentTemp","batchSize")
+    confoundColumns=['global_signal','white_matter','csf','trans_x','trans_x_derivative1','trans_x_derivative1_power2','trans_x_power2','trans_y','trans_y_derivative1','trans_y_power2','trans_y_derivative1_power2','trans_z','trans_z_derivative1','trans_z_derivative1_power2','trans_z_power2','rot_x','rot_x_derivative1','rot_x_power2','rot_x_derivative1_power2','rot_y','rot_y_derivative1','rot_y_power2','rot_y_derivative1_power2','rot_z','rot_z_derivative1','rot_z_power2','rot_z_derivative1_power2']
+    noiseStd=0.1;tuneBatchSize=12;_tunedParamNames=('dModel','heads','output','layers','dropout','lr','weightDecay','maskRate','ntXentTemp','batchSize')
     if raySavePath.exists():
-        tuneParams = pd.read_json(raySavePath);
-        dModel=int(tuneParams.at[0,"dModel"]);
-        heads=int(tuneParams.at[0,"heads"]);
-        output=int(tuneParams.at[0,"output"]);
-        layers=int(tuneParams.at[0,"layers"]);
-        dropout=float(tuneParams.at[0,"dropout"]);
-        lr=float(tuneParams.at[0,"lr"]);
-        weightDecay=float(tuneParams.at[0,"weightDecay"]);
-        maskRate=float(tuneParams.at[0,"maskRate"]);
-        noiseStd=float(tuneParams.at[0,"noiseStd"]) if "noiseStd" in tuneParams.columns else 0.1;
-        ntXentTemp=float(tuneParams.at[0,"ntXentTemp"]);
-        batchSize=int(tuneParams.at[0,"batchSize"]) if "batchSize" in tuneParams.columns else tuneBatchSize;
-    # Augmentation apply probs (per view, independent of strength)
-    maskApplyProb=0.5
-    noiseApplyProb=0.5
-
-   #Tuning Hypers:
-    tuneEpochs = 100;
-    maxConcurrents = 12;
-    sampleNum = 100;
-    # Training
-    epochs=200
-    patience=25
-    warmupFraction=0.05
-    attentionLearningRateMultiplier=10.0
-    nPermutations=1000
-    bootstrapNResamples=1000
-    randomSeed=42
-    valFraction=0.15
-    valFractionForTune = 0.3;
-    # Clustering
-    kmeansKRange=[2,3,4,5,6]
-    kmeansNInit=20
-    minClusterSizeFraction = 0.15;
-    minClusterSizeFloor = 4;
-
-    # Motion / QC (verify_setup.py)
-    fdThreshold=0.5
-    fdFractionThreshold=0.25
-    cMeanFDStartIdx = 5;
-    cMeanFDEndIdx = 12; #this is for slicing the subject exclusion csv and is specific to it. 
-    # Statistics
-    fdrAlpha=0.05
-
-    # Baselines
-    pcaComponents=50
-    groupIcaComponents=20
-    svmCvFolds=5
-
-    # Graph construction
-    edgePercentile=80
-    edgePercentileSensitivity=[75,80,85,90]
-    
-    #gap
-    gapB=10
-    #Synthetic Data Parms
-    synthSeedG = 5; #group assignment
-    offsetSeed = 5;
-    deltas = [0, 1.0, 3.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 12.0, 15.0, 20.0];
-    normalizedTolerance = 1e-4;
-    numRandGroups = 6;
-    presetGroups = [[5,9,7,7], [7,7,7,7]]; #for 28 subjects. note, even across is easier and gives best case.
-    usePresets = True; #if False, will randomly generate x groups. if true, will run along x-2 groups. 
-    subjectAmt = 28;
-    clustersPerGroup = 4;
-    runsPerDelta = 20;
-    # Device
+        tuneParams=pd.read_json(raySavePath);dModel=int(tuneParams.at[0,'dModel']);heads=int(tuneParams.at[0,'heads']);output=int(tuneParams.at[0,'output']);layers=int(tuneParams.at[0,'layers'])
+        dropout=float(tuneParams.at[0,'dropout']);lr=float(tuneParams.at[0,'lr']);weightDecay=float(tuneParams.at[0,'weightDecay']);maskRate=float(tuneParams.at[0,'maskRate'])
+        noiseStd=float(tuneParams.at[0,'noiseStd'])if 'noiseStd' in tuneParams.columns else 0.1;ntXentTemp=float(tuneParams.at[0,'ntXentTemp'])
+        batchSize=int(tuneParams.at[0,'batchSize'])if 'batchSize' in tuneParams.columns else tuneBatchSize
+    maskApplyProb=0.5;noiseApplyProb=0.5;tuneEpochs=100;maxConcurrents=12;sampleNum=100;epochs=200;patience=25;warmupFraction=0.05;attentionLearningRateMultiplier=10.0;nPermutations=1000
+    bootstrapNResamples=1000;randomSeed=42;valFraction=0.15;valFractionForTune=0.3;kmeansKRange=[2,3,4,5,6];kmeansNInit=20;minClusterSizeFraction=0.15;minClusterSizeFloor=4;fdThreshold=0.5
+    fdFractionThreshold=0.25;cMeanFDStartIdx=5;cMeanFDEndIdx=12;fdrAlpha=0.05;pcaComponents=50;groupIcaComponents=20;svmCvFolds=5;edgePercentile=80;edgePercentileSensitivity=[75,80,85,90];gapB=10
+    synthSeedG=5;offsetSeed=5;deltas=[0,1.0,3.0,5.0,6.0,7.0,8.0,9.0,10.0,12.0,15.0,20.0];normalizedTolerance=0.0001;numRandGroups=6;presetGroups=[[5,9,7,7],[7,7,7,7]];usePresets=True;subjectAmt=28
+    clustersPerGroup=4;runsPerDelta=20
     @property
     def device(self):
         import torch
-        if torch.cuda.is_available(): return torch.device("cuda")
-        if torch.backends.mps.is_available(): return torch.device("mps")
-        return torch.device("cpu")
-
-    def __getattr__(self, name):
+        if torch.cuda.is_available():return torch.device('cuda')
+        if torch.backends.mps.is_available():return torch.device('mps')
+        return torch.device('cpu')
+    def __getattr__(self,name):
         if name in type(self)._tunedParamNames:
-            raise FileNotFoundError(
-                f"Tuned hyperparameter '{name}' is unavailable because the tuning "
-                f"result '{type(self).raySavePath}' does not exist. Run "
-                f"`python src/hyperparameter_search.py` to generate bestParams.json "
-                f"before training or analysis. Refusing to fall back to untuned defaults."
-            )
+            raise FileNotFoundError(f"Tuned hyperparameter '{name}' is unavailable because the tuning result '{type(self).raySavePath}' does not exist. Run `python src/hyperparameter_search.py` to generate bestParams.json before training or analysis. Refusing to fall back to untuned defaults.")
         raise AttributeError(name)
-
-
 config=Config()
