@@ -1,0 +1,230 @@
+{
+  "source": "Discordance counts transcribed from FINAL supplement paragraphs S11; no raw-record verification implied.",
+  "paired_comparisons": {
+    "exp_pr4.5": {
+      "c_only": 8,
+      "m_only": 193,
+      "n": 1600,
+      "difference_C_minus_M": -0.115625,
+      "exact_two_sided_McNemar_p": 3.723653778052136e-47,
+      "paired_difference_normal95": [
+        -0.1320470877581271,
+        -0.0992029122418729
+      ],
+      "Holm_p_over_15_reported_verification_cells": 3.3512884002469226e-46
+    },
+    "power_pr3.0": {
+      "c_only": 42,
+      "m_only": 211,
+      "n": 1600,
+      "difference_C_minus_M": -0.105625,
+      "exact_two_sided_McNemar_p": 2.8367970278904027e-28,
+      "paired_difference_normal95": [
+        -0.12441538948540283,
+        -0.08683461051459716
+      ],
+      "Holm_p_over_15_reported_verification_cells": 1.985757919523282e-27
+    },
+    "power_pr4.5": {
+      "c_only": 106,
+      "m_only": 97,
+      "n": 1600,
+      "difference_C_minus_M": 0.005625,
+      "exact_two_sided_McNemar_p": 0.5745722959151965,
+      "paired_difference_normal95": [
+        -0.011831522274773682,
+        0.023081522274773683
+      ],
+      "Holm_p_over_15_reported_verification_cells": 0.5745722959151965
+    },
+    "power_pr6.0": {
+      "c_only": 63,
+      "m_only": 35,
+      "n": 1600,
+      "difference_C_minus_M": 0.0175,
+      "exact_two_sided_McNemar_p": 0.006092629672064721,
+      "paired_difference_normal95": [
+        0.005399914306154092,
+        0.02960008569384591
+      ],
+      "Holm_p_over_15_reported_verification_cells": 0.012185259344129442
+    },
+    "one_spike_pr3.0": {
+      "c_only": 89,
+      "m_only": 3,
+      "n": 1600,
+      "difference_C_minus_M": 0.05375,
+      "exact_two_sided_McNemar_p": 5.244963240504083e-23,
+      "paired_difference_normal95": [
+        0.042295828663573495,
+        0.0652041713364265
+      ],
+      "Holm_p_over_15_reported_verification_cells": 2.6224816202520415e-22
+    },
+    "one_spike_pr4.5": {
+      "c_only": 360,
+      "m_only": 12,
+      "n": 1600,
+      "difference_C_minus_M": 0.2175,
+      "exact_two_sided_McNemar_p": 2.635294539430072e-90,
+      "paired_difference_normal95": [
+        0.19640706462465407,
+        0.23859293537534593
+      ],
+      "Holm_p_over_15_reported_verification_cells": 3.689412355202101e-89
+    },
+    "one_spike_pr6.0": {
+      "c_only": 245,
+      "m_only": 6,
+      "n": 1600,
+      "difference_C_minus_M": 0.149375,
+      "exact_two_sided_McNemar_p": 1.8524373265747595e-64,
+      "paired_difference_normal95": [
+        0.13139518361142244,
+        0.16735481638857758
+      ],
+      "Holm_p_over_15_reported_verification_cells": 2.0376810592322355e-63
+    },
+    "two_block_pr3.0": {
+      "c_only": 97,
+      "m_only": 5,
+      "n": 1600,
+      "difference_C_minus_M": 0.0575,
+      "exact_two_sided_McNemar_p": 3.4598728933748426e-23,
+      "paired_difference_normal95": [
+        0.04544965281982298,
+        0.06955034718017702
+      ],
+      "Holm_p_over_15_reported_verification_cells": 2.0759237360249056e-22
+    },
+    "two_block_pr4.5": {
+      "c_only": 341,
+      "m_only": 12,
+      "n": 1600,
+      "difference_C_minus_M": 0.205625,
+      "exact_two_sided_McNemar_p": 7.307489575296866e-85,
+      "paired_difference_normal95": [
+        0.18492585863138467,
+        0.22632414136861534
+      ],
+      "Holm_p_over_15_reported_verification_cells": 9.499736447885927e-84
+    },
+    "two_block_pr6.0": {
+      "c_only": 252,
+      "m_only": 2,
+      "n": 1600,
+      "difference_C_minus_M": 0.15625,
+      "exact_two_sided_McNemar_p": 2.2375276386023095e-72,
+      "paired_difference_normal95": [
+        0.13828530019585955,
+        0.17421469980414045
+      ],
+      "Holm_p_over_15_reported_verification_cells": 2.6850331663227714e-71
+    },
+    "grid_pr3.0_n28": {
+      "c_only": 6,
+      "m_only": 555,
+      "n": 1600,
+      "difference_C_minus_M": -0.343125,
+      "exact_two_sided_McNemar_p": 1.129016416021175e-155,
+      "paired_difference_normal95": [
+        -0.36677872253582827,
+        -0.31947127746417175
+      ],
+      "Holm_p_over_15_reported_verification_cells": 1.6935246240317626e-154
+    },
+    "grid_pr4.5_n28": {
+      "c_only": 1,
+      "m_only": 187,
+      "n": 1600,
+      "difference_C_minus_M": -0.11625,
+      "exact_two_sided_McNemar_p": 9.635019878529071e-55,
+      "paired_difference_normal95": [
+        -0.1320556064822299,
+        -0.10044439351777011
+      ],
+      "Holm_p_over_15_reported_verification_cells": 9.635019878529071e-54
+    },
+    "grid_pr9.0_n119": {
+      "c_only": 3,
+      "m_only": 171,
+      "n": 1600,
+      "difference_C_minus_M": -0.105,
+      "exact_two_sided_McNemar_p": 7.334651031773318e-47,
+      "paired_difference_normal95": [
+        -0.12032239657921623,
+        -0.08967760342078376
+      ],
+      "Holm_p_over_15_reported_verification_cells": 5.867720825418654e-46
+    },
+    "negative_within_between": {
+      "c_only": 72,
+      "m_only": 30,
+      "n": 1600,
+      "difference_C_minus_M": 0.02625,
+      "exact_two_sided_McNemar_p": 3.885014426598705e-05,
+      "paired_difference_normal95": [
+        0.01394153002416251,
+        0.03855846997583749
+      ],
+      "Holm_p_over_15_reported_verification_cells": 0.0001554005770639482
+    },
+    "negative_Davies_Bouldin": {
+      "c_only": 35,
+      "m_only": 10,
+      "n": 1600,
+      "difference_C_minus_M": 0.015625,
+      "exact_two_sided_McNemar_p": 0.00024708778460080794,
+      "paired_difference_normal95": [
+        0.007440786746684348,
+        0.023809213253315652
+      ],
+      "Holm_p_over_15_reported_verification_cells": 0.0007412633538024238
+    }
+  },
+  "implementation_checks": {
+    "eigenvector_residual": 1.1102230246251565e-16,
+    "orthogonal_shift_residual": 5.0541621629297855e-16,
+    "shift_alignment_error": 8.881784197001252e-16,
+    "coordinate0_leading_eigenvector_absolute_dot": 0.0992326317195329,
+    "nested_projection_check": "passed",
+    "scope": "Deterministic implementation checks on a new synthetic example; not manuscript power results."
+  },
+  "corrected_script_manifest": [
+    {
+      "source": "C:\\Users\\evaba\\OneDrive\\Desktop\\Paper_archive\\05_code_prestyle\\analysis\\shape_aware_at_article_geometry.py",
+      "source_sha256": "796d9783924e3742f6451cd054345e6ab3686155ce8131d340507861f0ef84ab",
+      "corrected_file": "corrected_scripts\\shape_aware_at_article_geometry.py",
+      "corrected_sha256": "515e51e7ccb63a078a318ba60ba1cdc4ef840d2419d1e8adc879f45b58e90dbc",
+      "executed_full_study": false
+    },
+    {
+      "source": "C:\\Users\\evaba\\OneDrive\\Desktop\\Paper_archive\\05_code_prestyle\\analysis\\shape_aware_detection_floor.py",
+      "source_sha256": "4bbda754846e66567ea61eeca37c40861658e41f8783f18639b23d4edff35cb0",
+      "corrected_file": "corrected_scripts\\shape_aware_detection_floor.py",
+      "corrected_sha256": "0719d46bd90776dc17859ce963b87def924cdc5ed66a395d49c69f18fd9656a6",
+      "executed_full_study": false
+    },
+    {
+      "source": "C:\\Users\\evaba\\OneDrive\\Desktop\\Paper_archive\\05_code_prestyle\\analysis\\shape_aware_minor_axis.py",
+      "source_sha256": "489e55caf0736314be3451680faf5161653e2112aab9c6f16869754a6a087861",
+      "corrected_file": "corrected_scripts\\shape_aware_minor_axis.py",
+      "corrected_sha256": "e1b89fcdf9b9b43d4482f3e15a7e5bc07f41cf5b2ad6ee9a5ffafd33bfcaebf1",
+      "executed_full_study": false
+    }
+  ],
+  "interval_check": {
+    "legacy_C": 0.004,
+    "larger_C_interval": [
+      0.0057,
+      0.0091
+    ],
+    "legacy_M": 0.205,
+    "larger_M_interval": [
+      0.1861,
+      0.2016
+    ],
+    "both_legacy_points_inside": false
+  },
+  "note": "Paired normal difference intervals are approximate. Exact McNemar tests condition on the discordant total. Holm family is a transparent retrospective 15-cell family, not a preregistered analysis."
+}

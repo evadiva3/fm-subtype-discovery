@@ -1,19 +1,14 @@
-#experimental ignore for now
-
-
 import sys
 import os
 import math
 from pathlib import Path
 import torch
 from torch_geometric.data import Batch
-
 _R=Path(__file__).resolve().parents[2]
 for _p in (Path(__file__).resolve().parent,_R,_R/"src",_R/"models"):
     if str(_p) not in sys.path:
         sys.path.insert(0,str(_p))
 from config import config
-
 CK_NAME="bestMddModel.pt"
 
 def _views(subs,aug,dev):
@@ -24,7 +19,7 @@ def _views(subs,aug,dev):
         v1,v2=aug.augment(g)
         a.append(v1)
         b.append(v2)
-    return Batch.from_data_list(a).to(dev),Batch.from_data_list(b).to(dev)
+    return (Batch.from_data_list(a).to(dev),Batch.from_data_list(b).to(dev))
 
 def train_mdd(enc,loss,tr,vl,aug,dev,dire,epochs=None,patience=None,lr=None,wd=None,normStats=None):
     epochs=config.epochs if epochs is None else epochs
@@ -35,12 +30,13 @@ def train_mdd(enc,loss,tr,vl,aug,dev,dire,epochs=None,patience=None,lr=None,wd=N
     ck=os.path.join(dire,CK_NAME)
     opt=torch.optim.AdamW(enc.parameters(),lr=lr,weight_decay=wd)
     warm=min(max(1,int(epochs*config.warmupFraction)),epochs)
-    def sch_fn(e):
+
+    def T(e):
         if e<warm:
             return (e+1)/warm
         p=(e-warm)/max(1,epochs-warm)
-        return 0.5*(1.0+math.cos(math.pi*p))
-    sch=torch.optim.lr_scheduler.LambdaLR(opt,lr_lambda=sch_fn)
+        return 0.5* (1.0+math.cos(math.pi*p))
+    sch=torch.optim.lr_scheduler.LambdaLR(opt,lr_lambda=T)
     best=float("inf")
     cnt=0
     trl=[]
@@ -87,8 +83,7 @@ def train_mdd(enc,loss,tr,vl,aug,dev,dire,epochs=None,patience=None,lr=None,wd=N
                 print(f"Early stopping at epoch {e}")
                 break
     enc.load_state_dict(torch.load(ck,map_location=dev)["enc"])
-    return enc,trl,vll
-
+    return (enc,trl,vll)
 if __name__=="__main__":
     from gnn_encoder import GNNEncoder
     from contrastive_loss import NTXentLoss
@@ -100,11 +95,15 @@ if __name__=="__main__":
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(config.randomSeed)
     ds=mddDataset()
+
     class W(torch.utils.data.Dataset):
+
         def __init__(self,sd):
             self.sd=sd
+
         def __len__(self):
             return len(self.sd)
+
         def __getitem__(self,i):
             return self.sd[i]
     gd=W(ds.subjectData)
@@ -112,7 +111,7 @@ if __name__=="__main__":
     nv=int(n*config.valFraction)
     nt=n-nv
     gen=torch.Generator().manual_seed(config.randomSeed)
-    ts,vs=random_split(gd,[nt,nv],generator=gen)
+    ts,vs=random_split(gd, [nt,nv],generator=gen)
     ds.normalize(ts.indices)
     normStats=(ds.mu,ds.sig)
     ebs=max(2,nt//4)

@@ -1,9 +1,7 @@
-# data/
+# Applied inputs
 
-Some subject folders are physically moved locally by preprocessing/verify_setup.py:
-- data/Subjects/excluded/     FD motion + missing-file exclusions (sub-004, sub-009, sub-012, sub-018, sub-019, sub-020, sub-032)
-- data/Subjects/junk_removed/ syncthing duplicate folders ("sub-XXX N")
+The synthetic studies do not use raw BOLD data. Their sole historical spectrum input is in `results/overnight/e2_spectrum_shape.json`.
 
-Both dirs are gitignored (blanket * in data/.gitignore). The original pre-exclusion data
-is unchanged in git history at data/Subjects/<sid>/ (on origin/main). Restore with:
-  git checkout origin/main -- data/Subjects/<sid>
+Saved arrays under `outputs/` and `results/mdd/` support replay of downstream statistics. They do not replace raw imaging, all checkpoints or execution logs needed for end-to-end training reproduction. Subjects and clinical fields should be reviewed by the authors before any public redistribution.
+
+Do not run `preprocessing/verify_setup.py` merely to inspect the data: it can move subject folders. `preprocessing/subject_filter.py` and the saved exclusion manifest describe the selection policy.
