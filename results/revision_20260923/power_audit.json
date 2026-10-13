@@ -1,0 +1,33 @@
+{
+  "studies": {
+    "shape_aware_article_geometry": {
+      "records": 1200,
+      "cells": 6,
+      "verified": true,
+      "guard_failures": 0,
+      "numerical_failures": 0,
+      "result_sha256": "1186fe1b0b718bbccb6b2ec502d347a444e6c77800022c390543b1dc65d1aa60"
+    },
+    "shape_aware_detection_floor": {
+      "records": 2800,
+      "cells": 14,
+      "verified": true,
+      "guard_failures": 0,
+      "numerical_failures": 0,
+      "result_sha256": "e37e40cdbeb179736472c408e97c50c4bab0e029fe3ea635ea9b4ead05c1b425"
+    },
+    "shape_aware_minor_axis": {
+      "records": 1200,
+      "cells": 6,
+      "verified": true,
+      "guard_failures": 0,
+      "numerical_failures": 0,
+      "result_sha256": "c62444903adc230b33f5bfa99575f7a7949da5bea395a3f9ead5a72f057d45c2"
+    }
+  },
+  "scope": "Complete corrected runs, 200 datasets per cell and 199 reference draws",
+  "passed": true,
+  "records": 5200,
+  "distinct_source_datasets": 5200,
+  "distinct_seed_addresses": 15600
+}

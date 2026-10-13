@@ -1,0 +1,126 @@
+{
+ "experiment": "population covariance control, cells 5 to 7, screening pass",
+ "purpose": "confirm the new cell is off the ceiling before spending the full run",
+ "written_utc": "20260911T021832Z",
+ "config": {
+  "d": 119,
+  "pr_tolerance": 0.05,
+  "n_datasets": 100,
+  "n_draws": 200,
+  "n_init": 5,
+  "k_grid": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "alpha": 0.05,
+  "arms": [
+   "M_est",
+   "C_est"
+  ],
+  "covariance": "estimated only",
+  "seed_base": 6000000,
+  "cells_screened": [
+   "cell7_exp_n119"
+  ],
+  "seed_rule": "dataset i uses seed_base + 1000*i + cell_offset; its draws use that + 7919",
+  "prefix_note": "datasets i = 0 .. 99 of the full run's seed rule, so the screen is a prefix of the full run and not an extra set of datasets",
+  "accept_band": [
+   0.05,
+   0.95
+  ],
+  "versions": {
+   "python": "3.13.9",
+   "numpy": "2.3.5",
+   "scipy": "1.16.3",
+   "scikit_learn": "1.7.2",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "n_workers": 47
+  }
+ },
+ "cells": {
+  "cell7_exp_n119": {
+   "spectrum": "exp",
+   "n": 119,
+   "d": 119,
+   "cell_offset": 22,
+   "regime": "n > d",
+   "pr_target": 6.0,
+   "pr_mean": 5.821225393511043,
+   "pr_sd": 0.2753575205599342,
+   "n_datasets": 100,
+   "n_skipped": 0,
+   "n_errors": 0,
+   "error_sample": null,
+   "n_draws": 200,
+   "arms": {
+    "M_est": {
+     "label": "M, covariance estimated",
+     "n_datasets": 100,
+     "events": 69,
+     "rejection_rate": 0.69,
+     "wilson95": [
+      0.5937394427816384,
+      0.7722030278933533
+     ],
+     "mean_p": 0.04388059701492538,
+     "ks_D_vs_uniform": 0.8556716417910448,
+     "in_accept_band": true
+    },
+    "C_est": {
+     "label": "C, covariance estimated",
+     "n_datasets": 100,
+     "events": 34,
+     "rejection_rate": 0.34,
+     "wilson95": [
+      0.2546152079554365,
+      0.4372227114761494
+     ],
+     "mean_p": 0.09781094527363182,
+     "ks_D_vs_uniform": 0.7262189054726368,
+     "in_accept_band": true
+    }
+   },
+   "discordance": {
+    "M_only": 35,
+    "C_only": 0,
+    "n_discordant": 35
+   },
+   "k_counts": {
+    "2": 95,
+    "3": 5
+   },
+   "wall_s": 18.2,
+   "param_name": "tau",
+   "param_value": 2.4800367821310134,
+   "tuned_pr": 5.777202515410618,
+   "tuned_ok": true,
+   "tune_note": "",
+   "sphere_spectrum_sum": 0.999999999999999,
+   "sphere_spectrum_top10": [
+    0.27260560401421907,
+    0.20594961234534054,
+    0.15260312353644323,
+    0.1110268818123039,
+    0.07944138912166707,
+    0.056010418024196436,
+    0.0389973976036721,
+    0.02687255019104745,
+    0.018365545285714987,
+    0.012472077586412141
+   ],
+   "in_accept_band": true
+  }
+ },
+ "decision": {
+  "all_rates_in_band": true,
+  "band": [
+   0.05,
+   0.95
+  ],
+  "rule": "proceed to the full run only if every screened rate falls strictly between 0.05 and 0.95"
+ },
+ "total_wall_s": 18.3
+}

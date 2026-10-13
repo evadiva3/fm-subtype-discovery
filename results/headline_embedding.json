@@ -1,0 +1,147 @@
+{
+ "experiment": "headline cell recalibrated at the embedding geometry",
+ "written_utc": "20260918T024001Z",
+ "embedding": "data/outputs/trained_fm_embeddings.npy",
+ "embedding_shape": [
+  28,
+  119
+ ],
+ "n_datasets": 10000,
+ "n_draws": 1000,
+ "n_blocks": 5,
+ "n_init": 5,
+ "k_grid": [
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "alpha": 0.05,
+ "n_skipped": 0,
+ "seed_rule": "ov_common.hashed_seed(20260917, 33, 0, block, i, purpose)",
+ "differences_from_archived_run": [
+  "audited nullcal guard and search path",
+  "five k-means restarts rather than twenty"
+ ],
+ "pr": {
+  "mean": 4.202702749052105,
+  "sd": 0.27900385853689325
+ },
+ "observed": {
+  "mean": 0.2556708092474052
+ },
+ "M": {
+  "label": "M, unmatched",
+  "events": 1937,
+  "n": 10000,
+  "rejection_rate": 0.1937,
+  "wilson95": [
+   0.18607250290077934,
+   0.2015627345012075
+  ],
+  "mean_p": 0.21546283716283715,
+  "median_p": 0.17782217782217782,
+  "ks_D_vs_uniform": 0.44401658341658345
+ },
+ "C": {
+  "label": "C, fully matched",
+  "events": 72,
+  "n": 10000,
+  "rejection_rate": 0.0072,
+  "wilson95": [
+   0.00572169385741375,
+   0.009056774936902665
+  ],
+  "mean_p": 0.5560695304695304,
+  "median_p": 0.5694305694305695,
+  "ks_D_vs_uniform": 0.12024725274725273
+ },
+ "mcnemar": {
+  "M_only": 1865,
+  "C_only": 0
+ },
+ "blocks": [
+  {
+   "block": 0,
+   "n_datasets": 2000,
+   "M_rate": 0.1975,
+   "C_rate": 0.007,
+   "M_events": 395,
+   "C_events": 14,
+   "C_wilson95": [
+    0.004174346055425151,
+    0.011715862564775697
+   ]
+  },
+  {
+   "block": 1,
+   "n_datasets": 2000,
+   "M_rate": 0.2115,
+   "C_rate": 0.0085,
+   "M_events": 423,
+   "C_events": 17,
+   "C_wilson95": [
+    0.0053137677391095935,
+    0.013570689739244801
+   ]
+  },
+  {
+   "block": 2,
+   "n_datasets": 2000,
+   "M_rate": 0.193,
+   "C_rate": 0.007,
+   "M_events": 386,
+   "C_events": 14,
+   "C_wilson95": [
+    0.004174346055425151,
+    0.011715862564775697
+   ]
+  },
+  {
+   "block": 3,
+   "n_datasets": 2000,
+   "M_rate": 0.18,
+   "C_rate": 0.0065,
+   "M_events": 360,
+   "C_events": 13,
+   "C_wilson95": [
+    0.003802596493606414,
+    0.011089529173876582
+   ]
+  },
+  {
+   "block": 4,
+   "n_datasets": 2000,
+   "M_rate": 0.1865,
+   "C_rate": 0.007,
+   "M_events": 373,
+   "C_events": 14,
+   "C_wilson95": [
+    0.004174346055425151,
+    0.011715862564775697
+   ]
+  }
+ ],
+ "block_variance": {
+  "C_min": 0.0065,
+  "C_max": 0.0085,
+  "C_range_ratio": 1.307692307692308
+ },
+ "selected_k_counts": {
+  "2": 3943,
+  "3": 2152,
+  "4": 2289,
+  "5": 1375,
+  "6": 241
+ },
+ "versions": {
+  "python": "3.13.9",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3",
+  "scikit_learn": "1.7.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "n_workers": 47
+ },
+ "total_wall_s": 3726.2
+}

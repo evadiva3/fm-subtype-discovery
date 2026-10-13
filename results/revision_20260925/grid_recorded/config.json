@@ -1,0 +1,212 @@
+{
+  "root_seed": 20260925,
+  "experiment": 80,
+  "cells": [
+    {
+      "key": "pr2.0_n28",
+      "n": 28,
+      "pr_target": 2.0,
+      "tau": 0.584022641316122
+    },
+    {
+      "key": "pr2.0_n60",
+      "n": 60,
+      "pr_target": 2.0,
+      "tau": 0.584022641316122
+    },
+    {
+      "key": "pr2.0_n119",
+      "n": 119,
+      "pr_target": 2.0,
+      "tau": 0.584022641316122
+    },
+    {
+      "key": "pr2.0_n180",
+      "n": 180,
+      "pr_target": 2.0,
+      "tau": 0.584022641316122
+    },
+    {
+      "key": "pr2.0_n240",
+      "n": 240,
+      "pr_target": 2.0,
+      "tau": 0.584022641316122
+    },
+    {
+      "key": "pr3.0_n28",
+      "n": 28,
+      "pr_target": 3.0,
+      "tau": 1.2034939268900737
+    },
+    {
+      "key": "pr3.0_n60",
+      "n": 60,
+      "pr_target": 3.0,
+      "tau": 1.0668618855515313
+    },
+    {
+      "key": "pr3.0_n119",
+      "n": 119,
+      "pr_target": 3.0,
+      "tau": 1.0668618855515313
+    },
+    {
+      "key": "pr3.0_n180",
+      "n": 180,
+      "pr_target": 3.0,
+      "tau": 1.0668618855515313
+    },
+    {
+      "key": "pr3.0_n240",
+      "n": 240,
+      "pr_target": 3.0,
+      "tau": 0.9457416090031758
+    },
+    {
+      "key": "pr4.5_n28",
+      "n": 28,
+      "pr_target": 4.5,
+      "tau": 2.1984794925044238
+    },
+    {
+      "key": "pr4.5_n60",
+      "n": 60,
+      "pr_target": 4.5,
+      "tau": 1.9488872559419879
+    },
+    {
+      "key": "pr4.5_n119",
+      "n": 119,
+      "pr_target": 4.5,
+      "tau": 1.7276310965477195
+    },
+    {
+      "key": "pr4.5_n180",
+      "n": 180,
+      "pr_target": 4.5,
+      "tau": 1.7276310965477195
+    },
+    {
+      "key": "pr4.5_n240",
+      "n": 240,
+      "pr_target": 4.5,
+      "tau": 1.7276310965477195
+    },
+    {
+      "key": "pr6.0_n28",
+      "n": 28,
+      "pr_target": 6.0,
+      "tau": 3.1559457438957335
+    },
+    {
+      "key": "pr6.0_n60",
+      "n": 60,
+      "pr_target": 6.0,
+      "tau": 2.7976528603940913
+    },
+    {
+      "key": "pr6.0_n119",
+      "n": 119,
+      "pr_target": 6.0,
+      "tau": 2.4800367821310134
+    },
+    {
+      "key": "pr6.0_n180",
+      "n": 180,
+      "pr_target": 6.0,
+      "tau": 2.4800367821310134
+    },
+    {
+      "key": "pr6.0_n240",
+      "n": 240,
+      "pr_target": 6.0,
+      "tau": 2.4800367821310134
+    },
+    {
+      "key": "pr9.0_n28",
+      "n": 28,
+      "pr_target": 9.0,
+      "tau": 5.765115919895394
+    },
+    {
+      "key": "pr9.0_n60",
+      "n": 60,
+      "pr_target": 9.0,
+      "tau": 4.530400930448321
+    },
+    {
+      "key": "pr9.0_n119",
+      "n": 119,
+      "pr_target": 9.0,
+      "tau": 4.016066862466169
+    },
+    {
+      "key": "pr9.0_n180",
+      "n": 180,
+      "pr_target": 9.0,
+      "tau": 4.016066862466169
+    },
+    {
+      "key": "pr9.0_n240",
+      "n": 240,
+      "pr_target": 9.0,
+      "tau": 4.016066862466169
+    },
+    {
+      "key": "pr15.0_n28",
+      "n": 28,
+      "pr_target": 15.0,
+      "tau": 17.054122278492986
+    },
+    {
+      "key": "pr15.0_n60",
+      "n": 60,
+      "pr_target": 15.0,
+      "tau": 9.335785328261695
+    },
+    {
+      "key": "pr15.0_n119",
+      "n": 119,
+      "pr_target": 15.0,
+      "tau": 8.275898461865136
+    },
+    {
+      "key": "pr15.0_n180",
+      "n": 180,
+      "pr_target": 15.0,
+      "tau": 7.336340001709799
+    },
+    {
+      "key": "pr15.0_n240",
+      "n": 240,
+      "pr_target": 15.0,
+      "tau": 7.336340001709799
+    }
+  ],
+  "datasets_per_cell": 400,
+  "draws": 200,
+  "n_init": 5,
+  "k_grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "inequality": "p < .05",
+  "observed_guard_policy": "count as nonrejection with p=1",
+  "tau_source": "results/overnight/e1_grid.json",
+  "tau_source_sha256": "a40cd203024a648d0168e510140b080ed1db2f354a2e6be44c01637822e054d4",
+  "protocol_sha256": "ca535a15c0c6720172f1c11c0e18d510aa0bc6603116934508a56ef76a42f3d3",
+  "source_sha256": {
+    "analysis/grid_recorded.py": "6e4495533f75dadd85357517310ecc7eaf121bc9a1397996295f14164197d655",
+    "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+    "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443"
+  },
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1"
+  }
+}

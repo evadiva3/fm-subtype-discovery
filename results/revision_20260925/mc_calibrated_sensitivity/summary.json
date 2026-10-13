@@ -1,0 +1,623 @@
+{
+  "config": {
+    "root_seed": 20260925,
+    "experiment": 78,
+    "n": 28,
+    "d": 119,
+    "qs": [
+      0
+    ],
+    "spectra": [
+      "fitted_fm_embedding"
+    ],
+    "arms": [
+      "M",
+      "C"
+    ],
+    "groups": {
+      "calibration": 1000,
+      "null": 1000,
+      "two0.5": 250,
+      "two1.0": 250,
+      "two1.5": 250,
+      "two2.0": 250,
+      "three0.5": 250,
+      "three1.0": 250,
+      "three1.5": 250,
+      "three2.0": 250
+    },
+    "draws": 499,
+    "bootstrap_resamples": 2000,
+    "bootstrap_address": 79,
+    "diagnostics": [
+      "standardized_between"
+    ],
+    "input_sha256": "b0ca63b7ff5b8a88585b528bc90a67563ad58bfeb3f053e9c16aebcd51bca134",
+    "protocol_sha256": "ca535a15c0c6720172f1c11c0e18d510aa0bc6603116934508a56ef76a42f3d3",
+    "source_sha256": {
+      "analysis/mc_calibrated_sensitivity.py": "38f6b2ef2e8c36263a7ee8265846f71613f039ca05f93a61c47f4b91a224f100",
+      "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+      "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443"
+    },
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "sklearn": "1.9.1"
+    }
+  },
+  "records_sha256": "fbbf86e994e1fdd04ed32878d1da4dea5ae9355c9ad333fa90af2d0bd6fd3f13",
+  "summary_source_sha256": "50d815caf9152f9fa14bb1fca9df58a4fb21b42e7275e874009765fa4ff4de90",
+  "cells": {
+    "0_q0_null": {
+      "n": 1000,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 3,
+      "median_standardized_between": 0.0,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 198,
+          "nominal_rate": 0.198,
+          "nominal_wilson95": [
+            0.1744775624258889,
+            0.22383379970046707
+          ],
+          "calibrated_events": 50,
+          "calibrated_rate": 0.05,
+          "conditional_wilson95": [
+            0.038130262390325555,
+            0.06531382024828433
+          ],
+          "two_stage_bootstrap95": [
+            0.034,
+            0.073
+          ],
+          "heldout_tolerance_03_07_supported": true
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 10,
+          "nominal_rate": 0.01,
+          "nominal_wilson95": [
+            0.0054407544447740265,
+            0.018309468872823392
+          ],
+          "calibrated_events": 52,
+          "calibrated_rate": 0.052,
+          "conditional_wilson95": [
+            0.03987303628129359,
+            0.06755573932336689
+          ],
+          "two_stage_bootstrap95": [
+            0.035,
+            0.071
+          ],
+          "heldout_tolerance_03_07_supported": true
+        }
+      }
+    },
+    "0_q0_two0.5": {
+      "n": 250,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0,
+      "median_standardized_between": 0.24999999999999994,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 57,
+          "nominal_rate": 0.228,
+          "nominal_wilson95": [
+            0.1803412980659655,
+            0.2838912168633617
+          ],
+          "calibrated_events": 16,
+          "calibrated_rate": 0.064,
+          "conditional_wilson95": [
+            0.03977474527269545,
+            0.101421491893432
+          ],
+          "two_stage_bootstrap95": [
+            0.032,
+            0.108
+          ],
+          "heldout_tolerance_03_07_supported": null
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 1,
+          "nominal_rate": 0.004,
+          "nominal_wilson95": [
+            0.0007064475338329525,
+            0.022305785572587295
+          ],
+          "calibrated_events": 21,
+          "calibrated_rate": 0.084,
+          "conditional_wilson95": [
+            0.055596038761271,
+            0.1249948664247589
+          ],
+          "two_stage_bootstrap95": [
+            0.048,
+            0.124
+          ],
+          "heldout_tolerance_03_07_supported": null
+        }
+      }
+    },
+    "0_q0_two1.0": {
+      "n": 250,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 2,
+      "median_standardized_between": 0.9999999999999998,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 74,
+          "nominal_rate": 0.296,
+          "nominal_wilson95": [
+            0.24284603161739188,
+            0.3553283545796035
+          ],
+          "calibrated_events": 11,
+          "calibrated_rate": 0.044,
+          "conditional_wilson95": [
+            0.024743798164217214,
+            0.07705777098200783
+          ],
+          "two_stage_bootstrap95": [
+            0.02,
+            0.084
+          ],
+          "heldout_tolerance_03_07_supported": null
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 24,
+          "nominal_rate": 0.096,
+          "nominal_wilson95": [
+            0.06536188077281882,
+            0.1388658252251525
+          ],
+          "calibrated_events": 84,
+          "calibrated_rate": 0.336,
+          "conditional_wilson95": [
+            0.2803229470397884,
+            0.39664077519701196
+          ],
+          "two_stage_bootstrap95": [
+            0.26,
+            0.416
+          ],
+          "heldout_tolerance_03_07_supported": null
+        }
+      }
+    },
+    "0_q0_two1.5": {
+      "n": 250,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 1,
+      "median_standardized_between": 2.2499999999999987,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 193,
+          "nominal_rate": 0.772,
+          "nominal_wilson95": [
+            0.7161087831366383,
+            0.8196587019340346
+          ],
+          "calibrated_events": 65,
+          "calibrated_rate": 0.26,
+          "conditional_wilson95": [
+            0.2095502187098578,
+            0.3177137650513133
+          ],
+          "two_stage_bootstrap95": [
+            0.18,
+            0.38
+          ],
+          "heldout_tolerance_03_07_supported": null
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 156,
+          "nominal_rate": 0.624,
+          "nominal_wilson95": [
+            0.5625067230128982,
+            0.6817402187104968
+          ],
+          "calibrated_events": 225,
+          "calibrated_rate": 0.9,
+          "conditional_wilson95": [
+            0.8565482893802674,
+            0.9313450710177809
+          ],
+          "two_stage_bootstrap95": [
+            0.856,
+            0.936
+          ],
+          "heldout_tolerance_03_07_supported": null
+        }
+      }
+    },
+    "0_q0_two2.0": {
+      "n": 250,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0,
+      "median_standardized_between": 3.999999999999999,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 250,
+          "nominal_rate": 1.0,
+          "nominal_wilson95": [
+            0.9848667004975602,
+            1.0
+          ],
+          "calibrated_events": 209,
+          "calibrated_rate": 0.836,
+          "conditional_wilson95": [
+            0.7850819159322787,
+            0.8767485068020816
+          ],
+          "two_stage_bootstrap95": [
+            0.756,
+            0.892
+          ],
+          "heldout_tolerance_03_07_supported": null
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 242,
+          "nominal_rate": 0.968,
+          "nominal_wilson95": [
+            0.938137597156866,
+            0.9836976345088504
+          ],
+          "calibrated_events": 250,
+          "calibrated_rate": 1.0,
+          "conditional_wilson95": [
+            0.9848667004975602,
+            1.0
+          ],
+          "two_stage_bootstrap95": [
+            1.0,
+            1.0
+          ],
+          "heldout_tolerance_03_07_supported": null
+        }
+      }
+    },
+    "0_q0_three0.5": {
+      "n": 250,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0,
+      "median_standardized_between": 0.24968112244897964,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 51,
+          "nominal_rate": 0.204,
+          "nominal_wilson95": [
+            0.158705254114582,
+            0.2582536591908623
+          ],
+          "calibrated_events": 13,
+          "calibrated_rate": 0.052,
+          "conditional_wilson95": [
+            0.03063765516044343,
+            0.08692178119374258
+          ],
+          "two_stage_bootstrap95": [
+            0.02,
+            0.084
+          ],
+          "heldout_tolerance_03_07_supported": null
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 3,
+          "nominal_rate": 0.012,
+          "nominal_wilson95": [
+            0.004089319879588724,
+            0.03468078043479249
+          ],
+          "calibrated_events": 15,
+          "calibrated_rate": 0.06,
+          "conditional_wilson95": [
+            0.03669441083491908,
+            0.09662289272722788
+          ],
+          "two_stage_bootstrap95": [
+            0.024,
+            0.092
+          ],
+          "heldout_tolerance_03_07_supported": null
+        }
+      }
+    },
+    "0_q0_three1.0": {
+      "n": 250,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0,
+      "median_standardized_between": 0.9987244897959185,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 87,
+          "nominal_rate": 0.348,
+          "nominal_wilson95": [
+            0.2916574757192432,
+            0.40894304732949843
+          ],
+          "calibrated_events": 27,
+          "calibrated_rate": 0.108,
+          "conditional_wilson95": [
+            0.0752919483941564,
+            0.15257255841575637
+          ],
+          "two_stage_bootstrap95": [
+            0.068,
+            0.164
+          ],
+          "heldout_tolerance_03_07_supported": null
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 7,
+          "nominal_rate": 0.028,
+          "nominal_wilson95": [
+            0.013628058598620367,
+            0.056657776131682776
+          ],
+          "calibrated_events": 28,
+          "calibrated_rate": 0.112,
+          "conditional_wilson95": [
+            0.0786343077858489,
+            0.15710913262804438
+          ],
+          "two_stage_bootstrap95": [
+            0.076,
+            0.172
+          ],
+          "heldout_tolerance_03_07_supported": null
+        }
+      }
+    },
+    "0_q0_three1.5": {
+      "n": 250,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0,
+      "median_standardized_between": 2.247130102040816,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 169,
+          "nominal_rate": 0.676,
+          "nominal_wilson95": [
+            0.615702783439205,
+            0.7309702951359363
+          ],
+          "calibrated_events": 87,
+          "calibrated_rate": 0.348,
+          "conditional_wilson95": [
+            0.2916574757192432,
+            0.40894304732949843
+          ],
+          "two_stage_bootstrap95": [
+            0.276,
+            0.444
+          ],
+          "heldout_tolerance_03_07_supported": null
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 35,
+          "nominal_rate": 0.14,
+          "nominal_wilson95": [
+            0.10241625730268758,
+            0.18847971833906904
+          ],
+          "calibrated_events": 119,
+          "calibrated_rate": 0.476,
+          "conditional_wilson95": [
+            0.4149242863660795,
+            0.5378021120100376
+          ],
+          "two_stage_bootstrap95": [
+            0.3799,
+            0.54
+          ],
+          "heldout_tolerance_03_07_supported": null
+        }
+      }
+    },
+    "0_q0_three2.0": {
+      "n": 250,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0,
+      "median_standardized_between": 3.994897959183674,
+      "arms": {
+        "M": {
+          "cutoff": 0.012,
+          "boundary_probability": 0.2,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 237,
+          "nominal_rate": 0.948,
+          "nominal_wilson95": [
+            0.9130782188062574,
+            0.9693623448395565
+          ],
+          "calibrated_events": 209,
+          "calibrated_rate": 0.836,
+          "conditional_wilson95": [
+            0.7850819159322787,
+            0.8767485068020816
+          ],
+          "two_stage_bootstrap95": [
+            0.78,
+            0.884
+          ],
+          "heldout_tolerance_03_07_supported": null
+        },
+        "C": {
+          "cutoff": 0.146,
+          "boundary_probability": 1.0,
+          "calibration_expected_rate": 0.05,
+          "nominal_events": 153,
+          "nominal_rate": 0.612,
+          "nominal_wilson95": [
+            0.5503353651637095,
+            0.6702747757477439
+          ],
+          "calibrated_events": 225,
+          "calibrated_rate": 0.9,
+          "conditional_wilson95": [
+            0.8565482893802674,
+            0.9313450710177809
+          ],
+          "two_stage_bootstrap95": [
+            0.856,
+            0.94
+          ],
+          "heldout_tolerance_03_07_supported": null
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "0_q0_null": {
+      "M-C": {
+        "rate_difference": -0.002,
+        "a_only": 19,
+        "b_only": 21,
+        "two_stage_bootstrap95": [
+          -0.018000000000000002,
+          0.018999999999999996
+        ]
+      }
+    },
+    "0_q0_two0.5": {
+      "M-C": {
+        "rate_difference": -0.02,
+        "a_only": 7,
+        "b_only": 12,
+        "two_stage_bootstrap95": [
+          -0.056,
+          0.020000000000000004
+        ]
+      }
+    },
+    "0_q0_two1.0": {
+      "M-C": {
+        "rate_difference": -0.292,
+        "a_only": 3,
+        "b_only": 76,
+        "two_stage_bootstrap95": [
+          -0.368,
+          -0.21200000000000002
+        ]
+      }
+    },
+    "0_q0_two1.5": {
+      "M-C": {
+        "rate_difference": -0.64,
+        "a_only": 1,
+        "b_only": 161,
+        "two_stage_bootstrap95": [
+          -0.716,
+          -0.52
+        ]
+      }
+    },
+    "0_q0_two2.0": {
+      "M-C": {
+        "rate_difference": -0.164,
+        "a_only": 0,
+        "b_only": 41,
+        "two_stage_bootstrap95": [
+          -0.244,
+          -0.10799999999999998
+        ]
+      }
+    },
+    "0_q0_three0.5": {
+      "M-C": {
+        "rate_difference": -0.008,
+        "a_only": 6,
+        "b_only": 8,
+        "two_stage_bootstrap95": [
+          -0.044000000000000004,
+          0.024
+        ]
+      }
+    },
+    "0_q0_three1.0": {
+      "M-C": {
+        "rate_difference": -0.004,
+        "a_only": 11,
+        "b_only": 12,
+        "two_stage_bootstrap95": [
+          -0.052000000000000005,
+          0.043999999999999984
+        ]
+      }
+    },
+    "0_q0_three1.5": {
+      "M-C": {
+        "rate_difference": -0.128,
+        "a_only": 8,
+        "b_only": 40,
+        "two_stage_bootstrap95": [
+          -0.18000000000000005,
+          -0.03200000000000003
+        ]
+      }
+    },
+    "0_q0_three2.0": {
+      "M-C": {
+        "rate_difference": -0.064,
+        "a_only": 4,
+        "b_only": 20,
+        "two_stage_bootstrap95": [
+          -0.11199999999999999,
+          -0.02400000000000002
+        ]
+      }
+    }
+  },
+  "uncertainty": "Conditional Wilson intervals and two-stage paired bootstrap percentile intervals; the latter include calibration-cutoff estimation and evaluation sampling. All intervals are pointwise. No universal method ranking."
+}

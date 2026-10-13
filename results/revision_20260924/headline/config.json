@@ -1,0 +1,37 @@
+{
+  "root_seed": 20260924,
+  "experiment": 71,
+  "n_datasets": 10000,
+  "n_draws": 1000,
+  "n_blocks": 5,
+  "n_init": 5,
+  "k_grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "alpha": 0.05,
+  "inequality": "p < .05",
+  "embedding_shape": [
+    28,
+    119
+  ],
+  "input_sha256": "b0ca63b7ff5b8a88585b528bc90a67563ad58bfeb3f053e9c16aebcd51bca134",
+  "observed_guard_policy": "retain as nonrejection with p=1",
+  "reference_guard_policy": "legacy sentinel -1; retain all draws",
+  "fixed_k_guard": "not applied in historical M implementation",
+  "seed_rule": "ov.hashed_seed(root,71,0,block,index,purpose); purpose 0=data,1=reference",
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1"
+  },
+  "source_sha256": {
+    "analysis/headline_recorded.py": "c072402a64808348aab0da04b4e4cd62d450810de9cb5dba20a876bfcf4d99a3",
+    "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+    "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443"
+  }
+}

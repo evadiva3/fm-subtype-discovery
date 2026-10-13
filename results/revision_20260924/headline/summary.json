@@ -1,0 +1,199 @@
+{
+  "config": {
+    "root_seed": 20260924,
+    "experiment": 71,
+    "n_datasets": 10000,
+    "n_draws": 1000,
+    "n_blocks": 5,
+    "n_init": 5,
+    "k_grid": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "alpha": 0.05,
+    "inequality": "p < .05",
+    "embedding_shape": [
+      28,
+      119
+    ],
+    "input_sha256": "b0ca63b7ff5b8a88585b528bc90a67563ad58bfeb3f053e9c16aebcd51bca134",
+    "observed_guard_policy": "retain as nonrejection with p=1",
+    "reference_guard_policy": "legacy sentinel -1; retain all draws",
+    "fixed_k_guard": "not applied in historical M implementation",
+    "seed_rule": "ov.hashed_seed(root,71,0,block,index,purpose); purpose 0=data,1=reference",
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "sklearn": "1.9.1"
+    },
+    "source_sha256": {
+      "analysis/headline_recorded.py": "c072402a64808348aab0da04b4e4cd62d450810de9cb5dba20a876bfcf4d99a3",
+      "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+      "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443"
+    }
+  },
+  "summary": {
+    "n": 10000,
+    "errors": 0,
+    "guard_failures": 0,
+    "M": {
+      "events": 2004,
+      "rate": 0.2004,
+      "wilson95": [
+        0.19266997911371034,
+        0.208360112710107
+      ],
+      "reference_guard_failures": 0
+    },
+    "C": {
+      "events": 87,
+      "rate": 0.0087,
+      "wilson95": [
+        0.0070590920625963555,
+        0.010718224736607485
+      ],
+      "reference_guard_failures": 42
+    },
+    "M_only": 1917,
+    "C_only": 0,
+    "mean_pr": 4.20309731638729
+  },
+  "blocks": {
+    "0": {
+      "n": 2000,
+      "errors": 0,
+      "guard_failures": 0,
+      "M": {
+        "events": 387,
+        "rate": 0.1935,
+        "wilson95": [
+          0.17678106379337855,
+          0.21139408619058003
+        ],
+        "reference_guard_failures": 0
+      },
+      "C": {
+        "events": 20,
+        "rate": 0.01,
+        "wilson95": [
+          0.006482767875902523,
+          0.015395938460605421
+        ],
+        "reference_guard_failures": 12
+      },
+      "M_only": 367,
+      "C_only": 0,
+      "mean_pr": 4.2087465490923215
+    },
+    "1": {
+      "n": 2000,
+      "errors": 0,
+      "guard_failures": 0,
+      "M": {
+        "events": 400,
+        "rate": 0.2,
+        "wilson95": [
+          0.1830520345047051,
+          0.21809819386458554
+        ],
+        "reference_guard_failures": 0
+      },
+      "C": {
+        "events": 16,
+        "rate": 0.008,
+        "wilson95": [
+          0.00493029685266593,
+          0.012956077672970615
+        ],
+        "reference_guard_failures": 7
+      },
+      "M_only": 384,
+      "C_only": 0,
+      "mean_pr": 4.207633182028344
+    },
+    "2": {
+      "n": 2000,
+      "errors": 0,
+      "guard_failures": 0,
+      "M": {
+        "events": 405,
+        "rate": 0.2025,
+        "wilson95": [
+          0.18546587834289513,
+          0.22067476478998477
+        ],
+        "reference_guard_failures": 0
+      },
+      "C": {
+        "events": 10,
+        "rate": 0.005,
+        "wilson95": [
+          0.0027181808581210895,
+          0.00917969595120836
+        ],
+        "reference_guard_failures": 7
+      },
+      "M_only": 395,
+      "C_only": 0,
+      "mean_pr": 4.208148902666156
+    },
+    "3": {
+      "n": 2000,
+      "errors": 0,
+      "guard_failures": 0,
+      "M": {
+        "events": 412,
+        "rate": 0.206,
+        "wilson95": [
+          0.18884702137024828,
+          0.22428020243165653
+        ],
+        "reference_guard_failures": 0
+      },
+      "C": {
+        "events": 24,
+        "rate": 0.012,
+        "wilson95": [
+          0.00807715427528075,
+          0.017793883872098588
+        ],
+        "reference_guard_failures": 10
+      },
+      "M_only": 388,
+      "C_only": 0,
+      "mean_pr": 4.191892292068665
+    },
+    "4": {
+      "n": 2000,
+      "errors": 0,
+      "guard_failures": 0,
+      "M": {
+        "events": 400,
+        "rate": 0.2,
+        "wilson95": [
+          0.1830520345047051,
+          0.21809819386458554
+        ],
+        "reference_guard_failures": 0
+      },
+      "C": {
+        "events": 17,
+        "rate": 0.0085,
+        "wilson95": [
+          0.0053137677391095935,
+          0.013570689739244801
+        ],
+        "reference_guard_failures": 6
+      },
+      "M_only": 383,
+      "C_only": 0,
+      "mean_pr": 4.199065656080962
+    }
+  },
+  "records_sha256": "9d4f0fde6907c8a4f57d55f0f15baea34065cfe59357ef2febe615877bfb37b1",
+  "execution_wall_s": 3842.7183911800385
+}

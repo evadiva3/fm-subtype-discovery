@@ -1,0 +1,2024 @@
+{
+ "purpose": "dataset overlap across four-seed verification replications",
+ "seed_rule": "dataset i of replication j uses base_j + 1000*i + cell_offset",
+ "e1_conly_check": {
+  "artifact": "results\\overnight\\e1_conly_check.json",
+  "cells": {
+   "pr3.0_n28": {
+    "overlap": {
+     "seed_bases": [
+      900000,
+      710000,
+      720000,
+      730000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 590,
+     "distinct_fraction": 0.36875,
+     "pairwise_overlap_fraction": {
+      "900000_vs_710000": 0.525,
+      "900000_vs_720000": 0.55,
+      "900000_vs_730000": 0.575,
+      "710000_vs_720000": 0.975,
+      "710000_vs_730000": 0.95,
+      "720000_vs_730000": 0.975
+     },
+     "disjoint_pairs": []
+    },
+    "stride_check": {
+     "checked": 8,
+     "offsets": [
+      30028
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 8,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 8,
+      "persisting": 0,
+      "draws": 2000
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      900000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 210,
+      "n": 400,
+      "rate": 0.525,
+      "wilson95": [
+       0.47605711125306005,
+       0.573467274030004
+      ]
+     },
+     "C": {
+      "events": 55,
+      "n": 400,
+      "rate": 0.1375,
+      "wilson95": [
+       0.10718448672851885,
+       0.17471192666705218
+      ]
+     },
+     "C_only": 2,
+     "M_only": 157,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 0,
+     "C_only_persisting_fraction": 0.0
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 8,
+     "distinct": 2,
+     "records_complete": true
+    }
+   },
+   "pr4.5_n28": {
+    "overlap": {
+     "seed_bases": [
+      900000,
+      710000,
+      720000,
+      730000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 590,
+     "distinct_fraction": 0.36875,
+     "pairwise_overlap_fraction": {
+      "900000_vs_710000": 0.525,
+      "900000_vs_720000": 0.55,
+      "900000_vs_730000": 0.575,
+      "710000_vs_720000": 0.975,
+      "710000_vs_730000": 0.95,
+      "720000_vs_730000": 0.975
+     },
+     "disjoint_pairs": []
+    },
+    "stride_check": {
+     "checked": 5,
+     "offsets": [
+      45028
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 5,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 5,
+      "persisting": 0,
+      "draws": 2000
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      900000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 48,
+      "n": 400,
+      "rate": 0.12,
+      "wilson95": [
+       0.0917153907479961,
+       0.15551395294943
+      ]
+     },
+     "C": {
+      "events": 5,
+      "n": 400,
+      "rate": 0.0125,
+      "wilson95": [
+       0.00535075077896365,
+       0.028923736201286937
+      ]
+     },
+     "C_only": 2,
+     "M_only": 45,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 0,
+     "C_only_persisting_fraction": 0.0
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 5,
+     "distinct": 2,
+     "records_complete": true
+    }
+   },
+   "pr9.0_n119": {
+    "overlap": {
+     "seed_bases": [
+      900000,
+      710000,
+      720000,
+      730000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 590,
+     "distinct_fraction": 0.36875,
+     "pairwise_overlap_fraction": {
+      "900000_vs_710000": 0.525,
+      "900000_vs_720000": 0.55,
+      "900000_vs_730000": 0.575,
+      "710000_vs_720000": 0.975,
+      "710000_vs_730000": 0.95,
+      "720000_vs_730000": 0.975
+     },
+     "disjoint_pairs": []
+    },
+    "stride_check": {
+     "checked": 7,
+     "offsets": [
+      90119
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 7,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 7,
+      "persisting": 0,
+      "draws": 2000
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      900000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 60,
+      "n": 400,
+      "rate": 0.15,
+      "wilson95": [
+       0.11834499529671785,
+       0.1883136107403852
+      ]
+     },
+     "C": {
+      "events": 8,
+      "n": 400,
+      "rate": 0.02,
+      "wilson95": [
+       0.010168386790104122,
+       0.038963415775065686
+      ]
+     },
+     "C_only": 1,
+     "M_only": 53,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 0,
+     "C_only_persisting_fraction": 0.0
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 7,
+     "distinct": 2,
+     "records_complete": true
+    }
+   }
+  }
+ },
+ "e2_conly_check": {
+  "artifact": "results\\overnight\\e2_conly_check.json",
+  "cells": {
+   "exp_pr4.5": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 2,
+     "offsets": [
+      4500
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 2,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 2,
+      "persisting": 0,
+      "draws": 2000,
+      "persist_frac": 0.0
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 52,
+      "n": 400,
+      "rate": 0.13,
+      "wilson95": [
+       0.10053125228052198,
+       0.1665078455301298
+      ]
+     },
+     "C": {
+      "events": 6,
+      "n": 400,
+      "rate": 0.015,
+      "wilson95": [
+       0.0068922919182397985,
+       0.0323346335903172
+      ]
+     },
+     "C_only": 2,
+     "M_only": 48,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 0,
+     "C_only_persisting_fraction": 0.0
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 103,
+      "n": 800,
+      "rate": 0.12875,
+      "wilson95": [
+       0.10730324894908497,
+       0.15374506663528695
+      ]
+     },
+     "C": {
+      "events": 8,
+      "n": 800,
+      "rate": 0.01,
+      "wilson95": [
+       0.005075687870837956,
+       0.019607610812912117
+      ]
+     },
+     "C_only": 2,
+     "M_only": 97,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 0,
+     "C_only_persisting_fraction": 0.0
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 2,
+     "distinct": 2,
+     "records_complete": true
+    }
+   },
+   "power_pr3.0": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 40,
+     "offsets": [
+      3001
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 40,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 40,
+      "persisting": 4,
+      "draws": 2000,
+      "persist_frac": 0.1
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 277,
+      "n": 400,
+      "rate": 0.6925,
+      "wilson95": [
+       0.6456251644012613,
+       0.7357126022783321
+      ]
+     },
+     "C": {
+      "events": 228,
+      "n": 400,
+      "rate": 0.57,
+      "wilson95": [
+       0.5210443194259947,
+       0.6176239593665845
+      ]
+     },
+     "C_only": 11,
+     "M_only": 60,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 0,
+     "C_only_persisting_fraction": 0.0
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 552,
+      "n": 800,
+      "rate": 0.69,
+      "wilson95": [
+       0.6571072349482057,
+       0.7210767920927892
+      ]
+     },
+     "C": {
+      "events": 454,
+      "n": 800,
+      "rate": 0.5675,
+      "wilson95": [
+       0.5329276178078446,
+       0.6014272339040878
+      ]
+     },
+     "C_only": 20,
+     "M_only": 118,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 1,
+     "C_only_persisting_fraction": 0.05
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 40,
+     "distinct": 22,
+     "records_complete": true
+    }
+   },
+   "power_pr4.5": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 89,
+     "offsets": [
+      4501
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 89,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 89,
+      "persisting": 36,
+      "draws": 2000,
+      "persist_frac": 0.4044943820224719
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 80,
+      "n": 400,
+      "rate": 0.2,
+      "wilson95": [
+       0.1637370597260629,
+       0.2419703168771683
+      ]
+     },
+     "C": {
+      "events": 82,
+      "n": 400,
+      "rate": 0.205,
+      "wilson95": [
+       0.16833283816988934,
+       0.24727941548995466
+      ]
+     },
+     "C_only": 25,
+     "M_only": 23,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 9,
+     "C_only_persisting_fraction": 0.36
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 157,
+      "n": 800,
+      "rate": 0.19625,
+      "wilson95": [
+       0.17020780955403345,
+       0.22519535774227087
+      ]
+     },
+     "C": {
+      "events": 155,
+      "n": 800,
+      "rate": 0.19375,
+      "wilson95": [
+       0.16785197651239991,
+       0.2225750851649439
+      ]
+     },
+     "C_only": 46,
+     "M_only": 48,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 18,
+     "C_only_persisting_fraction": 0.391304347826087
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 89,
+     "distinct": 49,
+     "records_complete": true
+    }
+   },
+   "power_pr6.0": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 37,
+     "offsets": [
+      6001
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 37,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 37,
+      "persisting": 13,
+      "draws": 2000,
+      "persist_frac": 0.35135135135135137
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 22,
+      "n": 400,
+      "rate": 0.055,
+      "wilson95": [
+       0.03659849414607336,
+       0.08186744781538616
+      ]
+     },
+     "C": {
+      "events": 18,
+      "n": 400,
+      "rate": 0.045,
+      "wilson95": [
+       0.02865145865088141,
+       0.07000472919735247
+      ]
+     },
+     "C_only": 6,
+     "M_only": 10,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 2,
+     "C_only_persisting_fraction": 0.3333333333333333
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 38,
+      "n": 800,
+      "rate": 0.0475,
+      "wilson95": [
+       0.03480005831032025,
+       0.06452482465783671
+      ]
+     },
+     "C": {
+      "events": 38,
+      "n": 800,
+      "rate": 0.0475,
+      "wilson95": [
+       0.03480005831032025,
+       0.06452482465783671
+      ]
+     },
+     "C_only": 17,
+     "M_only": 17,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 5,
+     "C_only_persisting_fraction": 0.29411764705882354
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 37,
+     "distinct": 18,
+     "records_complete": true
+    }
+   },
+   "one_spike_pr3.0": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 120,
+     "offsets": [
+      3002
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 120,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 120,
+      "persisting": 55,
+      "draws": 2000,
+      "persist_frac": 0.4583333333333333
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 347,
+      "n": 400,
+      "rate": 0.8675,
+      "wilson95": [
+       0.83075368029388,
+       0.897254783367162
+      ]
+     },
+     "C": {
+      "events": 376,
+      "n": 400,
+      "rate": 0.94,
+      "wilson95": [
+       0.9122771510919541,
+       0.9593520298899736
+      ]
+     },
+     "C_only": 30,
+     "M_only": 1,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 15,
+     "C_only_persisting_fraction": 0.5
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 694,
+      "n": 800,
+      "rate": 0.8675,
+      "wilson95": [
+       0.8422408627354252,
+       0.8892466632517624
+      ]
+     },
+     "C": {
+      "events": 752,
+      "n": 800,
+      "rate": 0.94,
+      "wilson95": [
+       0.9213458598274343,
+       0.9544487291096063
+      ]
+     },
+     "C_only": 59,
+     "M_only": 1,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 28,
+     "C_only_persisting_fraction": 0.4745762711864407
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 120,
+     "distinct": 62,
+     "records_complete": true
+    }
+   },
+   "one_spike_pr4.5": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 200,
+     "offsets": [
+      4502
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 374,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 374,
+      "persisting": 241,
+      "draws": 2000,
+      "persist_frac": 0.6443850267379679
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 167,
+      "n": 400,
+      "rate": 0.4175,
+      "wilson95": [
+       0.37018126767077986,
+       0.46638826089510876
+      ]
+     },
+     "C": {
+      "events": 251,
+      "n": 400,
+      "rate": 0.6275,
+      "wilson95": [
+       0.5791182278915757,
+       0.673456137052051
+      ]
+     },
+     "C_only": 89,
+     "M_only": 5,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 56,
+     "C_only_persisting_fraction": 0.6292134831460674
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 339,
+      "n": 800,
+      "rate": 0.42375,
+      "wilson95": [
+       0.38995202483480446,
+       0.4582767537869015
+      ]
+     },
+     "C": {
+      "events": 512,
+      "n": 800,
+      "rate": 0.64,
+      "wilson95": [
+       0.6061420932889413,
+       0.6725198213728444
+      ]
+     },
+     "C_only": 180,
+     "M_only": 7,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 115,
+     "C_only_persisting_fraction": 0.6388888888888888
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 200,
+     "distinct": 181,
+     "records_complete": false
+    }
+   },
+   "one_spike_pr6.0": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 200,
+     "offsets": [
+      6002
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 279,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 279,
+      "persisting": 178,
+      "draws": 2000,
+      "persist_frac": 0.6379928315412187
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 45,
+      "n": 400,
+      "rate": 0.1125,
+      "wilson95": [
+       0.08514845878035698,
+       0.14722356933214992
+      ]
+     },
+     "C": {
+      "events": 108,
+      "n": 400,
+      "rate": 0.27,
+      "wilson95": [
+       0.22883278411359848,
+       0.3155428712822122
+      ]
+     },
+     "C_only": 66,
+     "M_only": 3,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 49,
+     "C_only_persisting_fraction": 0.7424242424242424
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 84,
+      "n": 800,
+      "rate": 0.105,
+      "wilson95": [
+       0.08561189202188303,
+       0.12816342018236448
+      ]
+     },
+     "C": {
+      "events": 217,
+      "n": 800,
+      "rate": 0.27125,
+      "wilson95": [
+       0.2415884625440666,
+       0.3030978733210513
+      ]
+     },
+     "C_only": 137,
+     "M_only": 4,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 93,
+     "C_only_persisting_fraction": 0.6788321167883211
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 200,
+     "distinct": 140,
+     "records_complete": false
+    }
+   },
+   "two_block_pr3.0": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 101,
+     "offsets": [
+      3004
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 101,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 101,
+      "persisting": 45,
+      "draws": 2000,
+      "persist_frac": 0.44554455445544555
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 356,
+      "n": 400,
+      "rate": 0.89,
+      "wilson95": [
+       0.8555490895293816,
+       0.917031320886418
+      ]
+     },
+     "C": {
+      "events": 375,
+      "n": 400,
+      "rate": 0.9375,
+      "wilson95": [
+       0.9093658838620183,
+       0.9573108585916029
+      ]
+     },
+     "C_only": 20,
+     "M_only": 1,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 11,
+     "C_only_persisting_fraction": 0.55
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 711,
+      "n": 800,
+      "rate": 0.88875,
+      "wilson95": [
+       0.8650758121990849,
+       0.9087086115492666
+      ]
+     },
+     "C": {
+      "events": 755,
+      "n": 800,
+      "rate": 0.94375,
+      "wilson95": [
+       0.925561138568992,
+       0.9576976087964894
+      ]
+     },
+     "C_only": 46,
+     "M_only": 2,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 22,
+     "C_only_persisting_fraction": 0.4782608695652174
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 101,
+     "distinct": 49,
+     "records_complete": true
+    }
+   },
+   "two_block_pr4.5": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 200,
+     "offsets": [
+      4504
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 368,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 368,
+      "persisting": 244,
+      "draws": 2000,
+      "persist_frac": 0.6630434782608695
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 178,
+      "n": 400,
+      "rate": 0.445,
+      "wilson95": [
+       0.3970507860306297,
+       0.49399556634662944
+      ]
+     },
+     "C": {
+      "events": 263,
+      "n": 400,
+      "rate": 0.6575,
+      "wilson95": [
+       0.6096946457774416,
+       0.702308981505862
+      ]
+     },
+     "C_only": 89,
+     "M_only": 4,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 61,
+     "C_only_persisting_fraction": 0.6853932584269663
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 338,
+      "n": 800,
+      "rate": 0.4225,
+      "wilson95": [
+       0.3887213790934789,
+       0.4570193467187468
+      ]
+     },
+     "C": {
+      "events": 515,
+      "n": 800,
+      "rate": 0.64375,
+      "wilson95": [
+       0.6099505015451252,
+       0.6761755715451012
+      ]
+     },
+     "C_only": 183,
+     "M_only": 6,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 121,
+     "C_only_persisting_fraction": 0.6612021857923497
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 200,
+     "distinct": 184,
+     "records_complete": false
+    }
+   },
+   "two_block_pr6.0": {
+    "overlap": {
+     "seed_bases": [
+      300000,
+      810000,
+      820000,
+      830000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "300000_vs_810000": 0.0,
+      "300000_vs_820000": 0.0,
+      "300000_vs_830000": 0.0,
+      "810000_vs_820000": 0.975,
+      "810000_vs_830000": 0.95,
+      "820000_vs_830000": 0.975
+     },
+     "disjoint_pairs": [
+      "300000_vs_810000",
+      "300000_vs_820000",
+      "300000_vs_830000"
+     ]
+    },
+    "stride_check": {
+     "checked": 200,
+     "offsets": [
+      6004
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "total_C_only": 212,
+     "total_datasets": 1600,
+     "deep": {
+      "tested": 212,
+      "persisting": 142,
+      "draws": 2000,
+      "persist_frac": 0.6698113207547169
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      300000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 50,
+      "n": 400,
+      "rate": 0.125,
+      "wilson95": [
+       0.09611512323078787,
+       0.1610190975232511
+      ]
+     },
+     "C": {
+      "events": 102,
+      "n": 400,
+      "rate": 0.255,
+      "wilson95": [
+       0.214756700870547,
+       0.29990432335542516
+      ]
+     },
+     "C_only": 56,
+     "M_only": 4,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 40,
+     "C_only_persisting_fraction": 0.7142857142857143
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      300000,
+      810000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 93,
+      "n": 800,
+      "rate": 0.11625,
+      "wilson95": [
+       0.0958504618530804,
+       0.1403173256364892
+      ]
+     },
+     "C": {
+      "events": 194,
+      "n": 800,
+      "rate": 0.2425,
+      "wilson95": [
+       0.21407648888178998,
+       0.27338463236528276
+      ]
+     },
+     "C_only": 107,
+     "M_only": 6,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 72,
+     "C_only_persisting_fraction": 0.6728971962616822
+    },
+    "recorded_C_only_distinct_seeds": {
+     "recorded": 200,
+     "distinct": 112,
+     "records_complete": false
+    }
+   }
+  }
+ },
+ "e16_nwb_check": {
+  "artifact": "results/overnight/e16_nwb_check.json",
+  "cells": {
+   "nwb": {
+    "overlap": {
+     "seed_bases": [
+      100000,
+      910000,
+      920000,
+      930000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "100000_vs_910000": 0.0,
+      "100000_vs_920000": 0.0,
+      "100000_vs_930000": 0.0,
+      "910000_vs_920000": 0.975,
+      "910000_vs_930000": 0.95,
+      "920000_vs_930000": 0.975
+     },
+     "disjoint_pairs": [
+      "100000_vs_910000",
+      "100000_vs_920000",
+      "100000_vs_930000"
+     ]
+    },
+    "stride_check": {
+     "checked": 78,
+     "offsets": [
+      0
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "pooled_M": 0.0275,
+     "pooled_M_ci": [
+      0.02054862217717318,
+      0.03671480515056589
+     ],
+     "pooled_C": 0.058125,
+     "pooled_C_ci": [
+      0.04768350165060066,
+      0.07068322205404423
+     ],
+     "total_C_only": 78,
+     "total_M_only": 29,
+     "deep": {
+      "tested": 78,
+      "persisting": 63,
+      "draws": 2000,
+      "persist_frac": 0.8076923076923077
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      100000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 11,
+      "n": 400,
+      "rate": 0.0275,
+      "wilson95": [
+       0.015423636258249752,
+       0.048565481891839284
+      ]
+     },
+     "C": {
+      "events": 24,
+      "n": 400,
+      "rate": 0.06,
+      "wilson95": [
+       0.04064797011002641,
+       0.08772284890804591
+      ]
+     },
+     "C_only": 20,
+     "M_only": 7,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 14,
+     "C_only_persisting_fraction": 0.7
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      100000,
+      910000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 24,
+      "n": 800,
+      "rate": 0.03,
+      "wilson95": [
+       0.020241483683987684,
+       0.044250659951446066
+      ]
+     },
+     "C": {
+      "events": 50,
+      "n": 800,
+      "rate": 0.0625,
+      "wilson95": [
+       0.04772708293352225,
+       0.08145443374839749
+      ]
+     },
+     "C_only": 41,
+     "M_only": 15,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 33,
+     "C_only_persisting_fraction": 0.8048780487804879
+    },
+    "C_only_by_distinct_dataset": {
+     "recorded": 78,
+     "distinct_datasets": 63,
+     "distinct_persisting_in_every_replication": 51,
+     "distinct_persisting_in_any_replication": 51
+    }
+   },
+   "ndb": {
+    "overlap": {
+     "seed_bases": [
+      100000,
+      910000,
+      920000,
+      930000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 820,
+     "distinct_fraction": 0.5125,
+     "pairwise_overlap_fraction": {
+      "100000_vs_910000": 0.0,
+      "100000_vs_920000": 0.0,
+      "100000_vs_930000": 0.0,
+      "910000_vs_920000": 0.975,
+      "910000_vs_930000": 0.95,
+      "920000_vs_930000": 0.975
+     },
+     "disjoint_pairs": [
+      "100000_vs_910000",
+      "100000_vs_920000",
+      "100000_vs_930000"
+     ]
+    },
+    "stride_check": {
+     "checked": 40,
+     "offsets": [
+      0
+     ],
+     "consistent": true
+    },
+    "pooled_as_published": {
+     "pooled_M": 0.043125,
+     "pooled_M_ci": [
+      0.03421757156687649,
+      0.05422100697356963
+     ],
+     "pooled_C": 0.0475,
+     "pooled_C_ci": [
+      0.038117640208603976,
+      0.05904998067140012
+     ],
+     "total_C_only": 40,
+     "total_M_only": 33,
+     "deep": {
+      "tested": 40,
+      "persisting": 28,
+      "draws": 2000,
+      "persist_frac": 0.7
+     }
+    },
+    "base0_only": {
+     "replications": [
+      0
+     ],
+     "seed_bases": [
+      100000
+     ],
+     "n_datasets": 400,
+     "M": {
+      "events": 21,
+      "n": 400,
+      "rate": 0.0525,
+      "wilson95": [
+       0.034591528354557206,
+       0.07892197507859591
+      ]
+     },
+     "C": {
+      "events": 21,
+      "n": 400,
+      "rate": 0.0525,
+      "wilson95": [
+       0.034591528354557206,
+       0.07892197507859591
+      ]
+     },
+     "C_only": 8,
+     "M_only": 8,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 4,
+     "C_only_persisting_fraction": 0.5
+    },
+    "base0_plus_base1": {
+     "replications": [
+      0,
+      1
+     ],
+     "seed_bases": [
+      100000,
+      910000
+     ],
+     "n_datasets": 800,
+     "M": {
+      "events": 40,
+      "n": 800,
+      "rate": 0.05,
+      "wilson95": [
+       0.036931386383360104,
+       0.06736960220375732
+      ]
+     },
+     "C": {
+      "events": 42,
+      "n": 800,
+      "rate": 0.0525,
+      "wilson95": [
+       0.0390727960103659,
+       0.07020429819571196
+      ]
+     },
+     "C_only": 19,
+     "M_only": 17,
+     "discordant_records_complete": true,
+     "C_only_persisting_at_2000": 11,
+     "C_only_persisting_fraction": 0.5789473684210527
+    },
+    "C_only_by_distinct_dataset": {
+     "recorded": 40,
+     "distinct_datasets": 26,
+     "distinct_persisting_in_every_replication": 18,
+     "distinct_persisting_in_any_replication": 18
+    }
+   }
+  }
+ },
+ "e9_calibration_seeds": {
+  "artifact": "results/overnight/e9_calibration_seeds.json",
+  "overlap": {
+   "seed_bases": [
+    1100000,
+    1200000,
+    1300000,
+    1400000,
+    1500000
+   ],
+   "stride": 1000,
+   "datasets_per_base": 300,
+   "nominal_datasets": 1500,
+   "distinct_datasets": 700,
+   "distinct_fraction": 0.4666666666666667,
+   "pairwise_overlap_fraction": {
+    "1100000_vs_1200000": 0.6666666666666666,
+    "1100000_vs_1300000": 0.3333333333333333,
+    "1100000_vs_1400000": 0.0,
+    "1100000_vs_1500000": 0.0,
+    "1200000_vs_1300000": 0.6666666666666666,
+    "1200000_vs_1400000": 0.3333333333333333,
+    "1200000_vs_1500000": 0.0,
+    "1300000_vs_1400000": 0.6666666666666666,
+    "1300000_vs_1500000": 0.3333333333333333,
+    "1400000_vs_1500000": 0.6666666666666666
+   },
+   "disjoint_pairs": [
+    "1100000_vs_1400000",
+    "1100000_vs_1500000",
+    "1200000_vs_1500000"
+   ]
+  },
+  "published": {
+   "C_rates": [
+    0.006666666666666667,
+    0.016666666666666666,
+    0.013333333333333334,
+    0.016666666666666666,
+    0.016666666666666666
+   ],
+   "C_mean": 0.013999999999999999,
+   "M_mean": 0.196,
+   "M_sd": 0.01738453974720706
+  },
+  "base0_only": {
+   "M": {
+    "events": 53,
+    "n": 300,
+    "rate": 0.17666666666666667,
+    "wilson95": [
+     0.13767670929131948,
+     0.2238324121043423
+    ]
+   },
+   "C": {
+    "events": 2,
+    "n": 300,
+    "rate": 0.006666666666666667,
+    "wilson95": [
+     0.0018301483574223367,
+     0.023977583256577145
+    ]
+   }
+  },
+  "note": "consecutive bases are 100,000 apart with 300 datasets at stride 1,000, so adjacent replications share two thirds of their datasets and only the pairs listed under disjoint_pairs are independent"
+ },
+ "popcov_control": {
+  "artifact": "results\\popcov_control.json",
+  "cells": {
+   "cell1_exp_n28": {
+    "overlap": {
+     "seed_bases": [
+      6000000,
+      6100000,
+      6200000,
+      6300000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 700,
+     "distinct_fraction": 0.4375,
+     "pairwise_overlap_fraction": {
+      "6000000_vs_6100000": 0.75,
+      "6000000_vs_6200000": 0.5,
+      "6000000_vs_6300000": 0.25,
+      "6100000_vs_6200000": 0.75,
+      "6100000_vs_6300000": 0.5,
+      "6200000_vs_6300000": 0.75
+     },
+     "disjoint_pairs": []
+    },
+    "pooled_as_published": {
+     "est": {
+      "M": 0.120625,
+      "C": 0.015,
+      "C_minus_M": -0.105625
+     },
+     "known": {
+      "M": 0.415625,
+      "C": 0.23625,
+      "C_minus_M": -0.17937500000000003
+     }
+    },
+    "base0_only": {
+     "est": {
+      "M": {
+       "events": 43,
+       "n": 400,
+       "rate": 0.1075,
+       "wilson95": [
+        0.08079372046614831,
+        0.14167343058974574
+       ]
+      },
+      "C": {
+       "events": 6,
+       "n": 400,
+       "rate": 0.015,
+       "wilson95": [
+        0.0068922919182397985,
+        0.0323346335903172
+       ]
+      },
+      "C_minus_M": -0.0925,
+      "C_only": 2,
+      "M_only": 39
+     },
+     "known": {
+      "M": {
+       "events": 171,
+       "n": 400,
+       "rate": 0.4275,
+       "wilson95": [
+        0.3799345877934364,
+        0.4764446948856778
+       ]
+      },
+      "C": {
+       "events": 100,
+       "n": 400,
+       "rate": 0.25,
+       "wilson95": [
+        0.2100790142277167,
+        0.29467713294164266
+       ]
+      },
+      "C_minus_M": -0.1775,
+      "C_only": 7,
+      "M_only": 78
+     }
+    },
+    "deep_as_published": {
+     "draws": 2000,
+     "n_retested": 405,
+     "tested_estimated": 183,
+     "tested_known": 325,
+     "persisting_estimated": 147,
+     "persisting_known": 256,
+     "surviving_fraction_estimated": 0.8032786885245902,
+     "surviving_fraction_known": 0.7876923076923077
+    }
+   },
+   "cell3_two_block_n28": {
+    "overlap": {
+     "seed_bases": [
+      6000000,
+      6100000,
+      6200000,
+      6300000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 700,
+     "distinct_fraction": 0.4375,
+     "pairwise_overlap_fraction": {
+      "6000000_vs_6100000": 0.75,
+      "6000000_vs_6200000": 0.5,
+      "6000000_vs_6300000": 0.25,
+      "6100000_vs_6200000": 0.75,
+      "6100000_vs_6300000": 0.5,
+      "6200000_vs_6300000": 0.75
+     },
+     "disjoint_pairs": []
+    },
+    "pooled_as_published": {
+     "est": {
+      "M": 0.415625,
+      "C": 0.63375,
+      "C_minus_M": 0.218125
+     },
+     "known": {
+      "M": 0.5625,
+      "C": 0.7,
+      "C_minus_M": 0.13749999999999996
+     }
+    },
+    "base0_only": {
+     "est": {
+      "M": {
+       "events": 164,
+       "n": 400,
+       "rate": 0.41,
+       "wilson95": [
+        0.3628794776087149,
+        0.4588327353722545
+       ]
+      },
+      "C": {
+       "events": 264,
+       "n": 400,
+       "rate": 0.66,
+       "wilson95": [
+        0.6122516850785729,
+        0.7047043807330373
+       ]
+      },
+      "C_minus_M": 0.25000000000000006,
+      "C_only": 103,
+      "M_only": 3
+     },
+     "known": {
+      "M": {
+       "events": 239,
+       "n": 400,
+       "rate": 0.5975,
+       "wilson95": [
+        0.5487342037373939,
+        0.644410898866556
+       ]
+      },
+      "C": {
+       "events": 288,
+       "n": 400,
+       "rate": 0.72,
+       "wilson95": [
+        0.6740660138787695,
+        0.7617485766121943
+       ]
+      },
+      "C_minus_M": 0.12249999999999994,
+      "C_only": 50,
+      "M_only": 1
+     }
+    },
+    "deep_as_published": {
+     "draws": 2000,
+     "n_retested": 513,
+     "tested_estimated": 371,
+     "tested_known": 230,
+     "persisting_estimated": 218,
+     "persisting_known": 137,
+     "surviving_fraction_estimated": 0.5876010781671159,
+     "surviving_fraction_known": 0.5956521739130435
+    }
+   }
+  }
+ },
+ "popcov_control_cells567": {
+  "artifact": "results\\popcov_control_cells567.json",
+  "cells": {
+   "cell6_two_block_n180": {
+    "overlap": {
+     "seed_bases": [
+      6000000,
+      6100000,
+      6200000,
+      6300000
+     ],
+     "stride": 1000,
+     "datasets_per_base": 400,
+     "nominal_datasets": 1600,
+     "distinct_datasets": 700,
+     "distinct_fraction": 0.4375,
+     "pairwise_overlap_fraction": {
+      "6000000_vs_6100000": 0.75,
+      "6000000_vs_6200000": 0.5,
+      "6000000_vs_6300000": 0.25,
+      "6100000_vs_6200000": 0.75,
+      "6100000_vs_6300000": 0.5,
+      "6200000_vs_6300000": 0.75
+     },
+     "disjoint_pairs": []
+    },
+    "pooled_as_published": {
+     "est": {
+      "M": 0.348125,
+      "C": 0.535,
+      "C_minus_M": 0.186875
+     },
+     "known": {
+      "M": 0.5525,
+      "C": 0.65,
+      "C_minus_M": 0.09750000000000003
+     }
+    },
+    "base0_only": {
+     "est": {
+      "M": {
+       "events": 139,
+       "n": 400,
+       "rate": 0.3475,
+       "wilson95": [
+        0.30248604050213007,
+        0.39541520927117907
+       ]
+      },
+      "C": {
+       "events": 216,
+       "n": 400,
+       "rate": 0.54,
+       "wilson95": [
+        0.491008823313282,
+        0.5882301931396207
+       ]
+      },
+      "C_minus_M": 0.19250000000000006,
+      "C_only": 77,
+      "M_only": 0
+     },
+     "known": {
+      "M": {
+       "events": 225,
+       "n": 400,
+       "rate": 0.5625,
+       "wilson95": [
+        0.5135188136358619,
+        0.6102921495717983
+       ]
+      },
+      "C": {
+       "events": 260,
+       "n": 400,
+       "rate": 0.65,
+       "wilson95": [
+        0.6020319606959824,
+        0.6951143510024022
+       ]
+      },
+      "C_minus_M": 0.08750000000000002,
+      "C_only": 35,
+      "M_only": 0
+     }
+    },
+    "deep_as_published": {
+     "draws": 2000,
+     "n_retested": 416,
+     "tested_estimated": 299,
+     "tested_known": 156,
+     "persisting_estimated": 171,
+     "persisting_known": 82,
+     "surviving_fraction_estimated": 0.5719063545150501,
+     "surviving_fraction_known": 0.5256410256410257
+    }
+   }
+  }
+ },
+ "e2_spectra_seeds": "results/overnight/e2_spectra_seeds.json does not exist; the per-seed verification behind the reversal is e2_conly_check.json"
+}

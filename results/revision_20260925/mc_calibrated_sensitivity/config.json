@@ -1,0 +1,47 @@
+{
+  "root_seed": 20260925,
+  "experiment": 78,
+  "n": 28,
+  "d": 119,
+  "qs": [
+    0
+  ],
+  "spectra": [
+    "fitted_fm_embedding"
+  ],
+  "arms": [
+    "M",
+    "C"
+  ],
+  "groups": {
+    "calibration": 1000,
+    "null": 1000,
+    "two0.5": 250,
+    "two1.0": 250,
+    "two1.5": 250,
+    "two2.0": 250,
+    "three0.5": 250,
+    "three1.0": 250,
+    "three1.5": 250,
+    "three2.0": 250
+  },
+  "draws": 499,
+  "bootstrap_resamples": 2000,
+  "bootstrap_address": 79,
+  "diagnostics": [
+    "standardized_between"
+  ],
+  "input_sha256": "b0ca63b7ff5b8a88585b528bc90a67563ad58bfeb3f053e9c16aebcd51bca134",
+  "protocol_sha256": "ca535a15c0c6720172f1c11c0e18d510aa0bc6603116934508a56ef76a42f3d3",
+  "source_sha256": {
+    "analysis/mc_calibrated_sensitivity.py": "38f6b2ef2e8c36263a7ee8265846f71613f039ca05f93a61c47f4b91a224f100",
+    "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+    "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443"
+  },
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1"
+  }
+}

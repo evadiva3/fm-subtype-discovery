@@ -1,0 +1,53 @@
+{
+  "source": "results/mdd/multirun_v2/by_run/run9_Embeddings.npy",
+  "input_sha256": "2a0b22a616ee7e004460ba5698584c80de8ba03563eee6a6d5b57dd174bc8585",
+  "id": 11,
+  "q": 5,
+  "n": 51,
+  "d": 27,
+  "projection_seed": "130169662135583307522210424808088051315",
+  "null_seed": "3724628544340297365596838647236830296",
+  "p": {
+    "C": 0.456,
+    "T": 0.738,
+    "W": 0.359,
+    "N": 0.812
+  },
+  "observed": {
+    "C": 0.25216219345214325,
+    "T": 0.25216219345214325,
+    "W": 0.20092084694571913,
+    "N": 0.20092084694571913
+  },
+  "selected_k_raw": 2,
+  "selected_k_whitened": 4,
+  "raw_guard_failed": false,
+  "whitened_guard_failed": false,
+  "mean_resultant": 0.038785369106659286,
+  "shape_fit": {
+    "iterations": 29,
+    "relative_change": 5.267869047994219e-10,
+    "condition": 8.911708766081617,
+    "whitened_moment_residual": 6.898057040484819e-10
+  },
+  "max_reference_fit_iterations": 34,
+  "null_mean": {
+    "C": 0.25058891918660287,
+    "T": 0.2684074866601454,
+    "W": 0.1948449045250306,
+    "N": 0.21656290566157832
+  },
+  "null_sd": {
+    "C": 0.021935071231902314,
+    "T": 0.024192415107154995,
+    "W": 0.018318516518013635,
+    "N": 0.017557453516895145
+  },
+  "null_guard_failures": {
+    "C": 0,
+    "T": 0,
+    "W": 0,
+    "N": 0
+  },
+  "data_sha256": "060d052414cd8d1842dffa2c632ef3862842e011b05918f54e380bff0f90eedb"
+}

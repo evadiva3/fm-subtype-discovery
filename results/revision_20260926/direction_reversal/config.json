@@ -1,0 +1,51 @@
+{
+  "study": "S32",
+  "root_seed": 20260926,
+  "experiment": 88,
+  "d": 119,
+  "cells": {
+    "reversal": {
+      "spectrum": "two_block",
+      "n": 28,
+      "source": "results/overnight/e2_spectrum_shape.json",
+      "key": "two_block_pr4.5",
+      "param": "1/0.00504807"
+    }
+  },
+  "groups": {
+    "per_block": 400,
+    "blocks": 4
+  },
+  "draws": 200,
+  "retest_draws": 2000,
+  "arms": [
+    "M",
+    "C"
+  ],
+  "alpha": 0.05,
+  "rule": "p < 0.05",
+  "k_grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "n_init": 5,
+  "protocol_sha256": "4c994bd9f1717695bb06d709a4b46babe7f3b1c0308545bdd8b3bdf3aef8082e",
+  "source_sha256": {
+    "analysis/recorded_controls.py": "a32a6b7004e2259791154ae6ffc89a4917ba01e5e6caaac2bcd975649bda2bfe",
+    "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+    "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443",
+    "analysis/popcov_control.py": "726b4e77960dfd30dc21a5ed9649391e3aa03b4e25bf023f9e5398cff9df88b4"
+  },
+  "input_sha256": {
+    "results/overnight/e2_spectrum_shape.json": "ff3137e4c4631d49409a84dee60808b6cb552a27adba07aaf484952afaf0f54b"
+  },
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1"
+  }
+}

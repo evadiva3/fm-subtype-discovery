@@ -1,0 +1,22 @@
+{
+  "version": "2026-09-14.1",
+  "datasets": 100,
+  "draws": 999,
+  "root_seed": 20260914,
+  "block_size": 100,
+  "n_init": 5,
+  "cluster_seed": 0,
+  "threshold": "p <= 0.05",
+  "cells": [
+    "exp_n28",
+    "spike_n28"
+  ],
+  "python": "3.13.9",
+  "numpy": "2.5.2",
+  "scipy": "1.18.1",
+  "sklearn": "1.8.0",
+  "source_sha256": {
+    "validate_cluster_nulls.py": "3b258f8bd9885b23acfa0257bd31344da8eaaec9b6e25427c5992f57be24ba12",
+    "nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "study": "S29a",
+  "root_seed": 20260925,
+  "experiment": 82,
+  "n": 28,
+  "d": 119,
+  "qs": [
+    5,
+    10
+  ],
+  "spectra": [
+    "two_block_1_0.01",
+    "exponential_tau10"
+  ],
+  "groups": {
+    "calibration": 1000,
+    "null": 1000,
+    "rand34": 250,
+    "hexa4": 250,
+    "skew": 1000,
+    "heavy": 1000
+  },
+  "draws": 199,
+  "auxiliary": 200,
+  "bootstrap_resamples": 2000,
+  "bootstrap_address": 83,
+  "diagnostics": [
+    "projected_between_scatter",
+    "projected_mean_shift"
+  ],
+  "projection": "S19 fixed nested projection (experiment 72 address)",
+  "protocol_sha256": "80e6876efc8b1cfd5587106a9bf2c8fcf10cc46287694b679651929bd647f8df",
+  "source_sha256": {
+    "analysis/robustness_detection.py": "bfe8d339c12b5406af03aeff93ea5fb02512a9d178073e2936c6d1c44359b325",
+    "analysis/asymmetric_detection.py": "5225fad6bb8a7b86769c6f50c996a9ebe2ec526d6301b18838bcb6d956d60256",
+    "analysis/calibrated_detection.py": "418ca6ac89de971eca0e40b3e470b58a5e44ac9e61d7168d1daca7dd5b3dea50",
+    "analysis/mc_calibrated_sensitivity.py": "38f6b2ef2e8c36263a7ee8265846f71613f039ca05f93a61c47f4b91a224f100",
+    "analysis/summarize_detection.py": "50d815caf9152f9fa14bb1fca9df58a4fb21b42e7275e874009765fa4ff4de90",
+    "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+    "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443",
+    "reproducibility/s16/modules/angular_gof.py": "76965c438ae343738857f02812439f61cadc277cc707983b26043d0bda524765",
+    "reproducibility/s16/modules/angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+    "reproducibility/s16/modules/nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d"
+  },
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1"
+  }
+}

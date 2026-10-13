@@ -1,0 +1,269 @@
+{
+ "header": {
+  "experiment": "R1A headline recalibration",
+  "purpose": "replace the four-event 0.4 percent point estimate with an interval",
+  "written_utc": "20260831T233744Z",
+  "n": 28,
+  "d": 119,
+  "n_datasets": 10000,
+  "n_blocks": 5,
+  "n_datasets_per_block": 2000,
+  "n_draws": 1000,
+  "n_init": 5,
+  "k_grid": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "alpha": 0.05,
+  "spectrum": "exp(-i/tau) in a random orthonormal basis, redrawn per dataset",
+  "tau": 1.9409216106583076,
+  "pr_target": 4.36,
+  "pr_tolerance_fraction": 0.02,
+  "pr_tuned_on_throwaway_samples": 4.351439169491304,
+  "pr_tuning_deviation_fraction": 0.001963493235939588,
+  "pr_tuning_samples": 200,
+  "tune_ok": true,
+  "tune_note": "",
+  "seed_root": 4100000,
+  "block_stride": 10000000,
+  "seed_rule": "dataset i of block b uses seed_root + b*block_stride + 1000*i; its draws use that + 7",
+  "pairing": "M and C evaluated on identical datasets against nulls fitted to that dataset, sharing the draw seed",
+  "versions": {
+   "python": "3.13.9",
+   "numpy": "2.3.5",
+   "scipy": "1.16.3",
+   "scikit_learn": "1.7.2",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "n_cores_used": 47
+  },
+  "total_wall_s": 3967.2
+ },
+ "realized_pr": {
+  "mean": 4.360455575111114,
+  "sd": 0.4121100468037891,
+  "min": 2.931636506957891,
+  "max": 5.9373505542243565,
+  "deviation_from_target_fraction": 0.00010448970438393055
+ },
+ "n_skipped": 0,
+ "n_errors": 0,
+ "observed_statistic": {
+  "mean": 0.2606292111704814,
+  "sd": 0.03498810022718414
+ },
+ "null_means": {
+  "M": 0.22338234593429107,
+  "C": 0.24845540965164314,
+  "M_sd": 0.03669877122151143,
+  "C_sd": 0.03296994266268446
+ },
+ "M": {
+  "label": "M, unmatched",
+  "n_datasets": 10000,
+  "events": 1806,
+  "rejection_rate": 0.1806,
+  "wilson95": [
+   0.17318338389860174,
+   0.18826191426070157
+  ],
+  "clopper_pearson95": [
+   0.17310411589550184,
+   0.18828236694041592
+  ],
+  "mean_p": 0.19373506493506495,
+  "median_p": 0.16183816183816183,
+  "ks_D_vs_uniform": 0.4987636363636364,
+  "ks_p": 0.0,
+  "ks_D_nullcal": 0.4987636363636364,
+  "p_deciles": [
+   0.000999000999000999,
+   0.023976023976023976,
+   0.056943056943056944,
+   0.09090909090909091,
+   0.1258741258741259,
+   0.16183816183816183,
+   0.20279720279720279,
+   0.25074925074925075,
+   0.3126873126873127,
+   0.4095904095904096,
+   0.8671328671328671
+  ],
+  "p_histogram_20bins": [
+   1806,
+   1491,
+   1394,
+   1258,
+   1039,
+   823,
+   655,
+   452,
+   364,
+   264,
+   165,
+   104,
+   79,
+   57,
+   24,
+   14,
+   9,
+   2,
+   0,
+   0
+  ]
+ },
+ "C": {
+  "label": "C, fully matched",
+  "n_datasets": 10000,
+  "events": 175,
+  "rejection_rate": 0.0175,
+  "wilson95": [
+   0.015109099799371938,
+   0.020261458628504828
+  ],
+  "clopper_pearson95": [
+   0.015021261600495788,
+   0.020265126593843018
+  ],
+  "mean_p": 0.38143376623376624,
+  "median_p": 0.34665334665334663,
+  "ks_D_vs_uniform": 0.21997942057942055,
+  "ks_p": 0.0,
+  "ks_D_nullcal": 0.21997942057942055,
+  "p_deciles": [
+   0.01098901098901099,
+   0.11488511488511488,
+   0.17482517482517482,
+   0.22977022977022976,
+   0.28771228771228774,
+   0.34665334665334663,
+   0.4145854145854146,
+   0.4925074925074925,
+   0.5804195804195804,
+   0.7052947052947053,
+   0.9920079920079921
+  ],
+  "p_histogram_20bins": [
+   175,
+   573,
+   803,
+   931,
+   884,
+   852,
+   833,
+   748,
+   678,
+   607,
+   559,
+   531,
+   458,
+   332,
+   317,
+   248,
+   191,
+   156,
+   87,
+   37
+  ]
+ },
+ "mcnemar": {
+  "M_only": 1634,
+  "C_only": 3,
+  "n_discordant": 1637,
+  "exact_binomial_p": 0.0,
+  "mcnemar_chi2_cc": 1623.0299328039096,
+  "mcnemar_chi2_cc_p": 0.0
+ },
+ "blocks": [
+  {
+   "block": 0,
+   "seed_base": 4100000,
+   "n_datasets": 2000,
+   "M_rate": 0.178,
+   "M_events": 356,
+   "C_rate": 0.0175,
+   "C_events": 35,
+   "C_wilson95": [
+    0.012609752958618003,
+    0.02424019766865768
+   ]
+  },
+  {
+   "block": 1,
+   "seed_base": 14100000,
+   "n_datasets": 2000,
+   "M_rate": 0.1915,
+   "M_events": 383,
+   "C_rate": 0.022,
+   "C_events": 44,
+   "C_wilson95": [
+    0.01642890811319715,
+    0.029403789088539165
+   ]
+  },
+  {
+   "block": 2,
+   "seed_base": 24100000,
+   "n_datasets": 2000,
+   "M_rate": 0.191,
+   "M_events": 382,
+   "C_rate": 0.018,
+   "C_events": 36,
+   "C_wilson95": [
+    0.013029991443300646,
+    0.024818042136692878
+   ]
+  },
+  {
+   "block": 3,
+   "seed_base": 34100000,
+   "n_datasets": 2000,
+   "M_rate": 0.168,
+   "M_events": 336,
+   "C_rate": 0.0165,
+   "C_events": 33,
+   "C_wilson95": [
+    0.011772823606327679,
+    0.023080961115512305
+   ]
+  },
+  {
+   "block": 4,
+   "seed_base": 44100000,
+   "n_datasets": 2000,
+   "M_rate": 0.1745,
+   "M_events": 349,
+   "C_rate": 0.0135,
+   "C_events": 27,
+   "C_wilson95": [
+    0.009294493996853018,
+    0.01957079300867987
+   ]
+  }
+ ],
+ "seed_level_variance": {
+  "M": {
+   "mean": 0.1806,
+   "sd": 0.010364603224436525,
+   "min": 0.168,
+   "max": 0.1915,
+   "range_ratio": 1.1398809523809523
+  },
+  "C": {
+   "mean": 0.017499999999999998,
+   "sd": 0.003061862178478972,
+   "min": 0.0135,
+   "max": 0.022,
+   "range_ratio": 1.6296296296296295
+  }
+ },
+ "selected_k_counts": {
+  "2": 6089,
+  "3": 2297,
+  "4": 1130,
+  "5": 439,
+  "6": 45
+ }
+}
