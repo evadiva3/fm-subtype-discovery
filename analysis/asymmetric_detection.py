@@ -15,6 +15,7 @@ EXP=74
 G=('calibration','null','antipodal2','antipodal4','tri2','tri4','pair2','pair4','shift2','shift4')
 ANGLES={'antipodal':(0.,np.pi),'tri':(0.,2*np.pi/3,4*np.pi/3),'pair':(0.,np.pi/2)}
 PROTOCOL=R/'docs/FOLLOWUP_PROTOCOL_S20_20260924.md'
+# S20 reuses the exact S19 fixed projection, whose address is independent of the S20 root.
 PROJ=np.linalg.qr(np.random.default_rng(sd72(20260924,1,0,0,0)).normal(size=(119,10)))[0]
 
 def sha(p):

@@ -1,3 +1,4 @@
+"""Apply fixed comparators to all 23 v8 saved representations; diagnostic only."""
 import os
 for name in ('OMP_NUM_THREADS','MKL_NUM_THREADS','OPENBLAS_NUM_THREADS'):os.environ[name]='1'
 import argparse,hashlib,json,platform,sys,traceback

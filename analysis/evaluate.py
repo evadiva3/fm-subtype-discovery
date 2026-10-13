@@ -1,4 +1,4 @@
-# procedure matching does not establish calibration.
+#Fitted Gaussian diagnostics; procedure matching does not establish calibration.
 import numpy as np
 from sklearn.metrics import silhouette_score
 from sklearn.cluster import KMeans

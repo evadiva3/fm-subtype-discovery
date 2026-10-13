@@ -14,26 +14,31 @@ from contrastive_loss import NTXentLoss
 from augmentations import graph_augmentor
 from dataset_mdd import mddDataset
 from train_mdd import _views
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader,random_split
 
 class W(torch.utils.data.Dataset):
+
     def __init__(self,sd):
         self.sd=sd
+
     def __len__(self):
         return len(self.sd)
+
     def __getitem__(self,i):
         return self.sd[i]
 DS=None
 WD=None
+
 def _valloss(enc,loss,tr,vl,aug,dev,epochs,trial):
     opt=torch.optim.AdamW(enc.parameters(),lr=config.lr,weight_decay=config.weightDecay)
     warm=min(max(1,int(epochs*config.warmupFraction)),epochs)
-    def sch_fn(e):
+
+    def J(e):
         if e<warm:
             return (e+1)/warm
         p=(e-warm)/max(1,epochs-warm)
         return 0.5*(1.0+math.cos(math.pi*p))
-    sch=torch.optim.lr_scheduler.LambdaLR(opt,lr_lambda=sch_fn)
+    sch=torch.optim.lr_scheduler.LambdaLR(opt,lr_lambda=J)
     best=float("inf")
     for e in range(epochs):
         enc.train()
@@ -67,8 +72,8 @@ def objective(trial):
     config.output=trial.suggest_int("output",8,64)
     config.layers=trial.suggest_int("layers",2,4)
     config.dropout=trial.suggest_float("dropout",0.0,0.3)
-    config.lr=trial.suggest_float("lr",1e-5,3e-3,log=True)
-    config.weightDecay=trial.suggest_float("weightDecay",1e-4,1e-1,log=True)
+    config.lr=trial.suggest_float("lr",1e-05,0.003,log=True)
+    config.weightDecay=trial.suggest_float("weightDecay",0.0001,0.1,log=True)
     config.maskRate=trial.suggest_float("maskRate",0.05,0.25)
     config.ntXentTemp=trial.suggest_float("ntXentTemp",0.2,1.0)
     bs=config.tuneBatchSize
@@ -102,6 +107,5 @@ def main():
     pd.DataFrame([best]).to_json(config.mddRaySavePath)
     print(f"best valLoss={study.best_value:.6f} -> {config.mddRaySavePath}")
     print(best)
-
 if __name__=="__main__":
     main()

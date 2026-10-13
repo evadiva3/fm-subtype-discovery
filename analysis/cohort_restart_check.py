@@ -1,4 +1,4 @@
-#S36: do the Table S64 cohort p-values depend on the k-means restart count? See docs/FOLLOWUP_PROTOCOL_S35_S36_20261008.md.
+"""S36: do the Table S64 cohort p-values depend on the k-means restart count? See docs/FOLLOWUP_PROTOCOL_S35_S36_20261008.md."""
 import os
 for v in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS"):
     os.environ[v] = "1"

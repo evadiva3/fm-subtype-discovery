@@ -5,7 +5,6 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch_geometric.data import Batch
-
 _R=Path(__file__).resolve().parents[2]
 for _p in (Path(__file__).resolve().parent,_R,_R/"src",_R/"models",_R/"analysis"):
     if str(_p) not in sys.path:
@@ -13,10 +12,10 @@ for _p in (Path(__file__).resolve().parent,_R,_R/"src",_R/"models",_R/"analysis"
 from config import config
 from clustering import cluster
 import bootstrap_stability as bs
-
-OUT=Path(os.environ.get("MDD_OUT_DIR") or (Path(config.resultsRoot)/"mdd"))
+OUT=Path(os.environ.get("MDD_OUT_DIR") or Path(config.resultsRoot)/"mdd")
 
 class mddCluster(cluster):
+
     def deploy(self,subs):
         self.subjectEmbeddings={}
         self.groupLabels={}
@@ -38,7 +37,7 @@ class mddCluster(cluster):
         tr=self.KMeansUse(t,ids)
         emb=t.detach().cpu().numpy()
         ar=bs.run_bootstrap(self,emb,list(ids))
-        return tr,ids,emb,ar
+        return (tr,ids,emb,ar)
 
     def save(self,tr,ids,emb,ar):
         OUT.mkdir(parents=True,exist_ok=True)
@@ -48,7 +47,6 @@ class mddCluster(cluster):
         np.save(OUT/"bootstrap_ari.npy",ar)
         with open(OUT/"bootstrap_summary.json","w") as f:
             json.dump({"ari_mean":float(np.mean(ar)),"ari_std":float(np.std(ar)),"ari_min":float(np.min(ar)),"ari_max":float(np.max(ar))},f)
-
 if __name__=="__main__":
     from gnn_encoder import GNNEncoder
     from dataset_mdd import mddDataset,load_mdd_params

@@ -1,4 +1,4 @@
-#S24: sensitivity of M and C at calibrated size; see docs/FOLLOWUP_PROTOCOL_S24_S26_20260925.md.
+"""S24: sensitivity of M and C at calibrated size; see docs/FOLLOWUP_PROTOCOL_S24_S26_20260925.md."""
 import os
 for v in ('OMP_NUM_THREADS','MKL_NUM_THREADS','OPENBLAS_NUM_THREADS'):
     os.environ[v]='1'
