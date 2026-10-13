@@ -1,0 +1,68 @@
+{
+  "n": 200,
+  "numerical_failures": 0,
+  "raw_guard_failures": 0,
+  "whitened_guard_failures": 0,
+  "arms": {
+    "C": {
+      "count": 7,
+      "rate": 0.035,
+      "ci": [
+        0.014185525898419244,
+        0.07078099835097719
+      ]
+    },
+    "T": {
+      "count": 0,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.01827534035513624
+      ]
+    },
+    "W": {
+      "count": 11,
+      "rate": 0.055,
+      "ci": [
+        0.027772254552006544,
+        0.09627764443391289
+      ]
+    },
+    "N": {
+      "count": 1,
+      "rate": 0.005,
+      "ci": [
+        0.00012658102786701836,
+        0.02754189845720563
+      ]
+    }
+  },
+  "comparisons": {
+    "C_vs_W": {
+      "a_only": 6,
+      "b_only": 10,
+      "difference_b_minus_a": 0.02,
+      "exact_p": 0.454498291015625
+    },
+    "T_vs_W": {
+      "a_only": 0,
+      "b_only": 11,
+      "difference_b_minus_a": 0.055,
+      "exact_p": 0.0009765625
+    },
+    "N_vs_W": {
+      "a_only": 0,
+      "b_only": 10,
+      "difference_b_minus_a": 0.05,
+      "exact_p": 0.001953125
+    }
+  },
+  "max_fit_iterations": 32,
+  "max_fit_residual": 1.6650571986763373e-09,
+  "max_reference_fit_iterations": 36,
+  "kind": "power",
+  "q": 5,
+  "source_cell": "mixture_delta2",
+  "n_subjects": 60,
+  "d": 20
+}

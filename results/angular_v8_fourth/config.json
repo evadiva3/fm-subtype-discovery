@@ -1,0 +1,26 @@
+{
+  "protocol": "outcome-motivated independent follow-up",
+  "datasets": 200,
+  "draws": 199,
+  "n": 60,
+  "d": 20,
+  "delta": [
+    0,
+    2,
+    4
+  ],
+  "q": [
+    5,
+    10
+  ],
+  "python": "3.13.9",
+  "numpy": "2.5.2",
+  "scipy": "1.18.1",
+  "sklearn": "1.8.0",
+  "source_sha256": {
+    "validate_angular_fourth_v8.py": "82c50f3e3232b0a9e3ac852be15ba0846342a2f1c710ef72ce1e5b9792ef7584",
+    "angular_fourth.py": "5764a4273d1f46b08abc2b49f696dd60a3d5b229eda92f2f1a3178eb5e7fa58c",
+    "angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+    "nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d"
+  }
+}
