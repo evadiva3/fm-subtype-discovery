@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nullcal"
-version = "0.1.0"
-description = "Covariance-preserving permutation nulls for cluster validation, with the two common misspecifications made switchable and measurable."
+version = "0.4.0"
+description = "Diagnostic simulations of Gaussian cluster-validation nulls with explicit calibration controls."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -14,7 +14,7 @@ authors = [
     { name = "Nikhil Joshi", email = "nikhilravijoshi@gmail.com" },
 ]
 keywords = [
-    "cluster validation", "permutation test", "type I error",
+    "cluster validation", "parametric bootstrap", "type I error",
     "selective inference", "silhouette", "representation geometry",
 ]
 classifiers = [
@@ -28,6 +28,7 @@ classifiers = [
 dependencies = [
     "numpy>=1.23",
     "scikit-learn>=1.1",
+    "scipy>=1.10",
 ]
 
 [project.optional-dependencies]
@@ -38,4 +39,4 @@ Homepage = "https://github.com/evadiva3/fm-subtype-discovery"
 Source = "https://github.com/evadiva3/fm-subtype-discovery"
 
 [tool.setuptools]
-py-modules = ["nullcal"]
+py-modules = ["nullcal", "nullcal_validation", "angular_null", "angular_fourth", "angular_gof", "angular_balanced"]

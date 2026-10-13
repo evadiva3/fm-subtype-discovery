@@ -1,0 +1,5 @@
+# S36 post hoc note: depression observed statistic
+
+Added on 9 October 2026 after the S36 and amendment results were seen; post hoc.
+
+With 20 restarts, S36 reproduced every Table S64 value except the depression S and C p-values (recomputed 0.305 and 0.418 against stored 0.278 and 0.384). The searched constructions recompute the observed statistic as the best guarded silhouette over k = 2 to 6. For the depression embedding that search returns 0.1413 (k = 5), whereas the stored canonical partition (`results/mdd/canonical_single/K-Means-Labeling.csv`) has silhouette 0.1424. `analysis/cohort_observed_check.py` reran the 20,000 depression S and C reference draws with 20 restarts and the original seed, kept every null statistic, and read off both p-values: with the stored partition's silhouette as the observed value, S = 0.2772 and C = 0.3838, matching Table S64 within one Monte Carlo standard error. Table S64's depression S and C values therefore used the stored partition's silhouette rather than the recomputed search maximum. Neither value rejects.
