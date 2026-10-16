@@ -1,107 +1,39 @@
-# FM Subtype Discovery
+# Cluster-reference calibration on normalized representations
 
-Graph neural network–based self-supervised learning to discover fibromyalgia (FM) subtypes from short-epoch task fMRI.
+Code and evidence for Bangsil and Joshi, "Calibration and sensitivity of cluster tests on normalized neuroimaging representations" (PLOS ONE submission). The study examines how Gaussian and angular cluster references behave after row normalization, how they are calibrated, and what structure they are sensitive to. The clinical cohorts illustrate the fitted pipelines; they do not establish disease subtypes.
 
-## Overview
+Section and table numbers below refer to S1 File and S2 File of the submission. S2 File lists the code and stored result behind each table and figure, and Section S30 of S1 File is the register of every folder in `results/`.
 
-This project trains a 3-layer Graph Attention Network (GATv2) with NT-Xent contrastive loss on functional connectivity (FC) graphs built from 7 emotion regulation conditions (Neutral-Observe, Negative-Observe, Negative-Reduce, Negative-Suppress, Happy-Observe, Happy-Suppress, Happy-Increase). A learned-temperature attention pool aggregates per-condition embeddings into a subject-level representation. K-means clustering on the pooled embeddings, combined with orthogonal complement projection to isolate within-FM structure from FM-HC group separation, is used to test for FM subtypes. Cluster validity is assessed via silhouette score, permutation testing, and the gap statistic; discovered subtypes are compared against clinical variables (HAMD, HAMA, TAS-20 and subscales, ERQ, VAS pain).
+## Quick verification
 
-## Setup
+Use Python 3.12. Create an isolated environment, then run from this directory:
 
-```bash
-conda activate UTD
-pip install -r requirements.txt
-python preprocessing/verify_setup.py
+```text
+python -m pip install -r requirements/simulation-lock.txt
+python reproduce.py verify
 ```
 
-`verify_setup.py` computes framewise displacement per subject, flags motion and missing-file exclusions, and writes the exclusion manifest (`results/subject_exclusions.csv`) that the rest of the pipeline reads from. Run this before anything else — the downstream preprocessing and dataset steps depend on this manifest existing.
+This recalculates reported rates and checks stored records, source checksums and selected exact replays. It does not rerun every experiment. See [docs/REPRODUCING.md](docs/REPRODUCING.md) for fresh reruns, the S35 and S36 commands, the depression reproduction check (S21), tests and figures.
 
-## Configuration
+## Repository map
 
-All paths and hyperparameters are centralized in `config.py`. Data paths default to environment variables (`FM_DATA_ROOT`, `FM_RESULTS_ROOT`) with local fallbacks — no CLI flags needed for paths. Model hyperparameters (`d_model`, `heads`, `layers`, `dropout`, `lr`, etc.) are read from `data/tune/bestParamTune.json`, produced by the hyperparameter search step below.
+| Directory | Contents |
+|---|---|
+| `packaging/` | `nullcal` reference constructions and angular statistics, with package tests |
+| `analysis/` | Simulation drivers, summaries and verifiers for the recorded studies |
+| `experiments/ds002748_mdd/` | Depression pipeline and the exploratory screens E1 to E18 and phase 1 runs (`propagated_null/`) |
+| `models/`, `src/`, `preprocessing/`, `config.py` | Encoder, training, clustering and preprocessing used to produce the stored embeddings |
+| `results/` | Stored records for every study; see the register in Section S30 |
+| `reproducibility/s16/` | Frozen independent validation (S16), with its code and 1,800 records |
+| `reproducibility/audits/` | Reproduction checks, paired-count calculations and recovered historical records |
+| `docs/` | Study protocols and the reproduction guide |
+| `paper/figures/` | Figure scripts and the rendered figures |
+| `archive/` | Superseded source and figure inputs that current code or S2 File depends on |
+| `data/` | Applied inputs and saved embeddings; see `data/README.md` |
+| `tests/` | Tests of the drivers and package |
 
-## Workflow
+Stored results are not overwritten; fresh runs must use a new output path. Files whose SHA-256 is recorded in `results/` or `reproducibility/` are pinned by those records and must not be edited.
 
-### Step 1 — fMRI Preprocessing
+## License
 
-```bash
-bash preprocessing/run_fmriprep.sh
-```
-
-### Step 2 — Extract ROI Time Series
-
-```bash
-python preprocessing/extract_roi_timeseries.py
-```
-
-### Step 3 — Compute FC Matrices
-
-```bash
-python preprocessing/compute_fc_matrices.py
-```
-
-Reads the exclusion manifest from Step 0 and skips excluded subjects. Applies Ledoit-Wolf shrinkage and a high-pass filter (0.01Hz, full run, pre-slicing) before computing per-condition FC matrices.
-
-### Step 4 — Hyperparameter Search
-
-```bash
-python src/hyperparameter_search.py
-```
-
-Writes `data/tune/bestParamTune.json`, which `config.py` reads for all model hyperparameters from this point forward.
-
-### Step 5 — Train the Model
-
-```bash
-python src/train.py
-```
-
-End-to-end joint training of the GATv2 encoder and condition attention pool via NT-Xent contrastive loss, using hyperparameters from Step 4.
-
-### Step 6 — Cluster Subjects
-
-```bash
-python src/clustering.py
-```
-
-Extracts embeddings, applies attention pooling, runs FM-only k-means (both on raw and orthogonal-projected embeddings), and reports silhouette score, permutation p-value, and gap statistic per k.
-
-### Step 7 — Clinical Validation, Sensitivity Analysis, and Figures
-
-```bash
-python analysis/clinical_validation.py
-python analysis/sensitivity_analysis.py
-python analysis/bootstrap_stability.py
-```
-
-See `notebooks/03_results.ipynb` for figure generation.
-
-## Project Structure
-
-```
-fm-subtype-discovery/
-├── config.py         # Centralized paths and hyperparameters
-├── preprocessing/    # fMRIPrep, ROI extraction, FC computation, exclusion manifest
-├── models/           # GNN encoder, attention pooling, loss, augmentations
-├── src/              # Training loop, clustering, hyperparameter search, ablations
-├── analysis/         # Clinical validation, evaluation metrics, interpretability, figures
-├── notebooks/        # Exploratory notebooks
-├── tests/            # Unit tests
-├── paper/            # Manuscript draft and references
-├── data/             # Local data, including the exclusion manifest and tuned params
-└── results/          # Model checkpoints, embeddings, figures
-```
-
-## Running Tests
-
-```bash
-/opt/anaconda3/envs/UTD/bin/pytest tests/ -v
-```
-
-## Data
-
-See `data/README.md` for local data paths and the exclusion manifest.
-
-## Authorship
-
-Eva Bangsil, Nikhil Joshi
+Code is released under the MIT License; see [LICENSE](LICENSE). The OpenNeuro source datasets keep their own licenses.

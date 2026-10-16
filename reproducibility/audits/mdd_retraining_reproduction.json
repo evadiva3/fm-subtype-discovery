@@ -1,0 +1,16 @@
+{
+  "scope": "One fixed-architecture retraining seed rerun from the ds002748 parcel time series and compared with the saved run.",
+  "seed": 0,
+  "n_patients": 51,
+  "bitwise_match": false,
+  "max_abs_embedding_difference": 0.027300380170345306,
+  "selected_k_saved": 4,
+  "selected_k_retrained": 4,
+  "silhouette_saved": 0.13316713273525238,
+  "silhouette_retrained": 0.12812672555446625,
+  "partition_ari": 0.6011097440585899,
+  "elapsed_s_retrained": 1074.6,
+  "environment": "CPU; torch 2.13.0; torch-geometric 2.8.0; ray/umap/optuna absent and stubbed (not called)",
+  "saved_embedding_sha256": "44203f7d71acb127bcc1381fb02c8ef7c76079b37ad2b1ec127bcc19a9c815ac",
+  "retrained_embedding_sha256": "61371530db40638c06e6ddcc486fa1cdc83b9b06862a73d5e800600ba275080c"
+}

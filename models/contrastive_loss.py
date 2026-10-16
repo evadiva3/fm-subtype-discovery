@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from config import config  
+from config import config
 
 class NTXentLoss(nn.Module):
-    
+
     def __init__(self,temperature=None):
         super().__init__()
         self.temperature=temperature if temperature is not None else config.ntXentTemp
@@ -14,11 +14,8 @@ class NTXentLoss(nn.Module):
         b=F.normalize(ag2,dim=1)
         c=torch.cat([a,b],dim=0)
         sim=torch.mm(c,c.T)/self.temperature
-        sim.fill_diagonal_(-1e9)
+        sim.fill_diagonal_(-1000000000.0)
         n=ag1.shape[0]
-        labels=torch.cat([torch.arange(n,2*n),torch.arange(n)]).to(ag1.device)  
+        labels=torch.cat([torch.arange(n,2*n),torch.arange(n)]).to(ag1.device)
         loss=F.cross_entropy(sim,labels)
         return loss
-
-
-        

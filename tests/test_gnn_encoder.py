@@ -12,7 +12,7 @@ from gnn_encoder import GNNEncoder
 def _g(n=30,s=0):
     r=torch.Generator().manual_seed(s)
     x=torch.randn(n,5,generator=r)
-    ei=torch.randint(0,n,(2,n*3),generator=r)
+    ei=torch.randint(0,n, (2,n*3),generator=r)
     ea=torch.randn(n*3,generator=r)
     return Data(x=x,edge_index=ei,edge_attr=ea)
 
@@ -25,7 +25,7 @@ def test_forward_shape():
     ng=4
     with torch.no_grad():
         o=e(_b(ng))
-    assert o.shape==(ng,config.dModel)
+    assert o.shape== (ng,config.dModel)
     assert torch.isfinite(o).all()
 
 def test_gradient_flow():
@@ -35,8 +35,8 @@ def test_gradient_flow():
     o.sum().backward()
     gs=[p.grad for p in e.parameters() if p.requires_grad]
     assert len(gs)>0
-    assert any(g is not None for g in gs)
-    assert any(g is not None and torch.isfinite(g).all() and torch.any(g!=0) for g in gs)
+    assert any((g is not None for g in gs))
+    assert any((g is not None and torch.isfinite(g).all() and torch.any(g!=0) for g in gs))
 
 def test_batch_size_independent():
     torch.manual_seed(config.randomSeed)

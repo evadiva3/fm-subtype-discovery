@@ -10,7 +10,7 @@ import sys;
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "preprocessing"));
 from subject_filter import get_included_subjects;
 class datasetPreparation(Dataset):
-    def __init__(self, avgCond=False, fm_only=False, checkOnes = False):
+    def __init__(self, fm_only=False):
         super().__init__();
         self.datafolder = str(config.subjectDataFolder);
         self.datafolderPath = Path(self.datafolder);
@@ -18,9 +18,7 @@ class datasetPreparation(Dataset):
         self.TimeSeriesFilePath = "";
         self.clinicalCleanFilePath = str(config.clinicalCsv);
         self.subjectList = [];
-        self.avgCond = avgCond;
         self.fm_only = bool(fm_only);
-        self.checkOnes = False;
         self.conditionNames = config.conditions;
         self.clinicalDataFrame = None;
         self.clinicalLookup = {};
@@ -32,27 +30,25 @@ class datasetPreparation(Dataset):
             raise FileNotFoundError("clinical_clean.csv not found in the data folder. Please ensure it is present for proper dataset preparation.") from error;
         self.subjectData = [];
         self.rawNodeFeatures = None;
+        self.nodeMean = None;
+        self.nodeStd = None;
         self.DataList = self.execute();
     def organizeNodes(self):
-        if self.checkOnes == False:
-            originalData = np.load(self.TimeSeriesFilePath);
-            data = pd.DataFrame(originalData);
-            dataset = [];
-            for i in range(0, len(data.columns)):
-                mean = data.iloc[:, i].mean();
-                var = data.iloc[:, i].var(ddof=1);
-                freq = self.calculateFrequencies(data.iloc[:, i]);
-                dataset.append([mean, var, freq[0], freq[1], freq[2]]);
-            dataset = pd.DataFrame(dataset);
-            #node features [mean, var, 3 fft bands] unnormalized; z-score across subjects if subtype separation is weak
-            return torch.tensor(dataset.values, dtype=torch.float32);
-        else:
-            return torch.ones((200,5), dtype= torch.float32);
+        originalData = np.load(self.TimeSeriesFilePath);
+        data = pd.DataFrame(originalData);
+        dataset = [];
+        for i in range(0, len(data.columns)):
+            mean = data.iloc[:, i].mean();
+            var = data.iloc[:, i].var(ddof=1);
+            freq = self.calculateFrequencies(data.iloc[:, i]);
+            dataset.append([mean, var, freq[0], freq[1], freq[2]]);
+        dataset = pd.DataFrame(dataset);
+        return torch.tensor(dataset.values, dtype=torch.float32);
 
     def calculateFrequencies(self, data):
         freq = np.fft.rfft(data, axis=0, norm="forward");
         freq = np.abs(freq) ** 2;
-        labels = np.fft.rfftfreq(n=len(data), d=2);
+        labels = np.fft.rfftfreq(n=len(data), d=config.tr);
         indexes = [np.where((labels >= 0.01) & (labels < 0.04)), np.where((labels >= 0.04) & (labels < 0.1)), np.where((labels >= 0.1) & (labels < 0.25))];
         out = [np.sum(freq[index[0]]) for index in indexes];
         return out;
@@ -68,11 +64,8 @@ class datasetPreparation(Dataset):
                 return str(candidate);
         raise FileNotFoundError(f"Could not find {kind} file for {subjectId} and condition {conditionName}");
 
-    def edgeIndexAttr(self, loadFile, FCMatrix):
-        if loadFile:
-            data = np.load(self.FCMatricesFilePath);
-        else:
-            data = FCMatrix;
+    def edgeIndexAttr(self, FCMatrix=None):
+        data = np.load(self.FCMatricesFilePath) if FCMatrix is None else FCMatrix;
         indexing = np.where(np.abs(data) >= np.percentile(np.abs(data), config.edgePercentile));
         indexList = np.array([indexing[0], indexing[1]]);  #where already sym
         edgeAttr = data[indexList[0], indexList[1]];
@@ -90,25 +83,6 @@ class datasetPreparation(Dataset):
     def cleanCondName(self, cond):
         return cond.replace(" ", "").replace("-", "");
 
-    def averageConditions(self, subfolder, clinical):
-        if subfolder.is_dir() and not subfolder.name.startswith("top_"):
-            fullFC = [];
-            nodes = [];
-            yVal = clinical.loc[clinical["subject_id"] == subfolder.name, "group"].iloc[0];
-            for conditionName in self.conditionNames:
-                fullFC.append(np.load(self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_FCMatrixCondition" + conditionName.replace(" ", "") + ".npy"));
-                self.TimeSeriesFilePath = self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_ROITimeSeries" + conditionName.replace(" ", "") + ".npy";
-                nodes.append(self.organizeNodes().numpy());
-            fullFC = np.stack(fullFC, axis=0);
-            fullFC = np.mean(fullFC, axis=0);
-            nodes = np.stack(nodes, axis=0);
-            nodes = np.mean(nodes, axis=0);
-            packaged = self.edgeIndexAttr(False, fullFC);
-            graphData = Data(x=torch.tensor(nodes, dtype=torch.float32), y=torch.tensor(yVal, dtype=torch.long), edge_attr=packaged[1], edge_index=packaged[0]);
-            graphData.subjectID = subfolder.name;
-            assert graphData.x.shape[0] == config.nNodes, f"Subject {subfolder.name} has {graphData.x.shape[0]} nodes, expected {config.nNodes}";
-            return graphData;
-        return None;
     def normalizeData(self, trainIndices=None):
         if self.rawNodeFeatures is None:
             self.rawNodeFeatures = [data.x.clone() for data in self.DataList];
@@ -123,8 +97,20 @@ class datasetPreparation(Dataset):
         stacked = torch.stack([data.x for data in statGraphs]);
         nodeMean = stacked.mean(dim=0);
         nodeStd = stacked.std(dim=0);
+        self.nodeMean = nodeMean;
+        self.nodeStd = nodeStd;
         for data in self.DataList:
             data.x = (data.x - nodeMean)/(nodeStd + 1e-8);
+
+    def applyNormalization(self, nodeMean, nodeStd):
+        if self.rawNodeFeatures is None:
+            self.rawNodeFeatures = [data.x.clone() for data in self.DataList];
+        for data, raw in zip(self.DataList, self.rawNodeFeatures):
+            data.x = raw.clone();
+            data.x[:, 2:5] = torch.log1p(data.x[:, 2:5]);
+            data.x = (data.x - nodeMean)/(nodeStd + 1e-8);
+        self.nodeMean = nodeMean;
+        self.nodeStd = nodeStd;
 
     def trainGraphsForStats(self, trainIndices):
         graphs = [];
@@ -137,35 +123,27 @@ class datasetPreparation(Dataset):
         subjectData = [];
         clinical = pd.read_csv(self.clinicalCleanFilePath);
         clinical["group"] = clinical["group"].map({"FM": 0, "HC": 1});  #pandas3: map instead of int-into-str-dtype assignment
-        if self.avgCond is False:
-            subjectGraphs = {};
-            inc = set(get_included_subjects());  #include set
-            for subfolder in self.datafolderPath.iterdir():
-                if subfolder.is_dir() and subfolder.name in inc:
-                    self.subjectList.append(subfolder.name);
-                    subjectGraphs[subfolder.name] = [];
-                    for i in range(0, 7):
-                        self.FCMatricesFilePath = self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_FCMatrixCondition" + self.conditionNames[i].replace(" ", "") + ".npy";
-                        self.TimeSeriesFilePath = self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_ROITimeSeries" + self.conditionNames[i].replace(" ", "") + ".npy";
-                        unpackage = self.edgeIndexAttr(True, None);
-                        yVal = clinical.loc[clinical["subject_id"] == subfolder.name, "group"].iloc[0];
-                        data = Data(x=self.organizeNodes(), y=torch.tensor(yVal, dtype=torch.long), edge_index=unpackage[0], edge_attr=unpackage[1]);
-                        data.subjectID = subfolder.name;
-                        data.condition = self.conditionNames[i];
-                        subjectGraphs[subfolder.name].append(data);
-                        assert data.x.shape[0] == config.nNodes, f"Subject {subfolder.name} condition {self.conditionNames[i]} has {data.x.shape[0]} nodes, expected {config.nNodes}";
-                        dataList.append(data);
-            for subjectId, graphs in subjectGraphs.items():
-                subjectData.append({"subject_id": subjectId, "graphs": graphs, "group_label": torch.tensor([self.getGroupLabel(subjectId)], dtype=torch.long)});
-        else:
-            inc = set(get_included_subjects())  #include set
-            for subfolder in self.datafolderPath.iterdir():
-                if subfolder.is_dir() and subfolder.name in inc:
-                    self.subjectList.append(subfolder.name);
-                    data = self.averageConditions(subfolder, clinical);
-                    if data is not None:
-                        dataList.append(data);
-                        subjectData.append({"subject_id": subfolder.name, "graphs": [data], "group_label": torch.tensor([self.getGroupLabel(subfolder.name)], dtype=torch.long)});
+        subjectGraphs = {};
+        inc = set(get_included_subjects());  
+        for subfolder in sorted(self.datafolderPath.iterdir(), key=lambda d: d.name):
+            if subfolder.is_dir() and subfolder.name in inc:
+                if self.fm_only and self.getGroupLabel(subfolder.name) != 0:
+                    continue;
+                self.subjectList.append(subfolder.name);
+                subjectGraphs[subfolder.name] = [];
+                for i in range(0, len(self.conditionNames)):
+                    self.FCMatricesFilePath = self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_FCMatrixCondition" + self.conditionNames[i].replace(" ", "") + ".npy";
+                    self.TimeSeriesFilePath = self.datafolder + "/" + subfolder.name + "/" + subfolder.name + "_ROITimeSeries" + self.conditionNames[i].replace(" ", "") + ".npy";
+                    unpackage = self.edgeIndexAttr();
+                    yVal = clinical.loc[clinical["subject_id"] == subfolder.name, "group"].iloc[0];
+                    data = Data(x=self.organizeNodes(), y=torch.tensor(yVal, dtype=torch.long), edge_index=unpackage[0], edge_attr=unpackage[1]);
+                    data.subjectID = subfolder.name;
+                    data.condition = self.conditionNames[i];
+                    subjectGraphs[subfolder.name].append(data);
+                    assert data.x.shape[0] == config.nNodes, f"Subject {subfolder.name} condition {self.conditionNames[i]} has {data.x.shape[0]} nodes, expected {config.nNodes}";
+                    dataList.append(data);
+        for subjectId, graphs in subjectGraphs.items():
+            subjectData.append({"subject_id": subjectId, "graphs": graphs, "group_label": torch.tensor([self.getGroupLabel(subjectId)], dtype=torch.long)});
         self.DataList = dataList;
         self.subjectData = subjectData;
         self.normalizeData();

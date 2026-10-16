@@ -71,7 +71,7 @@ def objective(trial):
     config.weightDecay=trial.suggest_float("weightDecay",1e-4,1e-1,log=True)
     config.maskRate=trial.suggest_float("maskRate",0.05,0.25)
     config.ntXentTemp=trial.suggest_float("ntXentTemp",0.2,1.0)
-    bs=trial.suggest_int("batchSize",8,23)
+    bs=config.tuneBatchSize
     torch.manual_seed(config.randomSeed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(config.randomSeed)
@@ -85,7 +85,7 @@ def objective(trial):
     tr,vl=random_split(WD,[nt,nv],generator=gen)
     DS.normalize(tr.indices)
     tl=DataLoader(tr,batch_size=bs,shuffle=True,collate_fn=lambda b:b,drop_last=True)
-    vd=DataLoader(vl,batch_size=bs,shuffle=False,collate_fn=lambda b:b)
+    vd=DataLoader(vl,batch_size=len(vl),shuffle=False,collate_fn=lambda b:b)
     return _valloss(enc,loss,tl,vd,aug,config.device,config.tuneEpochs,trial)
 
 def main():
@@ -98,9 +98,9 @@ def main():
     study=optuna.create_study(direction="minimize",sampler=sampler,pruner=pruner)
     study.optimize(objective,n_trials=n_trials)
     best=study.best_params
-    Path(config.raySavePath).parent.mkdir(parents=True,exist_ok=True)
-    pd.DataFrame([best]).to_json(config.raySavePath)
-    print(f"best valLoss={study.best_value:.6f} -> {config.raySavePath}")
+    Path(config.mddRaySavePath).parent.mkdir(parents=True,exist_ok=True)
+    pd.DataFrame([best]).to_json(config.mddRaySavePath)
+    print(f"best valLoss={study.best_value:.6f} -> {config.mddRaySavePath}")
     print(best)
 
 if __name__=="__main__":
