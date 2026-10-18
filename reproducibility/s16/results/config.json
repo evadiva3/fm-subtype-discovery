@@ -1,0 +1,27 @@
+{
+  "auxiliary": 200,
+  "datasets_per_cell": 200,
+  "draws": 199,
+  "root_seed": 20260922,
+  "source_sha256": {
+    "angular_gof.py": "76965c438ae343738857f02812439f61cadc277cc707983b26043d0bda524765",
+    "angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+    "nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d",
+    "run_validation.py": "15ca7ca4b4c55eee7ddc9edfafb1c5eaa7cc9635ea5c75b7dcc73fbf1d47d6f3"
+  },
+  "spectrum": {
+    "achieved_pilot_PR": 4.499998524153036,
+    "epsilon": 0.004501022593963325,
+    "family": "two_block",
+    "m": 1,
+    "pilot_datasets": 100,
+    "source": "fresh tuning, not the missing FINAL spectrum artifact",
+    "target_centered_normalized_PR": 4.5
+  },
+  "versions": {
+    "numpy": "2.5.3",
+    "python": "3.12.14",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1"
+  }
+}

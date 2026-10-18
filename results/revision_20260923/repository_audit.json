@@ -1,0 +1,133 @@
+{
+  "scope": "Stored records and internal consistency; not a full simulation replay",
+  "angular": {
+    "angular_v9": {
+      "records": 7200,
+      "unique_sources": 2400,
+      "cells": 36,
+      "all_rates_and_intervals_match": true
+    },
+    "angular_v9_balanced": {
+      "records": 7200,
+      "unique_sources": 2400,
+      "cells": 36,
+      "all_rates_and_intervals_match": true
+    }
+  },
+  "paired": {
+    "exp_pr4.5": {
+      "C_only": 8,
+      "M_only": 193,
+      "discordant_records": 201,
+      "verified": true
+    },
+    "power_pr3.0": {
+      "C_only": 42,
+      "M_only": 211,
+      "discordant_records": 253,
+      "verified": true
+    },
+    "power_pr4.5": {
+      "C_only": 106,
+      "M_only": 97,
+      "discordant_records": 203,
+      "verified": true
+    },
+    "power_pr6.0": {
+      "C_only": 63,
+      "M_only": 35,
+      "discordant_records": 98,
+      "verified": true
+    },
+    "one_spike_pr3.0": {
+      "C_only": 89,
+      "M_only": 3,
+      "discordant_records": 92,
+      "verified": true
+    },
+    "one_spike_pr4.5": {
+      "C_only": 360,
+      "M_only": 12,
+      "discordant_records": 372,
+      "verified": true
+    },
+    "one_spike_pr6.0": {
+      "C_only": 245,
+      "M_only": 6,
+      "discordant_records": 251,
+      "verified": true
+    },
+    "two_block_pr3.0": {
+      "C_only": 97,
+      "M_only": 5,
+      "discordant_records": 102,
+      "verified": true
+    },
+    "two_block_pr4.5": {
+      "C_only": 341,
+      "M_only": 12,
+      "discordant_records": 353,
+      "verified": true
+    },
+    "two_block_pr6.0": {
+      "C_only": 252,
+      "M_only": 2,
+      "discordant_records": 254,
+      "verified": true
+    },
+    "grid_pr3.0_n28": {
+      "C_only": 6,
+      "M_only": 555,
+      "discordant_records": 561,
+      "verified": true
+    },
+    "grid_pr4.5_n28": {
+      "C_only": 1,
+      "M_only": 187,
+      "discordant_records": 188,
+      "verified": true
+    },
+    "grid_pr9.0_n119": {
+      "C_only": 3,
+      "M_only": 171,
+      "discordant_records": 174,
+      "verified": true
+    },
+    "negative_within_between": {
+      "C_only": 72,
+      "M_only": 30,
+      "discordant_records": 102,
+      "verified": true
+    },
+    "negative_Davies_Bouldin": {
+      "C_only": 35,
+      "M_only": 10,
+      "discordant_records": 45,
+      "verified": true
+    }
+  },
+  "source_hashes": {
+    "packaging/angular_gof.py": "76965c438ae343738857f02812439f61cadc277cc707983b26043d0bda524765",
+    "packaging/angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+    "packaging/nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d",
+    "analysis/validate_angular_gof_v9.py": "93cf9e68ea75f6197d5872494f3e222217c7c09b3e996068455c2141a214d9e3",
+    "packaging/angular_balanced.py": "5616100651591ea0b941d7b9e1cbbaefe3ca64a8a413254106e521d7a818d6de",
+    "analysis/validate_balanced_v9.py": "a2c916a3f3a40c7dce09a2b09c2d8aa4a9d2ffe060c15d86d4b591371def8baa"
+  },
+  "headline": {
+    "array_shape": [
+      28,
+      119
+    ],
+    "embedding_sha256": "b0ca63b7ff5b8a88585b528bc90a67563ad58bfeb3f053e9c16aebcd51bca134",
+    "fitted_mean_norm": 0.1696898434644649,
+    "nonzero_mean": true,
+    "covariance_factor_shape": [
+      28,
+      119
+    ],
+    "block_totals_match": true,
+    "limitation": "Only aggregate and block results were retained for the historical 10000-dataset headline run."
+  },
+  "passed": true
+}

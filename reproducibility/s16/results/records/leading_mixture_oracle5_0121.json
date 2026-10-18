@@ -1,0 +1,44 @@
+{
+  "d": 119,
+  "data_sha256": "1218a407cf057d6ec61025bb63855132dc8f4913fa108f2943cc917f9e5ff9ec",
+  "delta": 4.0,
+  "group": "leading_mixture",
+  "guard_failed": false,
+  "index": 121,
+  "max_reference_iterations": 45,
+  "max_reference_residual": 9.98412435572068e-08,
+  "n": 28,
+  "null_mean": {
+    "D4": 0.013800208312479034,
+    "E": 0.5320688511387817,
+    "K": 0.21656943952062718,
+    "W": 0.2058797419724974
+  },
+  "observed": {
+    "D4": 0.01534510367932064,
+    "E": 3.086533648309422,
+    "K": 0.23028109337473804,
+    "W": 0.23020409872419342
+  },
+  "p": {
+    "D4": 0.245,
+    "E": 0.015,
+    "K": 0.07,
+    "W": 0.17
+  },
+  "projected_sha256": "6d2bb126c48fb9e7089081c51acb998e772da33bc3bf1ec92c2899dc0685ed4c",
+  "projected_squared_separation": 15.999999999999982,
+  "projection": "oracle5",
+  "q": 5,
+  "reference_guard_failures": 0,
+  "retained_axis_length_squared": 0.9999999999999993,
+  "selected_k": 5,
+  "shape_fit": {
+    "condition": 13504.167958495736,
+    "iterations": 28,
+    "relative_change": 6.742699708684127e-10,
+    "whitened_moment_residual": 3.4488831867002756e-08
+  },
+  "source_data_sha256": "c6d3b3ab4d40cfe7bcb86723563c25742ee9ce17708e12a604d329b9b5dc3621",
+  "source_seed": "297014263996119909101103733881575528375"
+}

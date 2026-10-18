@@ -1,0 +1,110 @@
+{
+ "provenance": "generated with nullcal as it stood before the cov parameter was added",
+ "fixture": {
+  "n": 28,
+  "d": 119,
+  "tau": 2.2,
+  "seed": 20260910,
+  "k_grid": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "n_init": 5,
+  "n_draws": 200,
+  "min_size": 4,
+  "null_test_seed": 7919
+ },
+ "observed": {
+  "silhouette": "0x1.1a0a1c5e9d902p-2",
+  "k": 2
+ },
+ "gaussian_factor": {
+  "mean_sha": "aa4d63abf13fbdfe013d6249e2cea6aa2cea3f8cb248c62b7c52a8037abbe181",
+  "A_shape": [
+   28,
+   119
+  ],
+  "A_sha": "5f76c9a6a1f092e8ea78c53a71562cb93ff0ef8fcc0e5bc2ee959613086cefab"
+ },
+ "constructions": {
+  "M": {
+   "p": "0x1.08ea59277b8adp-3",
+   "observed": "0x1.1a0a1c5e9d902p-2",
+   "observed_k": 2,
+   "null_mean": "0x1.ca92d1e81609cp-3",
+   "null_sd": "0x1.444b1cfc99418p-5",
+   "n_draws": 200,
+   "n_exceed": 25,
+   "reproject": false,
+   "match_selection": false,
+   "null_k_counts": {
+    "2": 200,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0
+   },
+   "n_degenerate": 0
+  },
+  "G": {
+   "p": "0x1.d4b24ef715a6ep-4",
+   "observed": "0x1.1a0a1c5e9d902p-2",
+   "observed_k": 2,
+   "null_mean": "0x1.d52960081c6b1p-3",
+   "null_sd": "0x1.4897ff46195b0p-5",
+   "n_draws": 200,
+   "n_exceed": 22,
+   "reproject": true,
+   "match_selection": false,
+   "null_k_counts": {
+    "2": 200,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0
+   },
+   "n_degenerate": 0
+  },
+  "S": {
+   "p": "0x1.08ea59277b8adp-3",
+   "observed": "0x1.1a0a1c5e9d902p-2",
+   "observed_k": 2,
+   "null_mean": "0x1.ce23194c32756p-3",
+   "null_sd": "0x1.3af408cf95ef3p-5",
+   "n_draws": 200,
+   "n_exceed": 25,
+   "reproject": false,
+   "match_selection": true,
+   "null_k_counts": {
+    "2": 178,
+    "3": 16,
+    "4": 4,
+    "5": 1,
+    "6": 1
+   },
+   "n_degenerate": 0
+  },
+  "C": {
+   "p": "0x1.d4b24ef715a6ep-4",
+   "observed": "0x1.1a0a1c5e9d902p-2",
+   "observed_k": 2,
+   "null_mean": "0x1.de89fc6a84c9ap-3",
+   "null_sd": "0x1.2c2b80599f5bcp-5",
+   "n_draws": 200,
+   "n_exceed": 22,
+   "reproject": true,
+   "match_selection": true,
+   "null_k_counts": {
+    "2": 144,
+    "3": 33,
+    "4": 16,
+    "5": 7,
+    "6": 0
+   },
+   "n_degenerate": 0
+  }
+ }
+}

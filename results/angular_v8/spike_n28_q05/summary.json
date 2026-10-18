@@ -1,0 +1,68 @@
+{
+  "n": 200,
+  "numerical_failures": 0,
+  "raw_guard_failures": 0,
+  "whitened_guard_failures": 0,
+  "arms": {
+    "C": {
+      "count": 31,
+      "rate": 0.155,
+      "ci": [
+        0.10780940010409652,
+        0.21273764321570585
+      ]
+    },
+    "T": {
+      "count": 0,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.01827534035513624
+      ]
+    },
+    "W": {
+      "count": 9,
+      "rate": 0.045,
+      "ci": [
+        0.02078042222700435,
+        0.08370268807585397
+      ]
+    },
+    "N": {
+      "count": 1,
+      "rate": 0.005,
+      "ci": [
+        0.00012658102786701836,
+        0.02754189845720563
+      ]
+    }
+  },
+  "comparisons": {
+    "C_vs_W": {
+      "a_only": 30,
+      "b_only": 8,
+      "difference_b_minus_a": -0.11,
+      "exact_p": 0.0004719867429230362
+    },
+    "T_vs_W": {
+      "a_only": 0,
+      "b_only": 9,
+      "difference_b_minus_a": 0.045,
+      "exact_p": 0.00390625
+    },
+    "N_vs_W": {
+      "a_only": 0,
+      "b_only": 8,
+      "difference_b_minus_a": 0.04,
+      "exact_p": 0.0078125
+    }
+  },
+  "max_fit_iterations": 45,
+  "max_fit_residual": 4.3324622707925814e-09,
+  "max_reference_fit_iterations": 56,
+  "kind": "calibration",
+  "q": 5,
+  "source_cell": "spike_n28",
+  "n_subjects": 28,
+  "d": 119
+}

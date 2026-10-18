@@ -1,0 +1,297 @@
+{
+ "experiment": "shape-aware reference at the article's own geometry",
+ "written_utc": "20260919T023604Z",
+ "n": 28,
+ "d": 119,
+ "n_datasets": 200,
+ "draws": 199,
+ "auxiliary": 200,
+ "q": [
+  5,
+  10
+ ],
+ "planted_delta": 4.0,
+ "alpha": 0.05,
+ "arms": [
+  "W",
+  "D4",
+  "K",
+  "E"
+ ],
+ "cells": {
+  "exp_pr4.5": {
+   "spectrum_key": "exp_pr4.5",
+   "family": "exp",
+   "param_value": 2.1984794925044238,
+   "planted_two_modes": false,
+   "archived_pr_mean": 4.741062875902909
+  },
+  "two_block_pr4.5": {
+   "spectrum_key": "two_block_pr4.5",
+   "family": "two_block",
+   "param_value": "1/0.00504807",
+   "planted_two_modes": false,
+   "archived_pr_mean": 4.762168121907718
+  },
+  "two_modes_two_block": {
+   "spectrum_key": "two_block_pr4.5",
+   "family": "two_block",
+   "param_value": "1/0.00504807",
+   "planted_two_modes": true,
+   "archived_pr_mean": 4.762168121907718
+  }
+ },
+ "seed_rule": "nullcal_validation.stream_seed(20260918, 40, cell, q, dataset, purpose)",
+ "versions": {
+  "python": "3.13.9",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3",
+  "scikit_learn": "1.7.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "n_workers": 47
+ },
+ "results": {
+  "exp_pr4.5_q05": {
+   "cell": "exp_pr4.5",
+   "q": 5,
+   "n_datasets": 200,
+   "kind": "null",
+   "arms": {
+    "W": {
+     "count": 10,
+     "rate": 0.05,
+     "ci": [
+      0.02423416547210829,
+      0.09002753770155869
+     ]
+    },
+    "D4": {
+     "count": 8,
+     "rate": 0.04,
+     "ci": [
+      0.01742480899482101,
+      0.07729196822601603
+     ]
+    },
+    "K": {
+     "count": 5,
+     "rate": 0.025,
+     "ci": [
+      0.008166166190710242,
+      0.05737435112726713
+     ]
+    },
+    "E": {
+     "count": 6,
+     "rate": 0.03,
+     "ci": [
+      0.011087455672203695,
+      0.06415062670502639
+     ]
+    }
+   }
+  },
+  "exp_pr4.5_q10": {
+   "cell": "exp_pr4.5",
+   "q": 10,
+   "n_datasets": 200,
+   "kind": "null",
+   "arms": {
+    "W": {
+     "count": 8,
+     "rate": 0.04,
+     "ci": [
+      0.01742480899482101,
+      0.07729196822601603
+     ]
+    },
+    "D4": {
+     "count": 7,
+     "rate": 0.035,
+     "ci": [
+      0.01418552589838592,
+      0.0707809983509546
+     ]
+    },
+    "K": {
+     "count": 8,
+     "rate": 0.04,
+     "ci": [
+      0.01742480899482101,
+      0.07729196822601603
+     ]
+    },
+    "E": {
+     "count": 5,
+     "rate": 0.025,
+     "ci": [
+      0.008166166190710242,
+      0.05737435112726713
+     ]
+    }
+   }
+  },
+  "two_block_pr4.5_q05": {
+   "cell": "two_block_pr4.5",
+   "q": 5,
+   "n_datasets": 200,
+   "kind": "null",
+   "arms": {
+    "W": {
+     "count": 10,
+     "rate": 0.05,
+     "ci": [
+      0.02423416547210829,
+      0.09002753770155869
+     ]
+    },
+    "D4": {
+     "count": 11,
+     "rate": 0.055,
+     "ci": [
+      0.02777225455217507,
+      0.09627764443388101
+     ]
+    },
+    "K": {
+     "count": 8,
+     "rate": 0.04,
+     "ci": [
+      0.01742480899482101,
+      0.07729196822601603
+     ]
+    },
+    "E": {
+     "count": 8,
+     "rate": 0.04,
+     "ci": [
+      0.01742480899482101,
+      0.07729196822601603
+     ]
+    }
+   }
+  },
+  "two_block_pr4.5_q10": {
+   "cell": "two_block_pr4.5",
+   "q": 10,
+   "n_datasets": 200,
+   "kind": "null",
+   "arms": {
+    "W": {
+     "count": 14,
+     "rate": 0.07,
+     "ci": [
+      0.03879557042956298,
+      0.11465973353712218
+     ]
+    },
+    "D4": {
+     "count": 9,
+     "rate": 0.045,
+     "ci": [
+      0.020780422227004356,
+      0.08370268807585404
+     ]
+    },
+    "K": {
+     "count": 16,
+     "rate": 0.08,
+     "ci": [
+      0.04641760839957808,
+      0.1266648560220818
+     ]
+    },
+    "E": {
+     "count": 7,
+     "rate": 0.035,
+     "ci": [
+      0.01418552589838592,
+      0.0707809983509546
+     ]
+    }
+   }
+  },
+  "two_modes_two_block_q05": {
+   "cell": "two_modes_two_block",
+   "q": 5,
+   "n_datasets": 200,
+   "kind": "alternative",
+   "arms": {
+    "W": {
+     "count": 10,
+     "rate": 0.05,
+     "ci": [
+      0.02423416547210829,
+      0.09002753770155869
+     ]
+    },
+    "D4": {
+     "count": 26,
+     "rate": 0.13,
+     "ci": [
+      0.08670835276857532,
+      0.18465233052341248
+     ]
+    },
+    "K": {
+     "count": 20,
+     "rate": 0.1,
+     "ci": [
+      0.062159366254066054,
+      0.15021278786775585
+     ]
+    },
+    "E": {
+     "count": 16,
+     "rate": 0.08,
+     "ci": [
+      0.04641760839957808,
+      0.1266648560220818
+     ]
+    }
+   }
+  },
+  "two_modes_two_block_q10": {
+   "cell": "two_modes_two_block",
+   "q": 10,
+   "n_datasets": 200,
+   "kind": "alternative",
+   "arms": {
+    "W": {
+     "count": 17,
+     "rate": 0.085,
+     "ci": [
+      0.05029591863024178,
+      0.1326051658295526
+     ]
+    },
+    "D4": {
+     "count": 9,
+     "rate": 0.045,
+     "ci": [
+      0.020780422227004356,
+      0.08370268807585404
+     ]
+    },
+    "K": {
+     "count": 15,
+     "rate": 0.075,
+     "ci": [
+      0.042582803737036705,
+      0.12068422539966135
+     ]
+    },
+    "E": {
+     "count": 28,
+     "rate": 0.14,
+     "ci": [
+      0.09508751735901987,
+      0.19594526111961408
+     ]
+    }
+   }
+  }
+ },
+ "distinct_source_datasets": 1200,
+ "total_wall_s": 94.6
+}

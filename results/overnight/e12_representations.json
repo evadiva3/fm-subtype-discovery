@@ -1,0 +1,452 @@
+{
+ "experiment": "E12_reduced_substitute",
+ "config": {
+  "n_draws": 2000,
+  "n_init": 5,
+  "k_grid": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "seed": 0,
+  "specified_design_skipped": true,
+  "skip_reason": "Fisher-z connectivity features for the 28 fibromyalgia patients are not on disk; only 28x119 embeddings exist. Building random-projection / PCA / autoencoder embeddings from raw features is therefore impossible without recomputing connectivity, which is out of scope."
+ },
+ "cells": {
+  "gnn_trained": {
+   "representation": "gnn_trained",
+   "kind": "stored representation",
+   "note": "loaded from data/outputs/trained_fm_embeddings.npy",
+   "shape": [
+    28,
+    119
+   ],
+   "pr_unnormalized": 3.703478138899007,
+   "pr_sphere": 4.372971964698667,
+   "observed": 0.241484211627345,
+   "observed_k": 4,
+   "n_draws": 2000,
+   "p_spread": 0.536231884057971,
+   "null_mean_spread": 0.04921953493311035,
+   "M": {
+    "p": 0.13693153423288357,
+    "null_mean": 0.2071613776570845,
+    "null_sd": 0.030719244592872768,
+    "n_exceed": 273,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 0,
+     "3": 0,
+     "4": 2000,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "G": {
+    "p": 0.3888055972013993,
+    "null_mean": 0.23418086059978743,
+    "null_sd": 0.031183454064088827,
+    "n_exceed": 777,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 0,
+     "3": 0,
+     "4": 2000,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "S": {
+    "p": 0.3963018490754623,
+    "null_mean": 0.2331723482571831,
+    "null_sd": 0.06439450567125675,
+    "n_exceed": 792,
+    "n_degenerate": 4,
+    "null_k_counts": {
+     "2": 1265,
+     "3": 442,
+     "4": 223,
+     "5": 59,
+     "6": 7
+    }
+   },
+   "C": {
+    "p": 0.6731634182908546,
+    "null_mean": 0.25638091259019485,
+    "null_sd": 0.029774164860057288,
+    "n_exceed": 1346,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 760,
+     "3": 473,
+     "4": 458,
+     "5": 255,
+     "6": 54
+    }
+   }
+  },
+  "gnn_untrained": {
+   "representation": "gnn_untrained",
+   "kind": "stored representation",
+   "note": "loaded from data/outputs/untrained_fm_embeddings.npy",
+   "shape": [
+    28,
+    119
+   ],
+   "pr_unnormalized": 1.5850658746943964,
+   "pr_sphere": 1.5865858056897464,
+   "observed": 0.4599732478842577,
+   "observed_k": 2,
+   "n_draws": 2000,
+   "p_spread": 0.09345327336331835,
+   "null_mean_spread": 0.02596201062172543,
+   "M": {
+    "p": 0.19790104947526238,
+    "null_mean": 0.41670449713530694,
+    "null_sd": 0.05494816242748143,
+    "n_exceed": 395,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 2000,
+     "3": 0,
+     "4": 0,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "G": {
+    "p": 0.2798600699650175,
+    "null_mean": 0.42963061916165557,
+    "null_sd": 0.05231438164627145,
+    "n_exceed": 559,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 2000,
+     "3": 0,
+     "4": 0,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "S": {
+    "p": 0.19090454772613694,
+    "null_mean": 0.40389425652181704,
+    "null_sd": 0.14331307728351622,
+    "n_exceed": 381,
+    "n_degenerate": 18,
+    "null_k_counts": {
+     "2": 1886,
+     "3": 93,
+     "4": 2,
+     "5": 1,
+     "6": 0
+    }
+   },
+   "C": {
+    "p": 0.2843578210894553,
+    "null_mean": 0.42985626714354247,
+    "null_sd": 0.06052886498356984,
+    "n_exceed": 568,
+    "n_degenerate": 1,
+    "null_k_counts": {
+     "2": 1910,
+     "3": 83,
+     "4": 4,
+     "5": 2,
+     "6": 0
+    }
+   }
+  },
+  "embeddings_npy": {
+   "representation": "embeddings_npy",
+   "kind": "stored representation",
+   "note": "loaded from data/outputs/Embeddings.npy",
+   "shape": [
+    28,
+    119
+   ],
+   "pr_unnormalized": 3.703478138899007,
+   "pr_sphere": 4.372971964698667,
+   "observed": 0.241484211627345,
+   "observed_k": 4,
+   "n_draws": 2000,
+   "p_spread": 0.536231884057971,
+   "null_mean_spread": 0.04921953493311035,
+   "M": {
+    "p": 0.13693153423288357,
+    "null_mean": 0.2071613776570845,
+    "null_sd": 0.030719244592872768,
+    "n_exceed": 273,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 0,
+     "3": 0,
+     "4": 2000,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "G": {
+    "p": 0.3888055972013993,
+    "null_mean": 0.23418086059978743,
+    "null_sd": 0.031183454064088827,
+    "n_exceed": 777,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 0,
+     "3": 0,
+     "4": 2000,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "S": {
+    "p": 0.3963018490754623,
+    "null_mean": 0.2331723482571831,
+    "null_sd": 0.06439450567125675,
+    "n_exceed": 792,
+    "n_degenerate": 4,
+    "null_k_counts": {
+     "2": 1265,
+     "3": 442,
+     "4": 223,
+     "5": 59,
+     "6": 7
+    }
+   },
+   "C": {
+    "p": 0.6731634182908546,
+    "null_mean": 0.25638091259019485,
+    "null_sd": 0.029774164860057288,
+    "n_exceed": 1346,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 760,
+     "3": 473,
+     "4": 458,
+     "5": 255,
+     "6": 54
+    }
+   }
+  },
+  "randproj_trained_0": {
+   "representation": "randproj_trained_0",
+   "kind": "derived (random projection)",
+   "note": "random Gaussian projection of trained_fm_embeddings at matched output dimension 119, seed 11",
+   "shape": [
+    28,
+    119
+   ],
+   "pr_unnormalized": 3.3927895756527207,
+   "pr_sphere": 4.175414485308248,
+   "observed": 0.23878570993768053,
+   "observed_k": 4,
+   "n_draws": 2000,
+   "p_spread": 0.5902048975512244,
+   "null_mean_spread": 0.05135265661975055,
+   "M": {
+    "p": 0.19490254872563717,
+    "null_mean": 0.2124110807923911,
+    "null_sd": 0.031092578162050594,
+    "n_exceed": 389,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 0,
+     "3": 0,
+     "4": 2000,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "G": {
+    "p": 0.4992503748125937,
+    "null_mean": 0.23982236529131482,
+    "null_sd": 0.03161017436428026,
+    "n_exceed": 998,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 0,
+     "3": 0,
+     "4": 2000,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "S": {
+    "p": 0.5237381309345327,
+    "null_mean": 0.24055747091327223,
+    "null_sd": 0.06520622802947054,
+    "n_exceed": 1047,
+    "n_degenerate": 4,
+    "null_k_counts": {
+     "2": 1261,
+     "3": 479,
+     "4": 212,
+     "5": 39,
+     "6": 5
+    }
+   },
+   "C": {
+    "p": 0.7851074462768616,
+    "null_mean": 0.26376373741214165,
+    "null_sd": 0.030748218134592872,
+    "n_exceed": 1570,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 846,
+     "3": 456,
+     "4": 428,
+     "5": 228,
+     "6": 42
+    }
+   }
+  },
+  "randproj_trained_1": {
+   "representation": "randproj_trained_1",
+   "kind": "derived (random projection)",
+   "note": "random Gaussian projection of trained_fm_embeddings at matched output dimension 119, seed 22",
+   "shape": [
+    28,
+    119
+   ],
+   "pr_unnormalized": 3.589774212701932,
+   "pr_sphere": 4.22728555743905,
+   "observed": 0.23989836380684534,
+   "observed_k": 2,
+   "n_draws": 2000,
+   "p_spread": 0.39280359820089955,
+   "null_mean_spread": 0.030529979481478148,
+   "M": {
+    "p": 0.3823088455772114,
+    "null_mean": 0.23221942531229592,
+    "null_sd": 0.03757702991808426,
+    "n_exceed": 764,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 2000,
+     "3": 0,
+     "4": 0,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "G": {
+    "p": 0.5352323838080959,
+    "null_mean": 0.24475766757271128,
+    "null_sd": 0.0337649151841721,
+    "n_exceed": 1070,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 2000,
+     "3": 0,
+     "4": 0,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "S": {
+    "p": 0.4782608695652174,
+    "null_mean": 0.23846946097121122,
+    "null_sd": 0.06484910927670262,
+    "n_exceed": 956,
+    "n_degenerate": 4,
+    "null_k_counts": {
+     "2": 1256,
+     "3": 438,
+     "4": 242,
+     "5": 53,
+     "6": 7
+    }
+   },
+   "C": {
+    "p": 0.775112443778111,
+    "null_mean": 0.26274940479377407,
+    "null_sd": 0.03029701113870006,
+    "n_exceed": 1550,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 791,
+     "3": 436,
+     "4": 461,
+     "5": 267,
+     "6": 45
+    }
+   }
+  },
+  "randproj_trained_2": {
+   "representation": "randproj_trained_2",
+   "kind": "derived (random projection)",
+   "note": "random Gaussian projection of trained_fm_embeddings at matched output dimension 119, seed 33",
+   "shape": [
+    28,
+    119
+   ],
+   "pr_unnormalized": 3.129519221277476,
+   "pr_sphere": 4.215181732058749,
+   "observed": 0.24126119746685884,
+   "observed_k": 4,
+   "n_draws": 2000,
+   "p_spread": 0.5702148925537232,
+   "null_mean_spread": 0.052426825258671955,
+   "M": {
+    "p": 0.14142928535732133,
+    "null_mean": 0.20809339745298958,
+    "null_sd": 0.030408289569275222,
+    "n_exceed": 282,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 0,
+     "3": 0,
+     "4": 2000,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "G": {
+    "p": 0.4057971014492754,
+    "null_mean": 0.2359920319141001,
+    "null_sd": 0.03156723967303139,
+    "n_exceed": 811,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 0,
+     "3": 0,
+     "4": 2000,
+     "5": 0,
+     "6": 0
+    }
+   },
+   "S": {
+    "p": 0.4587706146926537,
+    "null_mean": 0.23826738935402433,
+    "null_sd": 0.07143458053202711,
+    "n_exceed": 917,
+    "n_degenerate": 5,
+    "null_k_counts": {
+     "2": 1344,
+     "3": 395,
+     "4": 210,
+     "5": 42,
+     "6": 4
+    }
+   },
+   "C": {
+    "p": 0.7116441779110445,
+    "null_mean": 0.26052022271166153,
+    "null_sd": 0.031728547970514775,
+    "n_exceed": 1423,
+    "n_degenerate": 0,
+    "null_k_counts": {
+     "2": 888,
+     "3": 430,
+     "4": 411,
+     "5": 228,
+     "6": 43
+    }
+   }
+  }
+ },
+ "wall_s": 254.8
+}

@@ -1,0 +1,29 @@
+{
+  "study": "S36 post hoc observed-statistic diagnostic",
+  "draws": 20000,
+  "restarts": 20,
+  "observed": {
+    "recomputed_best_silhouette": 0.14127565974014936,
+    "stored_canonical_partition": 0.14242756212525173
+  },
+  "stored_table_s64": {
+    "S": 0.2782,
+    "C": 0.3843
+  },
+  "p": {
+    "C": {
+      "recomputed_best_silhouette": 0.41907904604769763,
+      "stored_canonical_partition": 0.383830808459577
+    },
+    "S": {
+      "recomputed_best_silhouette": 0.30513474326283685,
+      "stored_canonical_partition": 0.2771861406929654
+    }
+  },
+  "versions": {
+    "python": "3.13.16",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.1"
+  },
+  "source_sha256": "89a271e6c624fd423634e822f0a0245818ddc560ce4c53370f0720c133129b3b"
+}

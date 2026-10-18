@@ -1,0 +1,25 @@
+{
+  "version": "2026-09-15.1",
+  "root_seed": 20260915,
+  "datasets": 50,
+  "draws": 199,
+  "n_init": 20,
+  "q": [
+    5
+  ],
+  "cells": [
+    "exp_n28",
+    "spike_n28"
+  ],
+  "threshold": "p <= .05",
+  "python": "3.13.9",
+  "numpy": "2.5.2",
+  "scipy": "1.18.1",
+  "sklearn": "1.8.0",
+  "v7_populations_sha256": "a651b168819700ea3bf74cb4234d55f6de6a4821af55d9a9f54dbe1fe0b46ae2",
+  "source_sha256": {
+    "validate_angular_null.py": "fa37461d34ddea1a138a1e165a2bdb89549caf75e8ba170ce6d1d5b9f5df8454",
+    "angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+    "nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d"
+  }
+}

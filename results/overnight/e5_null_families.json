@@ -1,0 +1,147 @@
+{
+ "experiment": "E5",
+ "config": {
+  "n": 28,
+  "d": 119,
+  "pr_target": 4.4,
+  "n_datasets": 400,
+  "n_draws": 200,
+  "n_init": 5,
+  "k_grid": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "alpha": 0.05,
+  "arms": [
+   "gaussian_reproj",
+   "isotropic",
+   "vmf",
+   "angular_gaussian",
+   "coord_resample",
+   "random_rotation"
+  ]
+ },
+ "cells": {
+  "done": true,
+  "tau": 1.9488872559419879,
+  "tuned_pr": 4.2743530155470575,
+  "tuned_ok": true,
+  "tune_note": "",
+  "pr_mean": 4.362551077026698,
+  "pr_sd": 0.41824165486925685,
+  "n_datasets": 400,
+  "n_errors": 0,
+  "n_draws": 200,
+  "obs_mean": 0.26121339065256527,
+  "vmf_kappa_mean": 22.778556715686808,
+  "arms": {
+   "gaussian_reproj": {
+    "n_datasets": 400,
+    "rej": 0.02,
+    "count": 8,
+    "ci": [
+     0.010168386790104122,
+     0.038963415775065686
+    ],
+    "mean_p": 0.38031094527363185,
+    "ks": 0.2223880597014925,
+    "wall_s": 0.0,
+    "arm": "gaussian_reproj",
+    "null_mean": 0.24823671783659876,
+    "null_sd": 0.032950850598890594,
+    "only_vs_C": 0,
+    "C_only_vs_this": 0
+   },
+   "isotropic": {
+    "n_datasets": 400,
+    "rej": 1.0,
+    "count": 400,
+    "ci": [
+     0.9904877056612815,
+     1.0
+    ],
+    "mean_p": 0.004975124378109451,
+    "ks": 0.9950248756218906,
+    "wall_s": 0.0,
+    "arm": "isotropic",
+    "null_mean": 0.020451968848618537,
+    "null_sd": 0.003614464988313881,
+    "only_vs_C": 392,
+    "C_only_vs_this": 0
+   },
+   "vmf": {
+    "n_datasets": 400,
+    "rej": 1.0,
+    "count": 400,
+    "ci": [
+     0.9904877056612815,
+     1.0
+    ],
+    "mean_p": 0.004975124378109451,
+    "ks": 0.9950248756218906,
+    "wall_s": 0.0,
+    "arm": "vmf",
+    "null_mean": 0.02028752292720359,
+    "null_sd": 0.003881514320295718,
+    "only_vs_C": 392,
+    "C_only_vs_this": 0
+   },
+   "angular_gaussian": {
+    "n_datasets": 400,
+    "rej": 0.035,
+    "count": 14,
+    "ci": [
+     0.02096129419549643,
+     0.05788513953951184
+    ],
+    "mean_p": 0.358731343283582,
+    "ks": 0.24501243781094528,
+    "wall_s": 0.0,
+    "arm": "angular_gaussian",
+    "null_mean": 0.24600676967568583,
+    "null_sd": 0.03223982037485826,
+    "only_vs_C": 8,
+    "C_only_vs_this": 2
+   },
+   "coord_resample": {
+    "n_datasets": 400,
+    "rej": 1.0,
+    "count": 400,
+    "ci": [
+     0.9904877056612815,
+     1.0
+    ],
+    "mean_p": 0.004975124378109451,
+    "ks": 0.9950248756218906,
+    "wall_s": 0.0,
+    "arm": "coord_resample",
+    "null_mean": 0.029566030393235212,
+    "null_sd": 0.005596007784405241,
+    "only_vs_C": 392,
+    "C_only_vs_this": 0
+   },
+   "random_rotation": {
+    "n_datasets": 400,
+    "rej": 0.0225,
+    "count": 9,
+    "ci": [
+     0.011881583528766362,
+     0.04220265756470985
+    ],
+    "mean_p": 0.5904104477611941,
+    "ks": 0.16011194029850745,
+    "wall_s": 0.0,
+    "arm": "random_rotation",
+    "null_mean": 0.26083706847628874,
+    "null_sd": 0.0031725451389215424,
+    "only_vs_C": 9,
+    "C_only_vs_this": 8
+   }
+  },
+  "wall_s": 159.5,
+  "error_sample": null
+ }
+}

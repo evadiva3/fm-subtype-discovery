@@ -1,4 +1,4 @@
-#S36 amendment (post hoc): M and G without the fixed-k size guard; see docs/FOLLOWUP_PROTOCOL_S36_AMENDMENT_20261009.md.
+"""S36 amendment (post hoc): M and G without the fixed-k size guard; see docs/FOLLOWUP_PROTOCOL_S36_AMENDMENT_20261009.md."""
 import os
 for v in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS"):
     os.environ[v] = "1"

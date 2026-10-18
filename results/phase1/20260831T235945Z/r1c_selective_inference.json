@@ -1,0 +1,1488 @@
+{
+ "header": {
+  "experiment": "R1C benchmark against existing selective inference",
+  "purpose": "run Chen and Witten and Gao et al. where defensible, record inapplicability where not",
+  "audit": "docs/selective_inference_assumption_audit.md, written before this ran",
+  "written_utc": "20260831T235945Z",
+  "n_datasets_per_cell": 200,
+  "K_tested": 2,
+  "alpha": 0.05,
+  "d": 119,
+  "pr_targets": [
+   3.0,
+   4.5,
+   9.0
+  ],
+  "n_values": [
+   28,
+   119
+  ],
+  "seed_root": 4300000,
+  "seed_rule": "dataset i of a cell uses seed_root + cell_offset + 1000*i",
+  "sigma_supplied": "pooled isotropic estimate sqrt(sum(scale(X)^2)/(n*q - q)), the packages' own default",
+  "r_stack": "R version 4.5.3 (2026-03-11 ucrt) |clusterpval 1.0.1 |KmeansInference 0.1.0 |jsonlite 2.0.0 |",
+  "versions": {
+   "python": "3.13.9",
+   "numpy": "2.3.5",
+   "scipy": "1.16.3",
+   "scikit_learn": "1.7.2",
+   "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "total_wall_s": 907.4
+ },
+ "cells": {
+  "control_iso": {
+   "manifest": {
+    "name": "control_iso",
+    "kind": "positive control, Sigma = I, unnormalized",
+    "normalized": false,
+    "spectrum": "isotropic",
+    "defensible": true,
+    "pr_sphere_mean": 18.286101740618495,
+    "n_datasets": 200,
+    "n": 200,
+    "d": 20,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell control_iso: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.0400\n  p_hier_gencov    ran  200/200  rejection 0.0100\n  p_kmeans_iso     ran  200/200  rejection 0.0500\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 70.6
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.04,
+     "events": 8,
+     "ci_wilson": [
+      0.02040563206302452,
+      0.07693206821204467
+     ],
+     "mean_p": 0.5042947368000903,
+     "ks_D": 0.05287807780879,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.01,
+     "events": 2,
+     "ci_wilson": [
+      0.002746658132809724,
+      0.03572176172541615
+     ],
+     "mean_p": 0.5955218838976089,
+     "ks_D": 0.17764299279115303,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.05,
+     "events": 10,
+     "ci_wilson": [
+      0.027382645596976445,
+      0.08957814815037385
+     ],
+     "mean_p": 0.48448297605827567,
+     "ks_D": 0.04797512727822201,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 1.0004012798838704
+   }
+  },
+  "control_iso_nltd": {
+   "manifest": {
+    "name": "control_iso_nltd",
+    "kind": "positive control, Sigma = I, unnormalized",
+    "normalized": false,
+    "spectrum": "isotropic",
+    "defensible": true,
+    "pr_sphere_mean": 22.17179236217492,
+    "n_datasets": 200,
+    "n": 28,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell control_iso_nltd: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.0600\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.0400\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 12.9
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.06,
+     "events": 12,
+     "ci_wilson": [
+      0.034652194249934175,
+      0.1019316929696972
+     ],
+     "mean_p": 0.49105869237578026,
+     "ks_D": 0.04056642737240901,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 6.78658e-21",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.04,
+     "events": 8,
+     "ci_wilson": [
+      0.02040563206302452,
+      0.07693206821204467
+     ],
+     "mean_p": 0.46411660413646544,
+     "ks_D": 0.10100677293800098,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.998766106026554
+   }
+  },
+  "pr3_n28_raw": {
+   "manifest": {
+    "name": "pr3_n28_raw",
+    "pr_target": 3.0,
+    "n": 28,
+    "tau": 1.1246826503806984,
+    "tuned_pr_gaussian": 2.97541253807681,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, unnormalized",
+    "normalized": false,
+    "defensible": true,
+    "caveat": "anisotropic, so the isotropy assumption is violated; the general-covariance path needs an invertible covariance",
+    "pr_sphere_mean": 3.045190818877889,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr3_n28_raw: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.9550\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.9250\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 14.2
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.955,
+     "events": 191,
+     "ci_wilson": [
+      0.9167032959868188,
+      0.9761474570019714
+     ],
+     "mean_p": 0.01063980989276861,
+     "ks_D": 0.9270447593740706,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 3.66505e-21",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.925,
+     "events": 185,
+     "ci_wilson": [
+      0.8799563897510914,
+      0.9540250828208556
+     ],
+     "mean_p": 0.023280256201652083,
+     "ks_D": 0.8847687276587991,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.11894397337656556
+   }
+  },
+  "pr3_n28_l2": {
+   "manifest": {
+    "name": "pr3_n28_l2",
+    "pr_target": 3.0,
+    "n": 28,
+    "tau": 1.1246826503806984,
+    "tuned_pr_gaussian": 2.97541253807681,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, L2-normalized",
+    "normalized": true,
+    "defensible": false,
+    "caveat": "rows lie on the unit sphere, a measure-zero set under the assumed Gaussian model; reported as inapplicable",
+    "pr_sphere_mean": 3.045190818877889,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr3_n28_l2: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.9350\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.9250\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 13.5
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.935,
+     "events": 187,
+     "ci_wilson": [
+      0.8919809206886942,
+      0.961623645355534
+     ],
+     "mean_p": 0.027662573980839343,
+     "ks_D": 0.9198360689472751,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 1.33727e-21",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.925,
+     "events": 185,
+     "ci_wilson": [
+      0.8799563897510914,
+      0.9540250828208556
+     ],
+     "mean_p": 0.020483925397576406,
+     "ks_D": 0.8888050703577637,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.0917377817552576
+   }
+  },
+  "pr3_n119_raw": {
+   "manifest": {
+    "name": "pr3_n119_raw",
+    "pr_target": 3.0,
+    "n": 119,
+    "tau": 1.0096131433334943,
+    "tuned_pr_gaussian": 2.932376724969465,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, unnormalized",
+    "normalized": false,
+    "defensible": true,
+    "caveat": "anisotropic, so the isotropy assumption is violated; the general-covariance path needs an invertible covariance",
+    "pr_sphere_mean": 2.9291805079765574,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr3_n119_raw: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.9600\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.8650\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 34.4
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.96,
+     "events": 192,
+     "ci_wilson": [
+      0.9230679317879553,
+      0.9795943679369754
+     ],
+     "mean_p": 0.015553472796770107,
+     "ks_D": 0.9277140138169522,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 1.01697e-20",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.865,
+     "events": 173,
+     "ci_wilson": [
+      0.8107086162781604,
+      0.9055342954600999
+     ],
+     "mean_p": 0.058875375284731746,
+     "ks_D": 0.8161516810505092,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.11520289439010467
+   }
+  },
+  "pr3_n119_l2": {
+   "manifest": {
+    "name": "pr3_n119_l2",
+    "pr_target": 3.0,
+    "n": 119,
+    "tau": 1.0096131433334943,
+    "tuned_pr_gaussian": 2.932376724969465,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, L2-normalized",
+    "normalized": true,
+    "defensible": false,
+    "caveat": "rows lie on the unit sphere, a measure-zero set under the assumed Gaussian model; reported as inapplicable",
+    "pr_sphere_mean": 2.9291805079765574,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr3_n119_l2: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.9800\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.9400\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 29.7
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.98,
+     "events": 196,
+     "ci_wilson": [
+      0.9497129130842302,
+      0.9921955735852627
+     ],
+     "mean_p": 0.007368697358966407,
+     "ks_D": 0.9656681169285525,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 8.67183e-21",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.94,
+     "events": 188,
+     "ci_wilson": [
+      0.8980683070303026,
+      0.9653478057500657
+     ],
+     "mean_p": 0.017524373041173803,
+     "ks_D": 0.8966626293717734,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.09168872459813017
+   }
+  },
+  "pr4.5_n28_raw": {
+   "manifest": {
+    "name": "pr4.5_n28_raw",
+    "pr_target": 4.5,
+    "n": 28,
+    "tau": 2.1492156566426353,
+    "tuned_pr_gaussian": 4.641096092127105,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, unnormalized",
+    "normalized": false,
+    "defensible": true,
+    "caveat": "anisotropic, so the isotropy assumption is violated; the general-covariance path needs an invertible covariance",
+    "pr_sphere_mean": 4.690227686043955,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr4.5_n28_raw: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.9250\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.8400\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 14.1
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.925,
+     "events": 185,
+     "ci_wilson": [
+      0.8799563897510914,
+      0.9540250828208556
+     ],
+     "mean_p": 0.019566151152855555,
+     "ks_D": 0.8852807810224677,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 3.8024e-22",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.84,
+     "events": 168,
+     "ci_wilson": [
+      0.7828592983645107,
+      0.8843258796930468
+     ],
+     "mean_p": 0.06073414598942195,
+     "ks_D": 0.8081099895348709,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.1494148665227822
+   }
+  },
+  "pr4.5_n28_l2": {
+   "manifest": {
+    "name": "pr4.5_n28_l2",
+    "pr_target": 4.5,
+    "n": 28,
+    "tau": 2.1492156566426353,
+    "tuned_pr_gaussian": 4.641096092127105,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, L2-normalized",
+    "normalized": true,
+    "defensible": false,
+    "caveat": "rows lie on the unit sphere, a measure-zero set under the assumed Gaussian model; reported as inapplicable",
+    "pr_sphere_mean": 4.690227686043955,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr4.5_n28_l2: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.8900\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.8050\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 12.5
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.89,
+     "events": 178,
+     "ci_wilson": [
+      0.8390730900132816,
+      0.9262275554056815
+     ],
+     "mean_p": 0.035783622971666165,
+     "ks_D": 0.8595358296239645,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 8.74455e-21",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.805,
+     "events": 161,
+     "ci_wilson": [
+      0.7445595562384938,
+      0.85394479466608
+     ],
+     "mean_p": 0.06473122126088568,
+     "ks_D": 0.7693713242772955,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.09167143256193783
+   }
+  },
+  "pr4.5_n119_raw": {
+   "manifest": {
+    "name": "pr4.5_n119_raw",
+    "pr_target": 4.5,
+    "n": 119,
+    "tau": 1.731928646720131,
+    "tuned_pr_gaussian": 4.3767064367070665,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, unnormalized",
+    "normalized": false,
+    "defensible": true,
+    "caveat": "anisotropic, so the isotropy assumption is violated; the general-covariance path needs an invertible covariance",
+    "pr_sphere_mean": 4.399012289366197,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr4.5_n119_raw: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.9450\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.8900\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 33.5
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.945,
+     "events": 189,
+     "ci_wilson": [
+      0.9042130012158697,
+      0.9690146583006393
+     ],
+     "mean_p": 0.015120235189882618,
+     "ks_D": 0.9263443455559928,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 3.15082e-20",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.89,
+     "events": 178,
+     "ci_wilson": [
+      0.8390730900132816,
+      0.9262275554056815
+     ],
+     "mean_p": 0.04397431827930871,
+     "ks_D": 0.8444540191128648,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.13886628750365543
+   }
+  },
+  "pr4.5_n119_l2": {
+   "manifest": {
+    "name": "pr4.5_n119_l2",
+    "pr_target": 4.5,
+    "n": 119,
+    "tau": 1.731928646720131,
+    "tuned_pr_gaussian": 4.3767064367070665,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, L2-normalized",
+    "normalized": true,
+    "defensible": false,
+    "caveat": "rows lie on the unit sphere, a measure-zero set under the assumed Gaussian model; reported as inapplicable",
+    "pr_sphere_mean": 4.399012289366197,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr4.5_n119_l2: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.9600\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.8300\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 32.5
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.96,
+     "events": 192,
+     "ci_wilson": [
+      0.9230679317879553,
+      0.9795943679369754
+     ],
+     "mean_p": 0.00988339376560482,
+     "ks_D": 0.9353898901045624,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 1.64361e-20",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.83,
+     "events": 166,
+     "ci_wilson": [
+      0.7718411637018794,
+      0.8757209208833969
+     ],
+     "mean_p": 0.060084602133079576,
+     "ks_D": 0.7903567638260158,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.09165747909793887
+   }
+  },
+  "pr9_n28_raw": {
+   "manifest": {
+    "name": "pr9_n28_raw",
+    "pr_target": 9.0,
+    "n": 28,
+    "tau": 6.324555320336759,
+    "tuned_pr_gaussian": 9.412331110235993,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, unnormalized",
+    "normalized": false,
+    "defensible": true,
+    "caveat": "anisotropic, so the isotropy assumption is violated; the general-covariance path needs an invertible covariance",
+    "pr_sphere_mean": 9.417006201300238,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr9_n28_raw: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.8200\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.6500\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 13.4
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.82,
+     "events": 164,
+     "ci_wilson": [
+      0.7608852496975937,
+      0.8670537414154014
+     ],
+     "mean_p": 0.06080930520894474,
+     "ks_D": 0.7760106710045053,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 7.56068e-21",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.65,
+     "events": 130,
+     "ci_wilson": [
+      0.5816346433439809,
+      0.7127117587402357
+     ],
+     "mean_p": 0.1276361646298412,
+     "ks_D": 0.63984362947397,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.23948297426012974
+   }
+  },
+  "pr9_n28_l2": {
+   "manifest": {
+    "name": "pr9_n28_l2",
+    "pr_target": 9.0,
+    "n": 28,
+    "tau": 6.324555320336759,
+    "tuned_pr_gaussian": 9.412331110235993,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, L2-normalized",
+    "normalized": true,
+    "defensible": false,
+    "caveat": "rows lie on the unit sphere, a measure-zero set under the assumed Gaussian model; reported as inapplicable",
+    "pr_sphere_mean": 9.417006201300238,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr9_n28_l2: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.7450\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.6100\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 12.4
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.745,
+     "events": 149,
+     "ci_wilson": [
+      0.6803707417794272,
+      0.8003950482914598
+     ],
+     "mean_p": 0.07926359808511244,
+     "ks_D": 0.7179283117484314,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 2.16642e-20",
+     "n_distinct_errors": 199
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.61,
+     "events": 122,
+     "ci_wilson": [
+      0.5409374595553039,
+      0.6749165686397881
+     ],
+     "mean_p": 0.13728343689582045,
+     "ks_D": 0.6267300159313709,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.09161969426269749
+   }
+  },
+  "pr9_n119_raw": {
+   "manifest": {
+    "name": "pr9_n119_raw",
+    "pr_target": 9.0,
+    "n": 119,
+    "tau": 4.107050052914293,
+    "tuned_pr_gaussian": 8.75230820272326,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, unnormalized",
+    "normalized": false,
+    "defensible": true,
+    "caveat": "anisotropic, so the isotropy assumption is violated; the general-covariance path needs an invertible covariance",
+    "pr_sphere_mean": 8.73310485952391,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr9_n119_raw: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.8650\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.6650\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 32.6
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.865,
+     "events": 173,
+     "ci_wilson": [
+      0.8107086162781604,
+      0.9055342954600999
+     ],
+     "mean_p": 0.0598037561425505,
+     "ks_D": 0.8241449626578887,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 2.11584e-19",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.665,
+     "events": 133,
+     "ci_wilson": [
+      0.5970219120632632,
+      0.7267591302293752
+     ],
+     "mean_p": 0.12587139450192958,
+     "ks_D": 0.6578826522939527,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.19670889454670756
+   }
+  },
+  "pr9_n119_l2": {
+   "manifest": {
+    "name": "pr9_n119_l2",
+    "pr_target": 9.0,
+    "n": 119,
+    "tau": 4.107050052914293,
+    "tuned_pr_gaussian": 8.75230820272326,
+    "tune_ok": true,
+    "spectrum": "exp(-i/tau)",
+    "kind": "surface cell, L2-normalized",
+    "normalized": true,
+    "defensible": false,
+    "caveat": "rows lie on the unit sphere, a measure-zero set under the assumed Gaussian model; reported as inapplicable",
+    "pr_sphere_mean": 8.73310485952391,
+    "n_datasets": 200,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell pr9_n119_l2: 200 datasets\n  p_hier_iso       ran  200/200  rejection 0.8750\n  p_hier_gencov    ran    0/200  rejection n/a\n  p_kmeans_iso     ran  200/200  rejection 0.6850\n  p_kmeans_gencov  ran    0/200  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 31.9
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.875,
+     "events": 175,
+     "ci_wilson": [
+      0.8219857499600927,
+      0.9138802552504488
+     ],
+     "mean_p": 0.03130923627597495,
+     "ks_D": 0.8366552364627698,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 5.03075e-19",
+     "n_distinct_errors": 200
+    },
+    "p_kmeans_iso": {
+     "n_ran": 200,
+     "n_attempted": 200,
+     "n_failed": 0,
+     "rejection_rate": 0.685,
+     "events": 137,
+     "ci_wilson": [
+      0.6176504391263429,
+      0.7453767901108577
+     ],
+     "mean_p": 0.11111701527033789,
+     "ks_D": 0.667087053922243,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 200,
+     "n_failed": 200,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.0916870927481569
+   }
+  },
+  "real_fibromyalgia_raw": {
+   "manifest": {
+    "name": "real_fibromyalgia_raw",
+    "kind": "real embedding, as stored",
+    "normalized": false,
+    "defensible": false,
+    "cohort": "fibromyalgia",
+    "caveat": "single realization, not a Type I cell; run to record whether the methods execute",
+    "pr_sphere_mean": 4.372971964698667,
+    "n_datasets": 1,
+    "n": 28,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell real_fibromyalgia_raw: 1 datasets\n  p_hier_iso       ran    1/1  rejection 1.0000\n  p_hier_gencov    ran    0/1  rejection n/a\n  p_kmeans_iso     ran    1/1  rejection 1.0000\n  p_kmeans_gencov  ran    0/1  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 3.8
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 1,
+     "n_attempted": 1,
+     "n_failed": 0,
+     "rejection_rate": 1.0,
+     "events": 1,
+     "ci_wilson": [
+      0.20654931430031864,
+      1.0
+     ],
+     "mean_p": 2.81001531474194e-15,
+     "ks_D": null,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 1,
+     "n_failed": 1,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 1.20583e-20",
+     "n_distinct_errors": 1
+    },
+    "p_kmeans_iso": {
+     "n_ran": 1,
+     "n_attempted": 1,
+     "n_failed": 0,
+     "rejection_rate": 1.0,
+     "events": 1,
+     "ci_wilson": [
+      0.20654931430031864,
+      1.0
+     ],
+     "mean_p": 7.95201762077043e-15,
+     "ks_D": null,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 1,
+     "n_failed": 1,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.201874114507268
+   }
+  },
+  "real_fibromyalgia_l2": {
+   "manifest": {
+    "name": "real_fibromyalgia_l2",
+    "kind": "real embedding, L2-normalized as clustered",
+    "normalized": true,
+    "defensible": false,
+    "cohort": "fibromyalgia",
+    "caveat": "rows on the unit sphere; reported as inapplicable",
+    "pr_sphere_mean": 4.372971964698667,
+    "n_datasets": 1,
+    "n": 28,
+    "d": 119,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell real_fibromyalgia_l2: 1 datasets\n  p_hier_iso       ran    1/1  rejection 1.0000\n  p_hier_gencov    ran    0/1  rejection n/a\n  p_kmeans_iso     ran    1/1  rejection 0.0000\n  p_kmeans_gencov  ran    0/1  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 3.8
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 1,
+     "n_attempted": 1,
+     "n_failed": 0,
+     "rejection_rate": 1.0,
+     "events": 1,
+     "ci_wilson": [
+      0.20654931430031864,
+      1.0
+     ],
+     "mean_p": 1.97540165085096e-08,
+     "ks_D": null,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 1,
+     "n_failed": 1,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 2.00686e-20",
+     "n_distinct_errors": 1
+    },
+    "p_kmeans_iso": {
+     "n_ran": 1,
+     "n_attempted": 1,
+     "n_failed": 0,
+     "rejection_rate": 0.0,
+     "events": 0,
+     "ci_wilson": [
+      0.0,
+      0.7934506856996815
+     ],
+     "mean_p": 0.454392439094452,
+     "ks_D": null,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 1,
+     "n_failed": 1,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.091998169775534
+   }
+  },
+  "real_depression_raw": {
+   "manifest": {
+    "name": "real_depression_raw",
+    "kind": "real embedding, as stored",
+    "normalized": false,
+    "defensible": false,
+    "cohort": "depression",
+    "caveat": "single realization, not a Type I cell; run to record whether the methods execute",
+    "pr_sphere_mean": 8.621178127322851,
+    "n_datasets": 1,
+    "n": 51,
+    "d": 68,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell real_depression_raw: 1 datasets\n  p_hier_iso       ran    1/1  rejection 1.0000\n  p_hier_gencov    ran    0/1  rejection n/a\n  p_kmeans_iso     ran    1/1  rejection 1.0000\n  p_kmeans_gencov  ran    0/1  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 4.0
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 1,
+     "n_attempted": 1,
+     "n_failed": 0,
+     "rejection_rate": 1.0,
+     "events": 1,
+     "ci_wilson": [
+      0.20654931430031864,
+      1.0
+     ],
+     "mean_p": 0.000224898759152414,
+     "ks_D": null,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 1,
+     "n_failed": 1,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 8.44379e-20",
+     "n_distinct_errors": 1
+    },
+    "p_kmeans_iso": {
+     "n_ran": 1,
+     "n_attempted": 1,
+     "n_failed": 0,
+     "rejection_rate": 1.0,
+     "events": 1,
+     "ci_wilson": [
+      0.20654931430031864,
+      1.0
+     ],
+     "mean_p": 7.72818542333646e-05,
+     "ks_D": null,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 1,
+     "n_failed": 1,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.0788718782637758
+   }
+  },
+  "real_depression_l2": {
+   "manifest": {
+    "name": "real_depression_l2",
+    "kind": "real embedding, L2-normalized as clustered",
+    "normalized": true,
+    "defensible": false,
+    "cohort": "depression",
+    "caveat": "rows on the unit sphere; reported as inapplicable",
+    "pr_sphere_mean": 8.621178127322851,
+    "n_datasets": 1,
+    "n": 51,
+    "d": 68,
+    "K": 2
+   },
+   "r_run": {
+    "returncode": 0,
+    "stdout": "cell real_depression_l2: 1 datasets\n  p_hier_iso       ran    1/1  rejection 0.0000\n  p_hier_gencov    ran    0/1  rejection n/a\n  p_kmeans_iso     ran    1/1  rejection 1.0000\n  p_kmeans_gencov  ran    0/1  rejection n/a\n\n",
+    "stderr": "",
+    "wall_s": 3.3
+   },
+   "results": {
+    "p_hier_iso": {
+     "n_ran": 1,
+     "n_attempted": 1,
+     "n_failed": 0,
+     "rejection_rate": 0.0,
+     "events": 0,
+     "ci_wilson": [
+      0.0,
+      0.7934506856996815
+     ],
+     "mean_p": 0.452128950203639,
+     "ks_D": null,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_hier_gencov": {
+     "n_ran": 0,
+     "n_attempted": 1,
+     "n_failed": 1,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "system is computationally singular: reciprocal condition number = 4.7479e-20",
+     "n_distinct_errors": 1
+    },
+    "p_kmeans_iso": {
+     "n_ran": 1,
+     "n_attempted": 1,
+     "n_failed": 0,
+     "rejection_rate": 1.0,
+     "events": 1,
+     "ci_wilson": [
+      0.20654931430031864,
+      1.0
+     ],
+     "mean_p": 0.0296046153264493,
+     "ks_D": null,
+     "error_sample": null,
+     "n_distinct_errors": 0
+    },
+    "p_kmeans_gencov": {
+     "n_ran": 0,
+     "n_attempted": 1,
+     "n_failed": 1,
+     "rejection_rate": null,
+     "events": 0,
+     "ci_wilson": null,
+     "mean_p": null,
+     "ks_D": null,
+     "error_sample": "At least one of variance and covariance matrix must be specified!",
+     "n_distinct_errors": 1
+    },
+    "sig_hat_mean": 0.121536093527875
+   }
+  }
+ }
+}

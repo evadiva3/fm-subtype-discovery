@@ -1,0 +1,23 @@
+{
+  "n_draws": 20000,
+  "observed_sil_ambient": 0.22115161245468268,
+  "observed_sil_normalized": 0.24330608118965738,
+  "k": 4,
+  "progression": [
+    {
+      "construction": "1. misspecified (no sphere projection)",
+      "p": 0.16849157542122895,
+      "null_mean_sil": 0.21604066260065166
+    },
+    {
+      "construction": "2. geometry corrected only",
+      "p": 0.4630268486575671,
+      "null_mean_sil": 0.24196330552499035
+    },
+    {
+      "construction": "3. fully corrected",
+      "p": 0.7008649567521624,
+      "null_mean_sil": 0.25906937235148014
+    }
+  ]
+}

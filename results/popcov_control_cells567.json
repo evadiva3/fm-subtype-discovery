@@ -1,0 +1,5594 @@
+{
+ "experiment": "popcov_control_cells567",
+ "config": {
+  "experiment": "population covariance control, cells 5, 6 and 7",
+  "purpose": "locate the n/d transition in the direction of the covariance effect, at n/d = 1.51 and n/d = 1.00",
+  "written_utc": "20260911T021901Z",
+  "d": 119,
+  "n_datasets": 400,
+  "n_draws": 200,
+  "deep_draws": 2000,
+  "pr_tolerance": 0.05,
+  "n_init": 5,
+  "k_grid": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "alpha": 0.05,
+  "arms": [
+   "M_est",
+   "C_est",
+   "M_known",
+   "C_known"
+  ],
+  "cells": {
+   "cell5_exp_n180": {
+    "spectrum": "exp",
+    "n": 180,
+    "d": 119,
+    "n_over_d": 1.5126,
+    "pr_target": 9.0,
+    "cell_offset": 20
+   },
+   "cell6_two_block_n180": {
+    "spectrum": "two_block",
+    "n": 180,
+    "d": 119,
+    "n_over_d": 1.5126,
+    "pr_target": 30.0,
+    "cell_offset": 21
+   },
+   "cell7_exp_n119": {
+    "spectrum": "exp",
+    "n": 119,
+    "d": 119,
+    "n_over_d": 1.0,
+    "pr_target": 6.0,
+    "cell_offset": 22
+   }
+  },
+  "seed_base": 6000000,
+  "extra_bases": [
+   6100000,
+   6200000,
+   6300000
+  ],
+  "seed_rule": "dataset i of a cell uses seed_base + 1000*i + cell_offset; its draws use that + 7919, shared by all six tests",
+  "pairing": "the four arms see identical datasets and identical draw seeds",
+  "population_covariance": "Q diag(c) Q.T, c_j = E[lambda_j z_j^2 / sum_k lambda_k z_k^2] by quadrature; sum(c) = 1 exactly, asserted to ten decimals",
+  "verification": "a cell with any C-only rejection is re-run at three further seed bases and every discordance in either mode re-tested at 2000 draws; a cell with none records triggered=false, which is the protocol behaving correctly rather than a missing result",
+  "shift_classification": "positive, negative, or indeterminate where |shift| < 0.03 ambient null sd",
+  "protocol_source": "analysis/popcov_control.py and analysis/popcov_control_pr9.py, imported; only the per-cell conditioning differs",
+  "screening_provenance": "cells 5 and 6 were screened in results/popcov_control_pr9_screen.json and its ladder; cell 7 in results/popcov_control_cells567_screen.json. Every screen is a prefix of the cell it screens, on the same offset and seed rule",
+  "versions": {
+   "python": "3.13.9",
+   "numpy": "2.3.5",
+   "scipy": "1.16.3",
+   "scikit_learn": "1.7.2",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "n_workers": 47
+  },
+  "total_wall_s": 1756.6
+ },
+ "cells": {
+  "cell5_exp_n180": {
+   "pr_mean": 8.785892646434553,
+   "pr_sd": 0.2756642173797915,
+   "n_datasets": 400,
+   "n_skipped": 0,
+   "n_errors": 0,
+   "error_sample": null,
+   "n_draws": 200,
+   "rej_M": 0.375,
+   "count_M": 150,
+   "ci_M": [
+    0.3289570794527303,
+    0.4234209941319494
+   ],
+   "rej_C": 0.1525,
+   "count_C": 61,
+   "ci_C": [
+    0.12058718800918729,
+    0.19102385655622217
+   ],
+   "mean_pM": 0.09222636815920397,
+   "mean_pC": 0.16002487562189052,
+   "ks_M": 0.7135696517412935,
+   "ks_C": 0.5841169154228856,
+   "null_mean_M": 0.1226029904737755,
+   "null_sd_M": 0.009162031758210749,
+   "null_mean_C": 0.12675067321502254,
+   "null_sd_C": 0.009059170516412042,
+   "obs_mean": 0.1375379126514695,
+   "M_only": 89,
+   "C_only": 0,
+   "degenerate_C": 0,
+   "k_counts": {
+    "2": 377,
+    "3": 16,
+    "4": 7
+   },
+   "arms": {
+    "M_est": {
+     "label": "M, covariance estimated",
+     "n_datasets": 400,
+     "events": 150,
+     "rejection_rate": 0.375,
+     "wilson95": [
+      0.3289570794527303,
+      0.4234209941319494
+     ],
+     "mean_p": 0.09222636815920397,
+     "ks_D_vs_uniform": 0.7135696517412935
+    },
+    "C_est": {
+     "label": "C, covariance estimated",
+     "n_datasets": 400,
+     "events": 61,
+     "rejection_rate": 0.1525,
+     "wilson95": [
+      0.12058718800918729,
+      0.19102385655622217
+     ],
+     "mean_p": 0.16002487562189052,
+     "ks_D_vs_uniform": 0.5841169154228856
+    },
+    "M_known": {
+     "label": "M, known population Sigma",
+     "n_datasets": 400,
+     "events": 274,
+     "rejection_rate": 0.685,
+     "wilson95": [
+      0.6379013667498195,
+      0.7285790843448547
+     ],
+     "mean_p": 0.06524875621890547,
+     "ks_D_vs_uniform": 0.7208457711442786
+    },
+    "C_known": {
+     "label": "C, known population Sigma",
+     "n_datasets": 400,
+     "events": 216,
+     "rejection_rate": 0.54,
+     "wilson95": [
+      0.491008823313282,
+      0.5882301931396207
+     ],
+     "mean_p": 0.10906716417910449,
+     "ks_D_vs_uniform": 0.6187935323383085
+    }
+   },
+   "discordance": {
+    "estimated": {
+     "M_only": 89,
+     "C_only": 0,
+     "n_discordant": 89
+    },
+    "known": {
+     "M_only": 58,
+     "C_only": 0,
+     "n_discordant": 58
+    }
+   },
+   "shift": {
+    "est": {
+     "null_mean_ambient": 0.1226029904737755,
+     "null_mean_sphere": 0.12596599758774243,
+     "null_sd_ambient": 0.009162031758210749,
+     "shift": 0.0033630071139669343,
+     "shift_in_sd": 0.36705909810376985,
+     "sign": 1,
+     "datasets_with_positive_shift": 400,
+     "n_datasets": 400,
+     "shift_band_null_sd": 0.03,
+     "shift_class": "positive"
+    },
+    "known": {
+     "null_mean_ambient": 0.11711722778029837,
+     "null_mean_sphere": 0.12027595231215109,
+     "null_sd_ambient": 0.00866008399449105,
+     "shift": 0.0031587245318527163,
+     "shift_in_sd": 0.36474525349431713,
+     "sign": 1,
+     "datasets_with_positive_shift": 400,
+     "n_datasets": 400,
+     "shift_band_null_sd": 0.03,
+     "shift_class": "positive"
+    }
+   },
+   "wall_s": 145.2,
+   "failed": false,
+   "spectrum": "exp",
+   "n": 180,
+   "d": 119,
+   "n_over_d": 1.5126,
+   "regime": "n > d",
+   "pr_target": 9.0,
+   "cell_offset": 20,
+   "param_name": "tau",
+   "param_value": 4.016066862466169,
+   "tuned_pr": 8.822789153121887,
+   "tuned_ok": true,
+   "tune_note": "",
+   "sphere_spectrum_sum": 0.9999999999999992,
+   "sphere_spectrum_top10": [
+    0.18950394182144,
+    0.1569118114441983,
+    0.12899641138011553,
+    0.10533145907565523,
+    0.08546731086127506,
+    0.0689491489014835,
+    0.05533309812909662,
+    0.04419928790475426,
+    0.035161354916630555,
+    0.027872347817126927
+   ],
+   "verification": {
+    "triggered": false,
+    "reason": "no C-only rejection in either covariance mode; the protocol does not call for a replication and none was forced"
+   }
+  },
+  "cell6_two_block_n180": {
+   "pr_mean": 31.268547019145053,
+   "pr_sd": 3.1308388171536783,
+   "n_datasets": 400,
+   "n_skipped": 0,
+   "n_errors": 0,
+   "error_sample": null,
+   "n_draws": 200,
+   "rej_M": 0.3475,
+   "count_M": 139,
+   "ci_M": [
+    0.30248604050213007,
+    0.39541520927117907
+   ],
+   "rej_C": 0.54,
+   "count_C": 216,
+   "ci_C": [
+    0.491008823313282,
+    0.5882301931396207
+   ],
+   "mean_pM": 0.0917412935323383,
+   "mean_pC": 0.06294776119402985,
+   "ks_M": 0.7286691542288557,
+   "ks_C": 0.7909452736318408,
+   "null_mean_M": 0.08465568330574802,
+   "null_sd_M": 0.007950444725530971,
+   "null_mean_C": 0.08299374410977829,
+   "null_sd_C": 0.007731212005227457,
+   "obs_mean": 0.09677037599125217,
+   "M_only": 0,
+   "C_only": 77,
+   "degenerate_C": 0,
+   "k_counts": {
+    "2": 400
+   },
+   "arms": {
+    "M_est": {
+     "label": "M, covariance estimated",
+     "n_datasets": 400,
+     "events": 139,
+     "rejection_rate": 0.3475,
+     "wilson95": [
+      0.30248604050213007,
+      0.39541520927117907
+     ],
+     "mean_p": 0.0917412935323383,
+     "ks_D_vs_uniform": 0.7286691542288557
+    },
+    "C_est": {
+     "label": "C, covariance estimated",
+     "n_datasets": 400,
+     "events": 216,
+     "rejection_rate": 0.54,
+     "wilson95": [
+      0.491008823313282,
+      0.5882301931396207
+     ],
+     "mean_p": 0.06294776119402985,
+     "ks_D_vs_uniform": 0.7909452736318408
+    },
+    "M_known": {
+     "label": "M, known population Sigma",
+     "n_datasets": 400,
+     "events": 225,
+     "rejection_rate": 0.5625,
+     "wilson95": [
+      0.5135188136358619,
+      0.6102921495717983
+     ],
+     "mean_p": 0.11940298507462685,
+     "ks_D_vs_uniform": 0.6009701492537314
+    },
+    "C_known": {
+     "label": "C, known population Sigma",
+     "n_datasets": 400,
+     "events": 260,
+     "rejection_rate": 0.65,
+     "wilson95": [
+      0.6020319606959824,
+      0.6951143510024022
+     ],
+     "mean_p": 0.09099502487562189,
+     "ks_D_vs_uniform": 0.6556965174129353
+    }
+   },
+   "discordance": {
+    "estimated": {
+     "M_only": 0,
+     "C_only": 77,
+     "n_discordant": 77
+    },
+    "known": {
+     "M_only": 0,
+     "C_only": 35,
+     "n_discordant": 35
+    }
+   },
+   "shift": {
+    "est": {
+     "null_mean_ambient": 0.08465568330574802,
+     "null_mean_sphere": 0.08299374410977829,
+     "null_sd_ambient": 0.007950444725530971,
+     "shift": -0.0016619391959697277,
+     "shift_in_sd": -0.20903726185691265,
+     "sign": -1,
+     "datasets_with_positive_shift": 1,
+     "n_datasets": 400,
+     "shift_band_null_sd": 0.03,
+     "shift_class": "negative"
+    },
+    "known": {
+     "null_mean_ambient": 0.08193074357515082,
+     "null_mean_sphere": 0.08008772448514101,
+     "null_sd_ambient": 0.007758147836737827,
+     "shift": -0.0018430190900098065,
+     "shift_in_sd": -0.23755916087115522,
+     "sign": -1,
+     "datasets_with_positive_shift": 0,
+     "n_datasets": 400,
+     "shift_band_null_sd": 0.03,
+     "shift_class": "negative"
+    }
+   },
+   "wall_s": 1500.9,
+   "failed": false,
+   "spectrum": "two_block",
+   "n": 180,
+   "d": 119,
+   "n_over_d": 1.5126,
+   "regime": "n > d",
+   "pr_target": 30.0,
+   "cell_offset": 21,
+   "param_name": "m/eps",
+   "param_value": "1/0.0392419",
+   "tuned_pr": 30.779478957470406,
+   "tuned_ok": true,
+   "tune_note": "",
+   "sphere_spectrum_sum": 1.0000000000000007,
+   "sphere_spectrum_top10": [
+    0.14339064204660273,
+    0.007259401338588118,
+    0.007259401338588118,
+    0.007259401338588118,
+    0.007259401338588118,
+    0.007259401338588118,
+    0.007259401338588118,
+    0.007259401338588118,
+    0.007259401338588118,
+    0.007259401338588118
+   ],
+   "verification": {
+    "triggered": true,
+    "n_replications": 4,
+    "seed_bases": [
+     6000000,
+     6100000,
+     6200000,
+     6300000
+    ],
+    "replications": [
+     {
+      "base": 6000000,
+      "n_datasets": 400,
+      "C_only_est": 77,
+      "M_only_est": 0,
+      "rej_M_est": 0.3475,
+      "rej_C_est": 0.54,
+      "C_only_known": 35,
+      "M_only_known": 0,
+      "rej_M_known": 0.5625,
+      "rej_C_known": 0.65,
+      "C_only_either": 112,
+      "note": "reproduces the original cell"
+     },
+     {
+      "base": 6100000,
+      "n_datasets": 400,
+      "C_only_est": 69,
+      "M_only_est": 0,
+      "rej_M_est": 0.345,
+      "rej_C_est": 0.5175,
+      "C_only_known": 35,
+      "M_only_known": 0,
+      "rej_M_known": 0.555,
+      "rej_C_known": 0.6425,
+      "C_only_either": 104,
+      "replication": 1,
+      "n_skipped": 0,
+      "n_errors": 0
+     },
+     {
+      "base": 6200000,
+      "n_datasets": 400,
+      "C_only_est": 76,
+      "M_only_est": 0,
+      "rej_M_est": 0.3625,
+      "rej_C_est": 0.5525,
+      "C_only_known": 40,
+      "M_only_known": 0,
+      "rej_M_known": 0.56,
+      "rej_C_known": 0.66,
+      "C_only_either": 116,
+      "replication": 2,
+      "n_skipped": 0,
+      "n_errors": 0
+     },
+     {
+      "base": 6300000,
+      "n_datasets": 400,
+      "C_only_est": 77,
+      "M_only_est": 0,
+      "rej_M_est": 0.3375,
+      "rej_C_est": 0.53,
+      "C_only_known": 46,
+      "M_only_known": 0,
+      "rej_M_known": 0.5325,
+      "rej_C_known": 0.6475,
+      "C_only_either": 123,
+      "replication": 3,
+      "n_skipped": 0,
+      "n_errors": 0
+     }
+    ],
+    "total_C_only": 455,
+    "total_datasets": 1600,
+    "C_only_rate": 0.284375,
+    "C_only_ci": [
+     0.2628076149273002,
+     0.3069752983373426
+    ],
+    "n_discordant": 416,
+    "discordant": [
+     {
+      "replication": 0,
+      "i": 2,
+      "seed": 6002021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.04547726136931534,
+        "pC": 0.02498750624687656,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.005497251374312844,
+        "pC": 0.001999000499750125,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 7,
+      "seed": 6007021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.07446276861569215,
+        "pC": 0.047476261869065464,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.03248375812093953,
+        "pC": 0.02048975512243878,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 36,
+      "seed": 6036021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.1044776119402985,
+      "pC_est": 0.07960199004975124,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.1184407796101949,
+        "pC": 0.08445777111444278,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0544727636181909,
+        "pC": 0.030484757621189407,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 21,
+      "seed": 6021021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.029850746268656716,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.05697151424287856,
+        "pC": 0.031484257871064465,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.03298350824587706,
+        "pC": 0.015992003998001,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 9,
+      "seed": 6009021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.0704647676161919,
+        "pC": 0.044977511244377814,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.005497251374312844,
+        "pC": 0.001999000499750125,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 29,
+      "seed": 6029021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.04097951024487756,
+        "pC": 0.02148925537231384,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.013993003498250875,
+        "pC": 0.0069965017491254375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 28,
+      "seed": 6028021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.0945273631840796,
+      "pC_known": 0.07960199004975124,
+      "deep": {
+       "est": {
+        "pM": 0.09545227386306847,
+        "pC": 0.06096951524237881,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.14592703648175911,
+        "pC": 0.0944527736131934,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 32,
+      "seed": 6032021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.0544727636181909,
+        "pC": 0.03248375812093953,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.018490754622688656,
+        "pC": 0.010494752623688156,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 23,
+      "seed": 6023021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.024875621890547265,
+      "pM_known": 0.08955223880597014,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.07546226886556721,
+        "pC": 0.04147926036981509,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.09895052473763119,
+        "pC": 0.0544727636181909,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 12,
+      "seed": 6012021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.07462686567164178,
+      "pM_known": 0.06965174129353234,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.15642178910544727,
+        "pC": 0.10494752623688156,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.11244377811094453,
+        "pC": 0.07096451774112944,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 43,
+      "seed": 6043021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.03482587064676617,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.095952023988006,
+        "pC": 0.054972513743128434,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.04847576211894053,
+        "pC": 0.02448775612193903,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 25,
+      "seed": 6025021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.06596701649175413,
+        "pC": 0.035982008995502246,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0009995002498750624,
+        "pC": 0.0009995002498750624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 18,
+      "seed": 6018021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.05472636815920398,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.0864567716141929,
+        "pC": 0.06046976511744128,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07396301849075462,
+        "pC": 0.046476761619190406,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 26,
+      "seed": 6026021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.029850746268656716,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.06946526736631684,
+        "pC": 0.04247876061969016,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.027486256871564217,
+        "pC": 0.014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 33,
+      "seed": 6033021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.09950248756218906,
+      "pC_est": 0.06965174129353234,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.08995502248875563,
+        "pC": 0.059470264867566215,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05897051474262868,
+        "pC": 0.034482758620689655,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 44,
+      "seed": 6044021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.1044776119402985,
+      "pC_known": 0.05970149253731343,
+      "deep": {
+       "est": {
+        "pM": 0.06696651674162919,
+        "pC": 0.04097951024487756,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.09545227386306847,
+        "pC": 0.05547226386806597,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 38,
+      "seed": 6038021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.07096451774112944,
+        "pC": 0.04397801099450275,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.009995002498750625,
+        "pC": 0.004497751124437781,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 55,
+      "seed": 6055021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.03648175912043978,
+        "pC": 0.0239880059970015,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.004497751124437781,
+        "pC": 0.001999000499750125,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 56,
+      "seed": 6056021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.1199400299850075,
+        "pC": 0.0769615192403798,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.08395802098950525,
+        "pC": 0.046476761619190406,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 58,
+      "seed": 6058021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.044977511244377814,
+        "pC": 0.026486756621689155,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0004997501249375312,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 52,
+      "seed": 6052021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.0734632683658171,
+        "pC": 0.04097951024487756,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0024987506246876563,
+        "pC": 0.0014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 48,
+      "seed": 6048021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.12935323383084577,
+      "pC_est": 0.07960199004975124,
+      "pM_known": 0.06965174129353234,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.13993003498250875,
+        "pC": 0.0879560219890055,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07296351824087956,
+        "pC": 0.0399800099950025,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 79,
+      "seed": 6079021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.024875621890547265,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06896551724137931,
+        "pC": 0.04397801099450275,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.019490254872563718,
+        "pC": 0.008995502248875561,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 66,
+      "seed": 6066021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.03798100949525238,
+        "pC": 0.0239880059970015,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0009995002498750624,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 80,
+      "seed": 6080021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.14427860696517414,
+      "pC_est": 0.0945273631840796,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.1539230384807596,
+        "pC": 0.10144927536231885,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06596701649175413,
+        "pC": 0.03298350824587706,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 84,
+      "seed": 6084021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.0704647676161919,
+        "pC": 0.044977511244377814,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.037481259370314844,
+        "pC": 0.01999000499750125,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 72,
+      "seed": 6072021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.1044776119402985,
+      "pC_est": 0.05472636815920398,
+      "pM_known": 0.08955223880597014,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06996501749125437,
+        "pC": 0.04147926036981509,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06946526736631684,
+        "pC": 0.03698150924537731,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 63,
+      "seed": 6063021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.05347326336831584,
+        "pC": 0.034482758620689655,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.01999000499750125,
+        "pC": 0.008995502248875561,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 90,
+      "seed": 6090021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.08045977011494253,
+        "pC": 0.04997501249375312,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.06646676661669165,
+        "pC": 0.03798100949525238,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 82,
+      "seed": 6082021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06596701649175413,
+        "pC": 0.04047976011994003,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0074962518740629685,
+        "pC": 0.001999000499750125,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 71,
+      "seed": 6071021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.029850746268656716,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.05147426286856572,
+        "pC": 0.028985507246376812,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.02848575712143928,
+        "pC": 0.01649175412293853,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 78,
+      "seed": 6078021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.05547226386806597,
+        "pC": 0.031984007996002,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.04047976011994003,
+        "pC": 0.022988505747126436,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 68,
+      "seed": 6068021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.03980099502487562,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.0734632683658171,
+        "pC": 0.04397801099450275,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.03398300849575212,
+        "pC": 0.021989005497251374,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 105,
+      "seed": 6105021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.03482587064676617,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.08245877061469266,
+        "pC": 0.057971014492753624,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.041979010494752625,
+        "pC": 0.02148925537231384,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 101,
+      "seed": 6101021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.063968015992004,
+        "pC": 0.03548225887056472,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.010994502748625687,
+        "pC": 0.0034982508745627187,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 100,
+      "seed": 6100021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.07146426786606697,
+        "pC": 0.0399800099950025,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.09195402298850575,
+        "pC": 0.05547226386806597,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 108,
+      "seed": 6108021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.01990049751243781,
+      "pM_known": 0.12935323383084577,
+      "pC_known": 0.05472636815920398,
+      "deep": {
+       "est": {
+        "pM": 0.07546226886556721,
+        "pC": 0.04597701149425287,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.12643678160919541,
+        "pC": 0.07946026986506746,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 122,
+      "seed": 6122021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.1044776119402985,
+      "pC_known": 0.05970149253731343,
+      "deep": {
+       "est": {
+        "pM": 0.0384807596201899,
+        "pC": 0.02148925537231384,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07646176911544228,
+        "pC": 0.04097951024487756,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 115,
+      "seed": 6115021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06696651674162919,
+        "pC": 0.04397801099450275,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.06346826586706647,
+        "pC": 0.038980509745127435,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 123,
+      "seed": 6123021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.050974512743628186,
+        "pC": 0.034482758620689655,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.03248375812093953,
+        "pC": 0.018490754622688656,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 121,
+      "seed": 6121021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.03548225887056472,
+        "pC": 0.02048975512243878,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0009995002498750624,
+        "pC": 0.0009995002498750624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 138,
+      "seed": 6138021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.079960019990005,
+        "pC": 0.05147426286856572,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.03248375812093953,
+        "pC": 0.015492253873063468,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 143,
+      "seed": 6143021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.23383084577114427,
+      "pC_est": 0.18407960199004975,
+      "pM_known": 0.0945273631840796,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.19090454772613694,
+        "pC": 0.1359320339830085,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06596701649175413,
+        "pC": 0.038980509745127435,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 149,
+      "seed": 6149021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.12935323383084577,
+      "pC_est": 0.08955223880597014,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.08595702148925537,
+        "pC": 0.06446776611694154,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.03248375812093953,
+        "pC": 0.01699150424787606,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 153,
+      "seed": 6153021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.03980099502487562,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.063968015992004,
+        "pC": 0.03398300849575212,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.03648175912043978,
+        "pC": 0.015492253873063468,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 152,
+      "seed": 6152021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.05997001499250375,
+        "pC": 0.0399800099950025,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.031484257871064465,
+        "pC": 0.018490754622688656,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 154,
+      "seed": 6154021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.05247376311844078,
+        "pC": 0.03698150924537731,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.004497751124437781,
+        "pC": 0.0029985007496251873,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 160,
+      "seed": 6160021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0945273631840796,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.08495752123938032,
+        "pC": 0.05347326336831584,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0029985007496251873,
+        "pC": 0.0009995002498750624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 174,
+      "seed": 6174021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.1791044776119403,
+      "pC_known": 0.09950248756218906,
+      "deep": {
+       "est": {
+        "pM": 0.0879560219890055,
+        "pC": 0.05647176411794103,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.16891554222888555,
+        "pC": 0.10994502748625687,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 172,
+      "seed": 6172021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.06846576711644178,
+        "pC": 0.043478260869565216,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.04997501249375312,
+        "pC": 0.029985007496251874,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 180,
+      "seed": 6180021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.06467661691542288,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.08995502248875563,
+        "pC": 0.0559720139930035,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06796601699150424,
+        "pC": 0.04247876061969016,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 183,
+      "seed": 6183021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.024875621890547265,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.030984507746126936,
+        "pC": 0.017991004497751123,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.020989505247376312,
+        "pC": 0.012993503248375811,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 186,
+      "seed": 6186021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.09245377311344327,
+        "pC": 0.057971014492753624,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0074962518740629685,
+        "pC": 0.004497751124437781,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 185,
+      "seed": 6185021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.04847576211894053,
+        "pC": 0.030984507746126936,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.004997501249375313,
+        "pC": 0.0014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 201,
+      "seed": 6201021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06446776611694154,
+        "pC": 0.03498250874562719,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0029985007496251873,
+        "pC": 0.0024987506246876563,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 214,
+      "seed": 6214021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.03698150924537731,
+        "pC": 0.019490254872563718,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0004997501249375312,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 218,
+      "seed": 6218021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.0239880059970015,
+        "pC": 0.014992503748125937,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.005997001499250375,
+        "pC": 0.0029985007496251873,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 221,
+      "seed": 6221021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.17412935323383086,
+      "pC_est": 0.09950248756218906,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.16441779110444776,
+        "pC": 0.10444777611194403,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07196401799100449,
+        "pC": 0.0384807596201899,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 217,
+      "seed": 6217021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.04047976011994003,
+        "pC": 0.0239880059970015,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.015492253873063468,
+        "pC": 0.006496751624187906,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 219,
+      "seed": 6219021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.049475262368815595,
+        "pC": 0.025487256371814093,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05847076461769116,
+        "pC": 0.0239880059970015,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 233,
+      "seed": 6233021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.031484257871064465,
+        "pC": 0.01999000499750125,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.00399800099950025,
+        "pC": 0.0009995002498750624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 241,
+      "seed": 6241021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.10945273631840796,
+      "pC_known": 0.05472636815920398,
+      "deep": {
+       "est": {
+        "pM": 0.0734632683658171,
+        "pC": 0.046476761619190406,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.09845077461269365,
+        "pC": 0.05997001499250375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 245,
+      "seed": 6245021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.17412935323383086,
+      "pC_est": 0.10945273631840796,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.1664167916041979,
+        "pC": 0.10994502748625687,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0559720139930035,
+        "pC": 0.028985507246376812,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 253,
+      "seed": 6253021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.03548225887056472,
+        "pC": 0.02048975512243878,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0004997501249375312,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 256,
+      "seed": 6256021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.03482587064676617,
+      "pC_est": 0.01990049751243781,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.07096451774112944,
+        "pC": 0.04097951024487756,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.09895052473763119,
+        "pC": 0.0559720139930035,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 261,
+      "seed": 6261021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0945273631840796,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.06546726636681659,
+        "pC": 0.03648175912043978,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.038980509745127435,
+        "pC": 0.02048975512243878,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 270,
+      "seed": 6270021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.12935323383084577,
+      "pC_est": 0.08955223880597014,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.1469265367316342,
+        "pC": 0.10394802598700649,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.08295852073963018,
+        "pC": 0.04997501249375312,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 272,
+      "seed": 6272021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.0399800099950025,
+        "pC": 0.01999000499750125,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0024987506246876563,
+        "pC": 0.0014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 283,
+      "seed": 6283021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.05472636815920398,
+      "pM_known": 0.1044776119402985,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.08745627186406797,
+        "pC": 0.04897551224387806,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.08995502248875563,
+        "pC": 0.046476761619190406,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 282,
+      "seed": 6282021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0945273631840796,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.09195402298850575,
+        "pC": 0.05847076461769116,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.017991004497751123,
+        "pC": 0.00849575212393803,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 285,
+      "seed": 6285021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.0864567716141929,
+        "pC": 0.05247376311844078,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.012993503248375811,
+        "pC": 0.005997001499250375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 292,
+      "seed": 6292021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.04897551224387806,
+        "pC": 0.03548225887056472,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.015992003998001,
+        "pC": 0.01199400299850075,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 309,
+      "seed": 6309021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.07196401799100449,
+        "pC": 0.04547726136931534,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0004997501249375312,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 307,
+      "seed": 6307021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.06965174129353234,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.10744627686156921,
+        "pC": 0.06646676661669165,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05847076461769116,
+        "pC": 0.03548225887056472,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 312,
+      "seed": 6312021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.0945273631840796,
+      "pC_est": 0.05472636815920398,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.07596201899050475,
+        "pC": 0.04297851074462768,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05897051474262868,
+        "pC": 0.02948525737131434,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 322,
+      "seed": 6322021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.07462686567164178,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.09545227386306847,
+        "pC": 0.06196901549225387,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.04847576211894053,
+        "pC": 0.027486256871564217,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 321,
+      "seed": 6321021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.024875621890547265,
+      "pM_known": 0.40298507462686567,
+      "pC_known": 0.30845771144278605,
+      "deep": {
+       "est": {
+        "pM": 0.050474762618690654,
+        "pC": 0.026486756621689155,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.36531734132933535,
+        "pC": 0.2798600699650175,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 326,
+      "seed": 6326021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.1890547263681592,
+      "pC_known": 0.0945273631840796,
+      "deep": {
+       "est": {
+        "pM": 0.08445777111444278,
+        "pC": 0.05147426286856572,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.17191404297851073,
+        "pC": 0.10744627686156921,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 330,
+      "seed": 6330021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.03482587064676617,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.050474762618690654,
+        "pC": 0.030484757621189407,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.02448775612193903,
+        "pC": 0.014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 331,
+      "seed": 6331021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.05970149253731343,
+      "deep": {
+       "est": {
+        "pM": 0.06296851574212893,
+        "pC": 0.04147926036981509,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.09095452273863068,
+        "pC": 0.05697151424287856,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 333,
+      "seed": 6333021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.0945273631840796,
+      "pC_known": 0.05472636815920398,
+      "deep": {
+       "est": {
+        "pM": 0.07746126936531735,
+        "pC": 0.04447776111944028,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.1024487756121939,
+        "pC": 0.063968015992004,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 334,
+      "seed": 6334021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.04477611940298507,
+      "pC_est": 0.024875621890547265,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.0384807596201899,
+        "pC": 0.018490754622688656,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.04047976011994003,
+        "pC": 0.01899050474762619,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 336,
+      "seed": 6336021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.12437810945273632,
+      "pC_known": 0.10945273631840796,
+      "deep": {
+       "est": {
+        "pM": 0.06146926536731634,
+        "pC": 0.03798100949525238,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.16741629185407297,
+        "pC": 0.10744627686156921,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 335,
+      "seed": 6335021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.04975124378109453,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.08595702148925537,
+        "pC": 0.05347326336831584,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06796601699150424,
+        "pC": 0.038980509745127435,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 338,
+      "seed": 6338021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.05897051474262868,
+        "pC": 0.034482758620689655,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.021989005497251374,
+        "pC": 0.01249375312343828,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 352,
+      "seed": 6352021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.0559720139930035,
+        "pC": 0.0399800099950025,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.01999000499750125,
+        "pC": 0.011494252873563218,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 342,
+      "seed": 6342021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.1044776119402985,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.06596701649175413,
+        "pC": 0.038980509745127435,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.095952023988006,
+        "pC": 0.057971014492753624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 345,
+      "seed": 6345021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.15920398009950248,
+      "pC_known": 0.1044776119402985,
+      "deep": {
+       "est": {
+        "pM": 0.09145427286356822,
+        "pC": 0.05547226386806597,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.1679160419790105,
+        "pC": 0.11394302848575712,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 354,
+      "seed": 6354021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.09950248756218906,
+      "pM_known": 0.06965174129353234,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.09045477261369315,
+        "pC": 0.063968015992004,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.047976011994003,
+        "pC": 0.027486256871564217,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 357,
+      "seed": 6357021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.07096451774112944,
+        "pC": 0.038980509745127435,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.01199400299850075,
+        "pC": 0.005997001499250375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 360,
+      "seed": 6360021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.09845077461269365,
+        "pC": 0.05997001499250375,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06546726636681659,
+        "pC": 0.034482758620689655,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 366,
+      "seed": 6366021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.050474762618690654,
+        "pC": 0.03298350824587706,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.01649175412293853,
+        "pC": 0.010494752623688156,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 369,
+      "seed": 6369021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.11442786069651742,
+      "pC_known": 0.07960199004975124,
+      "deep": {
+       "est": {
+        "pM": 0.08195902048975512,
+        "pC": 0.053973013493253376,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.11044477761119441,
+        "pC": 0.0704647676161919,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 361,
+      "seed": 6361021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.07146426786606697,
+        "pC": 0.04547726136931534,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.04897551224387806,
+        "pC": 0.031984007996002,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 371,
+      "seed": 6371021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.033483258370814596,
+        "pC": 0.01699150424787606,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0009995002498750624,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 373,
+      "seed": 6373021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.029850746268656716,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.12093953023488256,
+        "pC": 0.08045977011494253,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05147426286856572,
+        "pC": 0.02948525737131434,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 386,
+      "seed": 6386021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.0769615192403798,
+        "pC": 0.044977511244377814,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.02448775612193903,
+        "pC": 0.014492753623188406,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 390,
+      "seed": 6390021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.05297351324337831,
+        "pC": 0.033483258370814596,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.013993003498250875,
+        "pC": 0.0074962518740629685,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 396,
+      "seed": 6396021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.04897551224387806,
+        "pC": 0.02498750624687656,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.008995502248875561,
+        "pC": 0.004997501249375313,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 392,
+      "seed": 6392021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.06965174129353234,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.07946026986506746,
+        "pC": 0.051974012993503245,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.046476761619190406,
+        "pC": 0.025987006496751622,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 395,
+      "seed": 6395021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.0845771144278607,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.1089455272363818,
+        "pC": 0.06446776611694154,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.127936031984008,
+        "pC": 0.07496251874062969,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 0,
+      "i": 399,
+      "seed": 6399021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.044977511244377814,
+        "pC": 0.025487256371814093,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.00849575212393803,
+        "pC": 0.00399800099950025,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 5,
+      "seed": 6105021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.03482587064676617,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.08245877061469266,
+        "pC": 0.057971014492753624,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.041979010494752625,
+        "pC": 0.02148925537231384,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 21,
+      "seed": 6121021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.03548225887056472,
+        "pC": 0.02048975512243878,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0009995002498750624,
+        "pC": 0.0009995002498750624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 8,
+      "seed": 6108021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.01990049751243781,
+      "pM_known": 0.12935323383084577,
+      "pC_known": 0.05472636815920398,
+      "deep": {
+       "est": {
+        "pM": 0.07546226886556721,
+        "pC": 0.04597701149425287,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.12643678160919541,
+        "pC": 0.07946026986506746,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 15,
+      "seed": 6115021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06696651674162919,
+        "pC": 0.04397801099450275,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.06346826586706647,
+        "pC": 0.038980509745127435,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 0,
+      "seed": 6100021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.07146426786606697,
+        "pC": 0.0399800099950025,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.09195402298850575,
+        "pC": 0.05547226386806597,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 38,
+      "seed": 6138021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.079960019990005,
+        "pC": 0.05147426286856572,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.03248375812093953,
+        "pC": 0.015492253873063468,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 43,
+      "seed": 6143021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.23383084577114427,
+      "pC_est": 0.1890547263681592,
+      "pM_known": 0.09950248756218906,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.19090454772613694,
+        "pC": 0.1359320339830085,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06596701649175413,
+        "pC": 0.038980509745127435,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 1,
+      "seed": 6101021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.063968015992004,
+        "pC": 0.03548225887056472,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.010994502748625687,
+        "pC": 0.0034982508745627187,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 22,
+      "seed": 6122021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.1044776119402985,
+      "pC_known": 0.06965174129353234,
+      "deep": {
+       "est": {
+        "pM": 0.0384807596201899,
+        "pC": 0.02148925537231384,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07646176911544228,
+        "pC": 0.04097951024487756,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 10,
+      "seed": 6110021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.12935323383084577,
+      "pC_est": 0.09950248756218906,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.1454272863568216,
+        "pC": 0.09895052473763119,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.057971014492753624,
+        "pC": 0.034482758620689655,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 23,
+      "seed": 6123021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.050974512743628186,
+        "pC": 0.034482758620689655,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.03248375812093953,
+        "pC": 0.018490754622688656,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 52,
+      "seed": 6152021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.05997001499250375,
+        "pC": 0.0399800099950025,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.031484257871064465,
+        "pC": 0.018490754622688656,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 53,
+      "seed": 6153021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.03980099502487562,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.063968015992004,
+        "pC": 0.03398300849575212,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.03648175912043978,
+        "pC": 0.015492253873063468,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 49,
+      "seed": 6149021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.12935323383084577,
+      "pC_est": 0.0945273631840796,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.08595702148925537,
+        "pC": 0.06446776611694154,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.03248375812093953,
+        "pC": 0.01699150424787606,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 54,
+      "seed": 6154021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.05247376311844078,
+        "pC": 0.03698150924537731,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.004497751124437781,
+        "pC": 0.0029985007496251873,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 83,
+      "seed": 6183021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.024875621890547265,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.030984507746126936,
+        "pC": 0.017991004497751123,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.020989505247376312,
+        "pC": 0.012993503248375811,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 72,
+      "seed": 6172021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06846576711644178,
+        "pC": 0.043478260869565216,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.04997501249375312,
+        "pC": 0.029985007496251874,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 80,
+      "seed": 6180021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.06467661691542288,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.08995502248875563,
+        "pC": 0.0559720139930035,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06796601699150424,
+        "pC": 0.04247876061969016,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 85,
+      "seed": 6185021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.04847576211894053,
+        "pC": 0.030984507746126936,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.004997501249375313,
+        "pC": 0.0014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 74,
+      "seed": 6174021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.1791044776119403,
+      "pC_known": 0.09950248756218906,
+      "deep": {
+       "est": {
+        "pM": 0.0879560219890055,
+        "pC": 0.05647176411794103,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.16891554222888555,
+        "pC": 0.10994502748625687,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 86,
+      "seed": 6186021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.09245377311344327,
+        "pC": 0.057971014492753624,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0074962518740629685,
+        "pC": 0.004497751124437781,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 101,
+      "seed": 6201021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06446776611694154,
+        "pC": 0.03498250874562719,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0029985007496251873,
+        "pC": 0.0024987506246876563,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 121,
+      "seed": 6221021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.1691542288557214,
+      "pC_est": 0.09950248756218906,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.16441779110444776,
+        "pC": 0.10444777611194403,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07196401799100449,
+        "pC": 0.0384807596201899,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 114,
+      "seed": 6214021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.03698150924537731,
+        "pC": 0.019490254872563718,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0004997501249375312,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 119,
+      "seed": 6219021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.049475262368815595,
+        "pC": 0.025487256371814093,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05847076461769116,
+        "pC": 0.0239880059970015,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 118,
+      "seed": 6218021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.0239880059970015,
+        "pC": 0.014992503748125937,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.005997001499250375,
+        "pC": 0.0029985007496251873,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 141,
+      "seed": 6241021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.10945273631840796,
+      "pC_known": 0.06467661691542288,
+      "deep": {
+       "est": {
+        "pM": 0.0734632683658171,
+        "pC": 0.046476761619190406,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.09845077461269365,
+        "pC": 0.05997001499250375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 156,
+      "seed": 6256021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.03482587064676617,
+      "pC_est": 0.01990049751243781,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.07096451774112944,
+        "pC": 0.04097951024487756,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.09895052473763119,
+        "pC": 0.0559720139930035,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 161,
+      "seed": 6261021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0945273631840796,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.06546726636681659,
+        "pC": 0.03648175912043978,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.038980509745127435,
+        "pC": 0.02048975512243878,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 153,
+      "seed": 6253021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.03548225887056472,
+        "pC": 0.02048975512243878,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0004997501249375312,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 172,
+      "seed": 6272021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.0399800099950025,
+        "pC": 0.01999000499750125,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0024987506246876563,
+        "pC": 0.0014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 170,
+      "seed": 6270021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.12935323383084577,
+      "pC_est": 0.08955223880597014,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.1469265367316342,
+        "pC": 0.10394802598700649,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.08295852073963018,
+        "pC": 0.04997501249375312,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 183,
+      "seed": 6283021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.10945273631840796,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.08745627186406797,
+        "pC": 0.04897551224387806,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.08995502248875563,
+        "pC": 0.046476761619190406,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 182,
+      "seed": 6282021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0945273631840796,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.09195402298850575,
+        "pC": 0.05847076461769116,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.017991004497751123,
+        "pC": 0.00849575212393803,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 185,
+      "seed": 6285021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.0864567716141929,
+        "pC": 0.05247376311844078,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.012993503248375811,
+        "pC": 0.005997001499250375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 196,
+      "seed": 6296021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.063968015992004,
+        "pC": 0.03948025987006497,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.005497251374312844,
+        "pC": 0.00399800099950025,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 207,
+      "seed": 6307021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.06965174129353234,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.10744627686156921,
+        "pC": 0.06646676661669165,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05847076461769116,
+        "pC": 0.03548225887056472,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 192,
+      "seed": 6292021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.04897551224387806,
+        "pC": 0.03548225887056472,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.015992003998001,
+        "pC": 0.01199400299850075,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 212,
+      "seed": 6312021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.09950248756218906,
+      "pC_est": 0.05472636815920398,
+      "pM_known": 0.0845771144278607,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.07596201899050475,
+        "pC": 0.04297851074462768,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05897051474262868,
+        "pC": 0.02948525737131434,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 209,
+      "seed": 6309021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.07196401799100449,
+        "pC": 0.04547726136931534,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0004997501249375312,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 226,
+      "seed": 6326021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.1890547263681592,
+      "pC_known": 0.0945273631840796,
+      "deep": {
+       "est": {
+        "pM": 0.08445777111444278,
+        "pC": 0.05147426286856572,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.17191404297851073,
+        "pC": 0.10744627686156921,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 229,
+      "seed": 6329021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.06196901549225387,
+        "pC": 0.03548225887056472,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.05347326336831584,
+        "pC": 0.03298350824587706,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 221,
+      "seed": 6321021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.4129353233830846,
+      "pC_known": 0.31343283582089554,
+      "deep": {
+       "est": {
+        "pM": 0.050474762618690654,
+        "pC": 0.026486756621689155,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.36531734132933535,
+        "pC": 0.2798600699650175,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 233,
+      "seed": 6333021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.0945273631840796,
+      "pC_known": 0.05472636815920398,
+      "deep": {
+       "est": {
+        "pM": 0.07746126936531735,
+        "pC": 0.04447776111944028,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.1024487756121939,
+        "pC": 0.063968015992004,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 231,
+      "seed": 6331021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.05970149253731343,
+      "deep": {
+       "est": {
+        "pM": 0.06296851574212893,
+        "pC": 0.04147926036981509,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.09095452273863068,
+        "pC": 0.05697151424287856,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 230,
+      "seed": 6330021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.03482587064676617,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.050474762618690654,
+        "pC": 0.030484757621189407,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.02448775612193903,
+        "pC": 0.014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 234,
+      "seed": 6334021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.04477611940298507,
+      "pC_est": 0.024875621890547265,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.0384807596201899,
+        "pC": 0.018490754622688656,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.04047976011994003,
+        "pC": 0.01899050474762619,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 236,
+      "seed": 6336021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.12437810945273632,
+      "pC_known": 0.10945273631840796,
+      "deep": {
+       "est": {
+        "pM": 0.06146926536731634,
+        "pC": 0.03798100949525238,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.16741629185407297,
+        "pC": 0.10744627686156921,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 235,
+      "seed": 6335021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.04975124378109453,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.08595702148925537,
+        "pC": 0.05347326336831584,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06796601699150424,
+        "pC": 0.038980509745127435,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 238,
+      "seed": 6338021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.05897051474262868,
+        "pC": 0.034482758620689655,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.021989005497251374,
+        "pC": 0.01249375312343828,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 242,
+      "seed": 6342021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.09950248756218906,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.06596701649175413,
+        "pC": 0.038980509745127435,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.095952023988006,
+        "pC": 0.057971014492753624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 254,
+      "seed": 6354021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.09950248756218906,
+      "pM_known": 0.06965174129353234,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.09045477261369315,
+        "pC": 0.063968015992004,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.047976011994003,
+        "pC": 0.027486256871564217,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 245,
+      "seed": 6345021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.08955223880597014,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.16417910447761194,
+      "pC_known": 0.1044776119402985,
+      "deep": {
+       "est": {
+        "pM": 0.09145427286356822,
+        "pC": 0.05547226386806597,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.1679160419790105,
+        "pC": 0.11394302848575712,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 261,
+      "seed": 6361021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.07146426786606697,
+        "pC": 0.04547726136931534,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.04897551224387806,
+        "pC": 0.031984007996002,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 252,
+      "seed": 6352021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.0559720139930035,
+        "pC": 0.0399800099950025,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.01999000499750125,
+        "pC": 0.011494252873563218,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 266,
+      "seed": 6366021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.01990049751243781,
+      "pC_known": 0.014925373134328358,
+      "deep": {
+       "est": {
+        "pM": 0.050474762618690654,
+        "pC": 0.03298350824587706,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.01649175412293853,
+        "pC": 0.010494752623688156,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 257,
+      "seed": 6357021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.07096451774112944,
+        "pC": 0.038980509745127435,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.01199400299850075,
+        "pC": 0.005997001499250375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 269,
+      "seed": 6369021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.11442786069651742,
+      "pC_known": 0.07960199004975124,
+      "deep": {
+       "est": {
+        "pM": 0.08195902048975512,
+        "pC": 0.053973013493253376,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.11044477761119441,
+        "pC": 0.0704647676161919,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 260,
+      "seed": 6360021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.09845077461269365,
+        "pC": 0.05997001499250375,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.06546726636681659,
+        "pC": 0.034482758620689655,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 273,
+      "seed": 6373021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.029850746268656716,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.12093953023488256,
+        "pC": 0.08045977011494253,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05147426286856572,
+        "pC": 0.02948525737131434,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 271,
+      "seed": 6371021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.033483258370814596,
+        "pC": 0.01699150424787606,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0009995002498750624,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 286,
+      "seed": 6386021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.0769615192403798,
+        "pC": 0.044977511244377814,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.02448775612193903,
+        "pC": 0.014492753623188406,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 295,
+      "seed": 6395021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.0845771144278607,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.1089455272363818,
+        "pC": 0.06446776611694154,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.127936031984008,
+        "pC": 0.07496251874062969,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 292,
+      "seed": 6392021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.06965174129353234,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.024875621890547265,
+      "deep": {
+       "est": {
+        "pM": 0.07946026986506746,
+        "pC": 0.051974012993503245,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.046476761619190406,
+        "pC": 0.025987006496751622,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 296,
+      "seed": 6396021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.04897551224387806,
+        "pC": 0.02498750624687656,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.008995502248875561,
+        "pC": 0.004997501249375313,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 290,
+      "seed": 6390021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.024875621890547265,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.05297351324337831,
+        "pC": 0.033483258370814596,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.013993003498250875,
+        "pC": 0.0074962518740629685,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 299,
+      "seed": 6399021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.044977511244377814,
+        "pC": 0.025487256371814093,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.00849575212393803,
+        "pC": 0.00399800099950025,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 308,
+      "seed": 6408021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.10945273631840796,
+      "pC_known": 0.06467661691542288,
+      "deep": {
+       "est": {
+        "pM": 0.07846076961519241,
+        "pC": 0.04897551224387806,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.11044477761119441,
+        "pC": 0.06846576711644178,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 306,
+      "seed": 6406021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.0845771144278607,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.09645177411294353,
+        "pC": 0.06146926536731634,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.08695652173913043,
+        "pC": 0.047476261869065464,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 319,
+      "seed": 6419021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.05897051474262868,
+        "pC": 0.03648175912043978,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.014492753623188406,
+        "pC": 0.0069965017491254375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 311,
+      "seed": 6411021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.11442786069651742,
+      "pC_est": 0.07960199004975124,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.10444777611194403,
+        "pC": 0.06996501749125437,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.037481259370314844,
+        "pC": 0.02048975512243878,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 318,
+      "seed": 6418021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.05472636815920398,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.09095452273863068,
+        "pC": 0.05547226386806597,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.04447776111944028,
+        "pC": 0.022488755622188907,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 327,
+      "seed": 6427021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.06546726636681659,
+        "pC": 0.0384807596201899,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.004497751124437781,
+        "pC": 0.0024987506246876563,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 330,
+      "seed": 6430021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07462686567164178,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.17412935323383086,
+      "pC_known": 0.0945273631840796,
+      "deep": {
+       "est": {
+        "pM": 0.07946026986506746,
+        "pC": 0.050974512743628186,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.18940529735132433,
+        "pC": 0.11644177911044477,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 332,
+      "seed": 6432021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.05472636815920398,
+      "pM_known": 0.08955223880597014,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.09045477261369315,
+        "pC": 0.0544727636181909,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.08045977011494253,
+        "pC": 0.04847576211894053,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 331,
+      "seed": 6431021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.04447776111944028,
+        "pC": 0.0239880059970015,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0014992503748125937,
+        "pC": 0.0009995002498750624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 338,
+      "seed": 6438021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06596701649175413,
+        "pC": 0.04297851074462768,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.008995502248875561,
+        "pC": 0.005497251374312844,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 340,
+      "seed": 6440021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.04975124378109453,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.06965174129353234,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.05747126436781609,
+        "pC": 0.03798100949525238,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07296351824087956,
+        "pC": 0.04247876061969016,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 342,
+      "seed": 6442021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.208955223880597,
+      "pC_known": 0.13930348258706468,
+      "deep": {
+       "est": {
+        "pM": 0.0399800099950025,
+        "pC": 0.021989005497251374,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.1664167916041979,
+        "pC": 0.10294852573713144,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 344,
+      "seed": 6444021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.06846576711644178,
+        "pC": 0.03398300849575212,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.010994502748625687,
+        "pC": 0.005997001499250375,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 354,
+      "seed": 6454021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.05472636815920398,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.04975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.08295852073963018,
+        "pC": 0.04847576211894053,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.08295852073963018,
+        "pC": 0.04597701149425287,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 356,
+      "seed": 6456021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.05970149253731343,
+      "deep": {
+       "est": {
+        "pM": 0.07796101949025487,
+        "pC": 0.053973013493253376,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0704647676161919,
+        "pC": 0.047476261869065464,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 357,
+      "seed": 6457021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.09950248756218906,
+      "pC_est": 0.06965174129353234,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.06996501749125437,
+        "pC": 0.04847576211894053,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.04547726136931534,
+        "pC": 0.02448775612193903,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 352,
+      "seed": 6452021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.04975124378109453,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.0704647676161919,
+        "pC": 0.04697651174412794,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.047976011994003,
+        "pC": 0.02798600699650175,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 362,
+      "seed": 6462021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06467661691542288,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.0845771144278607,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.06096951524237881,
+        "pC": 0.0384807596201899,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.07546226886556721,
+        "pC": 0.04147926036981509,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 359,
+      "seed": 6459021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.01990049751243781,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.047476261869065464,
+        "pC": 0.027486256871564217,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.0009995002498750624,
+        "pC": 0.0004997501249375312,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 372,
+      "seed": 6472021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.0845771144278607,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.04477611940298507,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.09545227386306847,
+        "pC": 0.06796601699150424,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.063968015992004,
+        "pC": 0.03948025987006497,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 364,
+      "seed": 6464021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05970149253731343,
+      "pC_est": 0.03980099502487562,
+      "pM_known": 0.014925373134328358,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.05697151424287856,
+        "pC": 0.03498250874562719,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0029985007496251873,
+        "pC": 0.0009995002498750624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 375,
+      "seed": 6475021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.03980099502487562,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.05970149253731343,
+      "pC_known": 0.03482587064676617,
+      "deep": {
+       "est": {
+        "pM": 0.04297851074462768,
+        "pC": 0.028985507246376812,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.050474762618690654,
+        "pC": 0.03298350824587706,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 388,
+      "seed": 6488021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.07296351824087956,
+        "pC": 0.04297851074462768,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0704647676161919,
+        "pC": 0.037481259370314844,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 378,
+      "seed": 6478021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.10945273631840796,
+      "pC_est": 0.05970149253731343,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.10194902548725637,
+        "pC": 0.06146926536731634,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07396301849075462,
+        "pC": 0.03548225887056472,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 380,
+      "seed": 6480021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04975124378109453,
+      "pM_known": 0.0945273631840796,
+      "pC_known": 0.05472636815920398,
+      "deep": {
+       "est": {
+        "pM": 0.09245377311344327,
+        "pC": 0.07096451774112944,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.10144927536231885,
+        "pC": 0.06946526736631684,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 384,
+      "seed": 6484021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.04975124378109453,
+      "pC_known": 0.01990049751243781,
+      "deep": {
+       "est": {
+        "pM": 0.07396301849075462,
+        "pC": 0.047976011994003,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.02948525737131434,
+        "pC": 0.013493253373313344,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 398,
+      "seed": 6498021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.07960199004975124,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.06467661691542288,
+      "pC_known": 0.029850746268656716,
+      "deep": {
+       "est": {
+        "pM": 0.06696651674162919,
+        "pC": 0.044977511244377814,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.04447776111944028,
+        "pC": 0.0239880059970015,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 1,
+      "i": 396,
+      "seed": 6496021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.029850746268656716,
+      "pM_known": 0.004975124378109453,
+      "pC_known": 0.004975124378109453,
+      "deep": {
+       "est": {
+        "pM": 0.06446776611694154,
+        "pC": 0.035982008995502246,
+        "persists": true
+       },
+       "known": {
+        "pM": 0.0034982508745627187,
+        "pC": 0.0014992503748125937,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 2,
+      "i": 21,
+      "seed": 6221021,
+      "modes": [
+       "known"
+      ],
+      "pM_est": 0.1691542288557214,
+      "pC_est": 0.09950248756218906,
+      "pM_known": 0.07960199004975124,
+      "pC_known": 0.03980099502487562,
+      "deep": {
+       "est": {
+        "pM": 0.16441779110444776,
+        "pC": 0.10444777611194403,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.07196401799100449,
+        "pC": 0.0384807596201899,
+        "persists": true
+       }
+      }
+     },
+     {
+      "replication": 2,
+      "i": 33,
+      "seed": 6233021,
+      "modes": [
+       "est"
+      ],
+      "pM_est": 0.05472636815920398,
+      "pC_est": 0.03482587064676617,
+      "pM_known": 0.009950248756218905,
+      "pC_known": 0.009950248756218905,
+      "deep": {
+       "est": {
+        "pM": 0.031484257871064465,
+        "pC": 0.01999000499750125,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.00399800099950025,
+        "pC": 0.0009995002498750624,
+        "persists": false
+       }
+      }
+     },
+     {
+      "replication": 2,
+      "i": 19,
+      "seed": 6219021,
+      "modes": [
+       "est",
+       "known"
+      ],
+      "pM_est": 0.06965174129353234,
+      "pC_est": 0.04477611940298507,
+      "pM_known": 0.07462686567164178,
+      "pC_known": 0.04477611940298507,
+      "deep": {
+       "est": {
+        "pM": 0.049475262368815595,
+        "pC": 0.025487256371814093,
+        "persists": false
+       },
+       "known": {
+        "pM": 0.05847076461769116,
+        "pC": 0.0239880059970015,
+        "persists": true
+       }
+      }
+     }
+    ],
+    "discordant_truncated": true,
+    "deep": {
+     "draws": 2000,
+     "n_retested": 416,
+     "tested_estimated": 299,
+     "tested_known": 156,
+     "persisting_estimated": 171,
+     "persisting_known": 82,
+     "surviving_fraction_estimated": 0.5719063545150501,
+     "surviving_fraction_known": 0.5256410256410257
+    }
+   }
+  },
+  "cell7_exp_n119": {
+   "pr_mean": 5.827669521387807,
+   "pr_sd": 0.26317716546742576,
+   "n_datasets": 400,
+   "n_skipped": 0,
+   "n_errors": 0,
+   "error_sample": null,
+   "n_draws": 200,
+   "rej_M": 0.705,
+   "count_M": 282,
+   "ci_M": [
+    0.6585289509840012,
+    0.7475710083371242
+   ],
+   "rej_C": 0.36,
+   "count_C": 144,
+   "ci_C": [
+    0.3144979075999954,
+    0.40816553481484585
+   ],
+   "mean_pM": 0.043557213930348254,
+   "mean_pC": 0.09947761194029851,
+   "ks_M": 0.8331965174129353,
+   "ks_C": 0.7012189054726368,
+   "null_mean_M": 0.16881134685328839,
+   "null_sd_M": 0.014794125703685284,
+   "null_mean_C": 0.1780150895984628,
+   "null_sd_C": 0.014376149823949677,
+   "obs_mean": 0.20056291469990675,
+   "M_only": 138,
+   "C_only": 0,
+   "degenerate_C": 0,
+   "k_counts": {
+    "2": 372,
+    "3": 24,
+    "4": 3,
+    "5": 1
+   },
+   "arms": {
+    "M_est": {
+     "label": "M, covariance estimated",
+     "n_datasets": 400,
+     "events": 282,
+     "rejection_rate": 0.705,
+     "wilson95": [
+      0.6585289509840012,
+      0.7475710083371242
+     ],
+     "mean_p": 0.043557213930348254,
+     "ks_D_vs_uniform": 0.8331965174129353
+    },
+    "C_est": {
+     "label": "C, covariance estimated",
+     "n_datasets": 400,
+     "events": 144,
+     "rejection_rate": 0.36,
+     "wilson95": [
+      0.3144979075999954,
+      0.40816553481484585
+     ],
+     "mean_p": 0.09947761194029851,
+     "ks_D_vs_uniform": 0.7012189054726368
+    },
+    "M_known": {
+     "label": "M, known population Sigma",
+     "n_datasets": 400,
+     "events": 301,
+     "rejection_rate": 0.7525,
+     "wilson95": [
+      0.7079392287943856,
+      0.7922570625645614
+     ],
+     "mean_p": 0.04777363184079603,
+     "ks_D_vs_uniform": 0.7755721393034826
+    },
+    "C_known": {
+     "label": "C, known population Sigma",
+     "n_datasets": 400,
+     "events": 223,
+     "rejection_rate": 0.5575,
+     "wilson95": [
+      0.5085079945834489,
+      0.6053980915675986
+     ],
+     "mean_p": 0.09248756218905471,
+     "ks_D_vs_uniform": 0.6558955223880597
+    }
+   },
+   "discordance": {
+    "estimated": {
+     "M_only": 138,
+     "C_only": 0,
+     "n_discordant": 138
+    },
+    "known": {
+     "M_only": 78,
+     "C_only": 0,
+     "n_discordant": 78
+    }
+   },
+   "shift": {
+    "est": {
+     "null_mean_ambient": 0.16881134685328839,
+     "null_mean_sphere": 0.17630725174642273,
+     "null_sd_ambient": 0.014794125703685284,
+     "shift": 0.007495904893134342,
+     "shift_in_sd": 0.5066811681387213,
+     "sign": 1,
+     "datasets_with_positive_shift": 400,
+     "n_datasets": 400,
+     "shift_band_null_sd": 0.03,
+     "shift_class": "positive"
+    },
+    "known": {
+     "null_mean_ambient": 0.16294937216472555,
+     "null_mean_sphere": 0.16997643298128653,
+     "null_sd_ambient": 0.014291949424938414,
+     "shift": 0.007027060816560987,
+     "shift_in_sd": 0.49167965878043735,
+     "sign": 1,
+     "datasets_with_positive_shift": 400,
+     "n_datasets": 400,
+     "shift_band_null_sd": 0.03,
+     "shift_class": "positive"
+    }
+   },
+   "wall_s": 110.4,
+   "failed": false,
+   "spectrum": "exp",
+   "n": 119,
+   "d": 119,
+   "n_over_d": 1.0,
+   "regime": "n = d",
+   "pr_target": 6.0,
+   "cell_offset": 22,
+   "param_name": "tau",
+   "param_value": 2.4800367821310134,
+   "tuned_pr": 5.777202515410618,
+   "tuned_ok": true,
+   "tune_note": "",
+   "sphere_spectrum_sum": 0.999999999999999,
+   "sphere_spectrum_top10": [
+    0.27260560401421907,
+    0.20594961234534054,
+    0.15260312353644323,
+    0.1110268818123039,
+    0.07944138912166707,
+    0.056010418024196436,
+    0.0389973976036721,
+    0.02687255019104745,
+    0.018365545285714987,
+    0.012472077586412141
+   ],
+   "verification": {
+    "triggered": false,
+    "reason": "no C-only rejection in either covariance mode; the protocol does not call for a replication and none was forced"
+   }
+  }
+ },
+ "prior_cells_shift_classification": {
+  "source": "results/popcov_control.json",
+  "note": "derived here from the archived artifact; that artifact is not modified by this run",
+  "band_null_sd": 0.03,
+  "rows": [
+   {
+    "cell": "cell1_exp_n28",
+    "spectrum": "exp",
+    "n": 28,
+    "d": 119,
+    "mode": "estimated",
+    "null_mean_ambient": 0.21351058781191637,
+    "null_mean_sphere": 0.22216265098986746,
+    "null_sd_ambient": 0.03544442595911077,
+    "shift": 0.008652063177951086,
+    "shift_in_sd": 0.24410222323623573,
+    "sign_bit": 1,
+    "shift_class": "positive",
+    "datasets_with_positive_shift": 384,
+    "n_datasets": 400
+   },
+   {
+    "cell": "cell1_exp_n28",
+    "spectrum": "exp",
+    "n": 28,
+    "d": 119,
+    "mode": "known",
+    "null_mean_ambient": 0.1907772589912423,
+    "null_mean_sphere": 0.19735770002445718,
+    "null_sd_ambient": 0.03233420072342683,
+    "shift": 0.0065804410332148955,
+    "shift_in_sd": 0.20351333529166912,
+    "sign_bit": 1,
+    "shift_class": "positive",
+    "datasets_with_positive_shift": 367,
+    "n_datasets": 400
+   },
+   {
+    "cell": "cell2_exp_n200",
+    "spectrum": "exp",
+    "n": 200,
+    "d": 119,
+    "mode": "estimated",
+    "null_mean_ambient": 0.20065529767605228,
+    "null_mean_sphere": 0.21407766354545482,
+    "null_sd_ambient": 0.01362458157931687,
+    "shift": 0.013422365869402542,
+    "shift_in_sd": 0.9851580242125522,
+    "sign_bit": 1,
+    "shift_class": "positive",
+    "datasets_with_positive_shift": 400,
+    "n_datasets": 400
+   },
+   {
+    "cell": "cell2_exp_n200",
+    "spectrum": "exp",
+    "n": 200,
+    "d": 119,
+    "mode": "known",
+    "null_mean_ambient": 0.19864099896326423,
+    "null_mean_sphere": 0.21169591712607808,
+    "null_sd_ambient": 0.013655584534015776,
+    "shift": 0.013054918162813844,
+    "shift_in_sd": 0.9560131336959115,
+    "sign_bit": 1,
+    "shift_class": "positive",
+    "datasets_with_positive_shift": 400,
+    "n_datasets": 400
+   },
+   {
+    "cell": "cell3_two_block_n28",
+    "spectrum": "two_block",
+    "n": 28,
+    "d": 119,
+    "mode": "estimated",
+    "null_mean_ambient": 0.23979655707958522,
+    "null_mean_sphere": 0.23148470532469723,
+    "null_sd_ambient": 0.045133251228060285,
+    "shift": -0.008311851754887994,
+    "shift_in_sd": -0.18416248616541817,
+    "sign_bit": -1,
+    "shift_class": "negative",
+    "datasets_with_positive_shift": 14,
+    "n_datasets": 400
+   },
+   {
+    "cell": "cell3_two_block_n28",
+    "spectrum": "two_block",
+    "n": 28,
+    "d": 119,
+    "mode": "known",
+    "null_mean_ambient": 0.22735329185645084,
+    "null_mean_sphere": 0.2150361159629558,
+    "null_sd_ambient": 0.044139025647173626,
+    "shift": -0.012317175893495041,
+    "shift_in_sd": -0.27905409584599095,
+    "sign_bit": -1,
+    "shift_class": "negative",
+    "datasets_with_positive_shift": 9,
+    "n_datasets": 400
+   },
+   {
+    "cell": "cell4_two_block_n200",
+    "spectrum": "two_block",
+    "n": 200,
+    "d": 119,
+    "mode": "estimated",
+    "null_mean_ambient": 0.23046041305143272,
+    "null_mean_sphere": 0.230731987820632,
+    "null_sd_ambient": 0.015287309382385825,
+    "shift": 0.00027157476919928425,
+    "shift_in_sd": 0.01776471989977485,
+    "sign_bit": 1,
+    "shift_class": "indeterminate",
+    "datasets_with_positive_shift": 231,
+    "n_datasets": 400
+   },
+   {
+    "cell": "cell4_two_block_n200",
+    "spectrum": "two_block",
+    "n": 200,
+    "d": 119,
+    "mode": "known",
+    "null_mean_ambient": 0.22908287702214097,
+    "null_mean_sphere": 0.22874620308335344,
+    "null_sd_ambient": 0.015226187054059767,
+    "shift": -0.0003366739387875295,
+    "shift_in_sd": -0.022111506813372685,
+    "sign_bit": -1,
+    "shift_class": "indeterminate",
+    "datasets_with_positive_shift": 85,
+    "n_datasets": 400
+   }
+  ]
+ }
+}

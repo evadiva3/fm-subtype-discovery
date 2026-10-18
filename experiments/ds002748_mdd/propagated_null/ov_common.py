@@ -171,7 +171,10 @@ def summarize_single(pvals,wall,**extra):
 
 def load_state(path,experiment,config):
     if Path(path).exists():
-        return json.loads(Path(path).read_text())
+        saved=json.loads(Path(path).read_text())
+        if saved.get("experiment")!=experiment or saved.get("config")!=config:
+            raise ValueError("checkpoint configuration differs; use a new output path")
+        return saved
     return{"experiment":experiment,"config":config,"cells":{}}
 
 
@@ -205,3 +208,24 @@ def elapsed_budget():
     import datetime as _dt
     t0=_dt.datetime.strptime(f.read_text().strip(),"%Y-%m-%d %H:%M:%S")
     return(_dt.datetime.now()-t0).total_seconds()/3600.0
+
+
+def assert_seed_blocks(bases,n_datasets,stride=1000):
+    values=[int(base)+stride*i for base in bases for i in range(n_datasets)]
+    if len(values)!=len(set(values)):
+        raise ValueError("replication seed blocks overlap; choose disjoint streams")
+
+
+def hashed_seed(root,experiment,cell,replicate,dataset,purpose=0):
+    """Dataset seed for new verification runs, replacing base + 1000*i + offset.
+
+    Additive arithmetic lets replication blocks collide whenever two bases sit
+    closer than stride * n_datasets. Hashing the full address through
+    SeedSequence keeps every (cell, replicate, dataset, purpose) on its own
+    stream whatever the spacing. Returns a 64-bit integer for default_rng.
+    """
+    address=[int(v)for v in(root,experiment,cell,replicate,dataset,purpose)]
+    if min(address)<0:
+        raise ValueError("seed addresses must be nonnegative")
+    w=np.random.SeedSequence(address).generate_state(2,dtype=np.uint32)
+    return int(w[0])|(int(w[1])<<32)

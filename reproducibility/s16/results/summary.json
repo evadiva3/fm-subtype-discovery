@@ -1,0 +1,808 @@
+{
+  "cells": {
+    "calibration_null_nested10": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "calibrated_count": 10,
+          "calibrated_rate": 0.05,
+          "independently_calibrated_p_cutoff": 0.04,
+          "nominal_count": 13,
+          "nominal_exact95": [
+            0.03506070865697906,
+            0.10858723650381524
+          ],
+          "nominal_rate": 0.065,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.065,
+            0.065
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "calibrated_count": 10,
+          "calibrated_rate": 0.05,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 16,
+          "nominal_exact95": [
+            0.046417608399822556,
+            0.1266648560220817
+          ],
+          "nominal_rate": 0.08,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.08,
+            0.08
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "calibrated_count": 9,
+          "calibrated_rate": 0.045,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 11,
+          "nominal_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "nominal_rate": 0.055,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.055,
+            0.055
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "calibrated_count": 9,
+          "calibrated_rate": 0.045,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 11,
+          "nominal_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "nominal_rate": 0.055,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.055,
+            0.055
+          ]
+        }
+      },
+      "median_projected_squared_separation": 0.0,
+      "median_retained_axis_length": 0.07675190230424986,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    },
+    "calibration_null_nested5": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "calibrated_count": 9,
+          "calibrated_rate": 0.045,
+          "independently_calibrated_p_cutoff": 0.055,
+          "nominal_count": 8,
+          "nominal_exact95": [
+            0.0174248089944806,
+            0.07729196822601611
+          ],
+          "nominal_rate": 0.04,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.04,
+            0.04
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "calibrated_count": 9,
+          "calibrated_rate": 0.045,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 14,
+          "nominal_exact95": [
+            0.03879557042956282,
+            0.11465973353711056
+          ],
+          "nominal_rate": 0.07,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.07,
+            0.07
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.014185525898419244,
+            0.07078099835097719
+          ],
+          "calibrated_count": 7,
+          "calibrated_rate": 0.035,
+          "independently_calibrated_p_cutoff": 0.015,
+          "nominal_count": 14,
+          "nominal_exact95": [
+            0.03879557042956282,
+            0.11465973353711056
+          ],
+          "nominal_rate": 0.07,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.07,
+            0.07
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "calibrated_count": 10,
+          "calibrated_rate": 0.05,
+          "independently_calibrated_p_cutoff": 0.06,
+          "nominal_count": 8,
+          "nominal_exact95": [
+            0.0174248089944806,
+            0.07729196822601611
+          ],
+          "nominal_rate": 0.04,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.04,
+            0.04
+          ]
+        }
+      },
+      "median_projected_squared_separation": 0.0,
+      "median_retained_axis_length": 0.0342479134269373,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    },
+    "calibration_null_oracle5": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "calibrated_count": 9,
+          "calibrated_rate": 0.045,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 11,
+          "nominal_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "nominal_rate": 0.055,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.055,
+            0.055
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "calibrated_count": 10,
+          "calibrated_rate": 0.05,
+          "independently_calibrated_p_cutoff": 0.035,
+          "nominal_count": 15,
+          "nominal_exact95": [
+            0.042582803737092646,
+            0.12068422539966124
+          ],
+          "nominal_rate": 0.075,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.075,
+            0.075
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "calibrated_count": 10,
+          "calibrated_rate": 0.05,
+          "independently_calibrated_p_cutoff": 0.04,
+          "nominal_count": 11,
+          "nominal_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "nominal_rate": 0.055,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.055,
+            0.055
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.0174248089944806,
+            0.07729196822601611
+          ],
+          "calibrated_count": 8,
+          "calibrated_rate": 0.04,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 11,
+          "nominal_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "nominal_rate": 0.055,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.055,
+            0.055
+          ]
+        }
+      },
+      "median_projected_squared_separation": 0.0,
+      "median_retained_axis_length": 1.0,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    },
+    "evaluation_null_nested10": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.011087455672254776,
+            0.06415062670502701
+          ],
+          "calibrated_count": 6,
+          "calibrated_rate": 0.03,
+          "independently_calibrated_p_cutoff": 0.04,
+          "nominal_count": 7,
+          "nominal_exact95": [
+            0.014185525898419244,
+            0.07078099835097719
+          ],
+          "nominal_rate": 0.035,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.035,
+            0.035
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.005475565879556454,
+            0.05041360908989628
+          ],
+          "calibrated_count": 4,
+          "calibrated_rate": 0.02,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 6,
+          "nominal_exact95": [
+            0.011087455672254776,
+            0.06415062670502701
+          ],
+          "nominal_rate": 0.03,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.03,
+            0.03
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.014185525898419244,
+            0.07078099835097719
+          ],
+          "calibrated_count": 7,
+          "calibrated_rate": 0.035,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 7,
+          "nominal_exact95": [
+            0.014185525898419244,
+            0.07078099835097719
+          ],
+          "nominal_rate": 0.035,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.035,
+            0.035
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "calibrated_count": 11,
+          "calibrated_rate": 0.055,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 15,
+          "nominal_exact95": [
+            0.042582803737092646,
+            0.12068422539966124
+          ],
+          "nominal_rate": 0.075,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.075,
+            0.075
+          ]
+        }
+      },
+      "median_projected_squared_separation": 0.0,
+      "median_retained_axis_length": 0.07882094616550317,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    },
+    "evaluation_null_nested5": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "calibrated_count": 11,
+          "calibrated_rate": 0.055,
+          "independently_calibrated_p_cutoff": 0.055,
+          "nominal_count": 11,
+          "nominal_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "nominal_rate": 0.055,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.055,
+            0.055
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.005475565879556454,
+            0.05041360908989628
+          ],
+          "calibrated_count": 4,
+          "calibrated_rate": 0.02,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 9,
+          "nominal_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "nominal_rate": 0.045,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.045,
+            0.045
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.00012658102786701836,
+            0.02754189845720563
+          ],
+          "calibrated_count": 1,
+          "calibrated_rate": 0.005,
+          "independently_calibrated_p_cutoff": 0.015,
+          "nominal_count": 5,
+          "nominal_exact95": [
+            0.008166166190842514,
+            0.057374351126845816
+          ],
+          "nominal_rate": 0.025,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.025,
+            0.025
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "calibrated_count": 11,
+          "calibrated_rate": 0.055,
+          "independently_calibrated_p_cutoff": 0.06,
+          "nominal_count": 10,
+          "nominal_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "nominal_rate": 0.05,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.05,
+            0.05
+          ]
+        }
+      },
+      "median_projected_squared_separation": 0.0,
+      "median_retained_axis_length": 0.03602605582054205,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    },
+    "evaluation_null_oracle5": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "calibrated_count": 9,
+          "calibrated_rate": 0.045,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 9,
+          "nominal_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "nominal_rate": 0.045,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.045,
+            0.045
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.0174248089944806,
+            0.07729196822601611
+          ],
+          "calibrated_count": 8,
+          "calibrated_rate": 0.04,
+          "independently_calibrated_p_cutoff": 0.035,
+          "nominal_count": 11,
+          "nominal_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "nominal_rate": 0.055,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.055,
+            0.055
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.0174248089944806,
+            0.07729196822601611
+          ],
+          "calibrated_count": 8,
+          "calibrated_rate": 0.04,
+          "independently_calibrated_p_cutoff": 0.04,
+          "nominal_count": 12,
+          "nominal_exact95": [
+            0.03138395389348346,
+            0.10246183130832441
+          ],
+          "nominal_rate": 0.06,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.06,
+            0.06
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "calibrated_count": 9,
+          "calibrated_rate": 0.045,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 9,
+          "nominal_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "nominal_rate": 0.045,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.045,
+            0.045
+          ]
+        }
+      },
+      "median_projected_squared_separation": 0.0,
+      "median_retained_axis_length": 1.0,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    },
+    "leading_mixture_nested10": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.014185525898419244,
+            0.07078099835097719
+          ],
+          "calibrated_count": 7,
+          "calibrated_rate": 0.035,
+          "independently_calibrated_p_cutoff": 0.04,
+          "nominal_count": 8,
+          "nominal_exact95": [
+            0.0174248089944806,
+            0.07729196822601611
+          ],
+          "nominal_rate": 0.04,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.04,
+            0.04
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "calibrated_count": 10,
+          "calibrated_rate": 0.05,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 18,
+          "nominal_exact95": [
+            0.05421425445609641,
+            0.13850820847382217
+          ],
+          "nominal_rate": 0.09,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.09,
+            0.09
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.0174248089944806,
+            0.07729196822601611
+          ],
+          "calibrated_count": 8,
+          "calibrated_rate": 0.04,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 10,
+          "nominal_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "nominal_rate": 0.05,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.05,
+            0.05
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.008166166190842514,
+            0.057374351126845816
+          ],
+          "calibrated_count": 5,
+          "calibrated_rate": 0.025,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 10,
+          "nominal_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "nominal_rate": 0.05,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.05,
+            0.05
+          ]
+        }
+      },
+      "median_projected_squared_separation": 15.20040661741558,
+      "median_retained_axis_length": 0.07882094616550317,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    },
+    "leading_mixture_nested5": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.05421425445609641,
+            0.13850820847382217
+          ],
+          "calibrated_count": 18,
+          "calibrated_rate": 0.09,
+          "independently_calibrated_p_cutoff": 0.055,
+          "nominal_count": 17,
+          "nominal_exact95": [
+            0.05029591863025729,
+            0.13260516582955234
+          ],
+          "nominal_rate": 0.085,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.085,
+            0.085
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.014185525898419244,
+            0.07078099835097719
+          ],
+          "calibrated_count": 7,
+          "calibrated_rate": 0.035,
+          "independently_calibrated_p_cutoff": 0.03,
+          "nominal_count": 16,
+          "nominal_exact95": [
+            0.046417608399822556,
+            0.1266648560220817
+          ],
+          "nominal_rate": 0.08,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.08,
+            0.08
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.001213349013736031,
+            0.03565466839723978
+          ],
+          "calibrated_count": 2,
+          "calibrated_rate": 0.01,
+          "independently_calibrated_p_cutoff": 0.015,
+          "nominal_count": 10,
+          "nominal_exact95": [
+            0.02423416547210856,
+            0.09002753770135138
+          ],
+          "nominal_rate": 0.05,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.05,
+            0.05
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.027772254552006544,
+            0.09627764443391289
+          ],
+          "calibrated_count": 11,
+          "calibrated_rate": 0.055,
+          "independently_calibrated_p_cutoff": 0.06,
+          "nominal_count": 9,
+          "nominal_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "nominal_rate": 0.045,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.045,
+            0.045
+          ]
+        }
+      },
+      "median_projected_squared_separation": 14.28014136338779,
+      "median_retained_axis_length": 0.03602605582054205,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    },
+    "leading_mixture_oracle5": {
+      "arms": {
+        "D4": {
+          "calibrated_conditional_exact95": [
+            0.07023316352921175,
+            0.16179621556950016
+          ],
+          "calibrated_count": 22,
+          "calibrated_rate": 0.11,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 26,
+          "nominal_exact95": [
+            0.08670835276857529,
+            0.18465233052341257
+          ],
+          "nominal_rate": 0.13,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.13,
+            0.13
+          ]
+        },
+        "E": {
+          "calibrated_conditional_exact95": [
+            0.02078042222700435,
+            0.08370268807585397
+          ],
+          "calibrated_count": 9,
+          "calibrated_rate": 0.045,
+          "independently_calibrated_p_cutoff": 0.035,
+          "nominal_count": 12,
+          "nominal_exact95": [
+            0.03138395389348346,
+            0.10246183130832441
+          ],
+          "nominal_rate": 0.06,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.06,
+            0.06
+          ]
+        },
+        "K": {
+          "calibrated_conditional_exact95": [
+            0.011087455672254776,
+            0.06415062670502701
+          ],
+          "calibrated_count": 6,
+          "calibrated_rate": 0.03,
+          "independently_calibrated_p_cutoff": 0.04,
+          "nominal_count": 7,
+          "nominal_exact95": [
+            0.014185525898419244,
+            0.07078099835097719
+          ],
+          "nominal_rate": 0.035,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.035,
+            0.035
+          ]
+        },
+        "W": {
+          "calibrated_conditional_exact95": [
+            0.03138395389348346,
+            0.10246183130832441
+          ],
+          "calibrated_count": 12,
+          "calibrated_rate": 0.06,
+          "independently_calibrated_p_cutoff": 0.045,
+          "nominal_count": 13,
+          "nominal_exact95": [
+            0.03506070865697906,
+            0.10858723650381524
+          ],
+          "nominal_rate": 0.065,
+          "nominal_rate_bounds_if_failures_unresolved": [
+            0.065,
+            0.065
+          ]
+        }
+      },
+      "median_projected_squared_separation": 16.0,
+      "median_retained_axis_length": 1.0,
+      "n": 200,
+      "numerical_failures": 0,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0
+    }
+  },
+  "config": {
+    "auxiliary": 200,
+    "datasets_per_cell": 200,
+    "draws": 199,
+    "root_seed": 20260922,
+    "source_sha256": {
+      "angular_gof.py": "76965c438ae343738857f02812439f61cadc277cc707983b26043d0bda524765",
+      "angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+      "nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d",
+      "run_validation.py": "15ca7ca4b4c55eee7ddc9edfafb1c5eaa7cc9635ea5c75b7dcc73fbf1d47d6f3"
+    },
+    "spectrum": {
+      "achieved_pilot_PR": 4.499998524153036,
+      "epsilon": 0.004501022593963325,
+      "family": "two_block",
+      "m": 1,
+      "pilot_datasets": 100,
+      "source": "fresh tuning, not the missing FINAL spectrum artifact",
+      "target_centered_normalized_PR": 4.5
+    },
+    "versions": {
+      "numpy": "2.5.3",
+      "python": "3.12.14",
+      "scipy": "1.18.1",
+      "sklearn": "1.9.1"
+    }
+  },
+  "errors": [],
+  "execution_wall_seconds": 986.7297968864441,
+  "interpretation": "Independent fresh-spectrum follow-up. Calibration-threshold estimates are exploratory; their uncertainty is not included in conditional power intervals."
+}

@@ -1,0 +1,102 @@
+{
+  "config": {
+    "protocol": "outcome-motivated independent follow-up",
+    "datasets": 200,
+    "draws": 199,
+    "n": 60,
+    "d": 20,
+    "delta": [
+      0,
+      2,
+      4
+    ],
+    "q": [
+      5,
+      10
+    ],
+    "python": "3.13.9",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "sklearn": "1.8.0",
+    "source_sha256": {
+      "validate_angular_fourth_v8.py": "82c50f3e3232b0a9e3ac852be15ba0846342a2f1c710ef72ce1e5b9792ef7584",
+      "angular_fourth.py": "5764a4273d1f46b08abc2b49f696dd60a3d5b229eda92f2f1a3178eb5e7fa58c",
+      "angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+      "nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d"
+    }
+  },
+  "cells": {
+    "delta0_q05": {
+      "delta": 0,
+      "q": 5,
+      "n": 200,
+      "count": 11,
+      "rate": 0.055,
+      "ci": [
+        0.027772254552006544,
+        0.09627764443391289
+      ],
+      "numerical_failures": 0
+    },
+    "delta0_q10": {
+      "delta": 0,
+      "q": 10,
+      "n": 200,
+      "count": 9,
+      "rate": 0.045,
+      "ci": [
+        0.02078042222700435,
+        0.08370268807585397
+      ],
+      "numerical_failures": 0
+    },
+    "delta2_q05": {
+      "delta": 2,
+      "q": 5,
+      "n": 200,
+      "count": 10,
+      "rate": 0.05,
+      "ci": [
+        0.02423416547210856,
+        0.09002753770135138
+      ],
+      "numerical_failures": 0
+    },
+    "delta2_q10": {
+      "delta": 2,
+      "q": 10,
+      "n": 200,
+      "count": 11,
+      "rate": 0.055,
+      "ci": [
+        0.027772254552006544,
+        0.09627764443391289
+      ],
+      "numerical_failures": 0
+    },
+    "delta4_q05": {
+      "delta": 4,
+      "q": 5,
+      "n": 200,
+      "count": 21,
+      "rate": 0.105,
+      "ci": [
+        0.06618122702871178,
+        0.15601870554750283
+      ],
+      "numerical_failures": 0
+    },
+    "delta4_q10": {
+      "delta": 4,
+      "q": 10,
+      "n": 200,
+      "count": 19,
+      "rate": 0.095,
+      "ci": [
+        0.05816960972512027,
+        0.14437663997685246
+      ],
+      "numerical_failures": 0
+    }
+  }
+}

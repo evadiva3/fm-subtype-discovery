@@ -1,0 +1,70 @@
+{
+  "study": "S31",
+  "root_seed": 20260926,
+  "experiment": 87,
+  "d": 119,
+  "cells": {
+    "cell1": {
+      "spectrum": "exp",
+      "n": 28,
+      "source": "results/popcov_control.json",
+      "key": "cell1_exp_n28",
+      "param": 2.1984794925044238
+    },
+    "cell3": {
+      "spectrum": "two_block",
+      "n": 28,
+      "source": "results/popcov_control.json",
+      "key": "cell3_two_block_n28",
+      "param": "1/0.00504807"
+    },
+    "cell6": {
+      "spectrum": "two_block",
+      "n": 180,
+      "source": "results/popcov_control_cells567.json",
+      "key": "cell6_two_block_n180",
+      "param": "1/0.0392419"
+    }
+  },
+  "groups": {
+    "cell1": 400,
+    "cell3": 400,
+    "cell6": 400
+  },
+  "draws": 200,
+  "retest_draws": null,
+  "arms": [
+    "M_fit",
+    "C_fit",
+    "M_H",
+    "C_H",
+    "C_genlaw"
+  ],
+  "alpha": 0.05,
+  "rule": "p < 0.05",
+  "k_grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "n_init": 5,
+  "protocol_sha256": "4c994bd9f1717695bb06d709a4b46babe7f3b1c0308545bdd8b3bdf3aef8082e",
+  "source_sha256": {
+    "analysis/recorded_controls.py": "a32a6b7004e2259791154ae6ffc89a4917ba01e5e6caaac2bcd975649bda2bfe",
+    "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+    "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443",
+    "analysis/popcov_control.py": "726b4e77960dfd30dc21a5ed9649391e3aa03b4e25bf023f9e5398cff9df88b4"
+  },
+  "input_sha256": {
+    "results/popcov_control.json": "07e917ebfa8cd4f0cf1d67a3d1a340be4066ed420cc9506659264f3d5ca4e5d9",
+    "results/popcov_control_cells567.json": "feacc200edd603a8b4ab3364cec1a12c148d80674fe9477cba5a2b1d212938f7"
+  },
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "sklearn": "1.9.1"
+  }
+}

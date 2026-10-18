@@ -1,0 +1,179 @@
+{
+  "config": {
+    "study": "S36",
+    "draws": 20000,
+    "random_state": 42,
+    "restarts": [
+      20,
+      5
+    ],
+    "k_range": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "stored_table_s64": {
+      "fibromyalgia": {
+        "M": 0.1685,
+        "G": 0.463,
+        "S": 0.4033,
+        "C": 0.7009
+      },
+      "depression": {
+        "M": 0.0508,
+        "G": 0.154,
+        "S": 0.2782,
+        "C": 0.3843
+      }
+    },
+    "inputs": {
+      "fibromyalgia": [
+        "b0ca63b7ff5b8a88585b528bc90a67563ad58bfeb3f053e9c16aebcd51bca134",
+        "ced10c065471d7401e93fb2d377f36d88990780bdfcea165517cbf1125937a4c"
+      ],
+      "depression": [
+        "5cc4ec3618d5cb9460e9fe4dcd3c2bff8e48591e5c752484c17225089e5964fa",
+        "940324b6a2580cd803162ea6400f8fa5ad078f695c3eb26ddb7300a35d27cf33"
+      ]
+    },
+    "protocol_sha256": "886051d165379135f5f57138ee5a79247cd1251b379bdd9948c301bf7d2b3f9a",
+    "source_sha256": {
+      "analysis/cohort_restart_check.py": "cb7bcb93fbb1ea65b2265860cb62e659fcb07f91df23bae8f238e12cfb4a28a4",
+      "analysis/evaluate.py": "1a37aa0e024906fafcc9c66f67a2271028b905b5d9873f44260ff7a62ec1fecc",
+      "config.py": "466082cb8ec30ed1510f8af9a4012d1db0fdd1bedf2f68b0b9a03492dcab9308"
+    },
+    "versions": {
+      "python": "3.13.9",
+      "numpy": "2.3.5",
+      "scipy": "1.16.3",
+      "sklearn": "1.7.2"
+    }
+  },
+  "records_sha256": "2a92716ae4661f55802376ad338022253c2f394582b24043cfdbf8c4fa8a85d0",
+  "results": {
+    "restarts_20": {
+      "cells": {
+        "fibromyalgia_M": {
+          "stored": 0.1685,
+          "recomputed": 0.09154542272886355,
+          "difference": -0.07695457727113646,
+          "mc_se": 0.002646769257037719,
+          "z": -29.074909747616047
+        },
+        "fibromyalgia_G": {
+          "stored": 0.463,
+          "recomputed": 0.4174791260436978,
+          "difference": -0.04552087395630222,
+          "mc_se": 0.0035258403253692586,
+          "z": -12.910645337160824
+        },
+        "fibromyalgia_S": {
+          "stored": 0.4033,
+          "recomputed": 0.4023798810059497,
+          "difference": -0.0009201189940503118,
+          "mc_se": 0.0034687829998430284,
+          "z": -0.2652570063021958
+        },
+        "fibromyalgia_C": {
+          "stored": 0.7009,
+          "recomputed": 0.6980150992450378,
+          "difference": -0.002884900754962172,
+          "mc_se": 0.0032375854428879558,
+          "z": -0.8910655196141524
+        },
+        "depression_M": {
+          "stored": 0.0508,
+          "recomputed": 0.006449677516124194,
+          "difference": -0.044350322483875805,
+          "mc_se": 0.0015527292101329196,
+          "z": -28.56281841962595
+        },
+        "depression_G": {
+          "stored": 0.154,
+          "recomputed": 0.06424678766061696,
+          "difference": -0.08975321233938303,
+          "mc_se": 0.0025522930866183845,
+          "z": -35.16571541487814
+        },
+        "depression_S": {
+          "stored": 0.2782,
+          "recomputed": 0.30513474326283685,
+          "difference": 0.026934743262836847,
+          "mc_se": 0.0031686334593953903,
+          "z": 8.500428846691623
+        },
+        "depression_C": {
+          "stored": 0.3843,
+          "recomputed": 0.4183790810459477,
+          "difference": 0.0340790810459477,
+          "mc_se": 0.0034395749010597224,
+          "z": 9.907933982030174
+        }
+      },
+      "reproduces_table_s64": false
+    },
+    "restarts_5": {
+      "cells": {
+        "fibromyalgia_M": {
+          "stored": 0.1685,
+          "recomputed": 0.06749662516874157,
+          "difference": -0.10100337483125844,
+          "mc_se": 0.002646769257037719,
+          "z": -38.16100499229089
+        },
+        "fibromyalgia_G": {
+          "stored": 0.463,
+          "recomputed": 0.33148342582870854,
+          "difference": -0.13151657417129148,
+          "mc_se": 0.0035258403253692586,
+          "z": -37.30077429343538
+        },
+        "fibromyalgia_S": {
+          "stored": 0.4033,
+          "recomputed": 0.39168041597920106,
+          "difference": -0.011619584020798934,
+          "mc_se": 0.0034687829998430284,
+          "z": -3.349758120160515
+        },
+        "fibromyalgia_C": {
+          "stored": 0.7009,
+          "recomputed": 0.6676166191690416,
+          "difference": -0.03328338083095839,
+          "mc_se": 0.0032375854428879558,
+          "z": -10.28030963756413
+        },
+        "depression_M": {
+          "stored": 0.0508,
+          "recomputed": 0.002599870006499675,
+          "difference": -0.048200129993500325,
+          "mc_se": 0.0015527292101329196,
+          "z": -31.042199553503735
+        },
+        "depression_G": {
+          "stored": 0.154,
+          "recomputed": 0.03314834258287085,
+          "difference": -0.12085165741712914,
+          "mc_se": 0.0025522930866183845,
+          "z": -47.35022715484819
+        },
+        "depression_S": {
+          "stored": 0.2782,
+          "recomputed": 0.9222538873056347,
+          "difference": 0.6440538873056347,
+          "mc_se": 0.0031686334593953903,
+          "z": 203.25919534679383
+        },
+        "depression_C": {
+          "stored": 0.3843,
+          "recomputed": 0.9818009099545023,
+          "difference": 0.5975009099545023,
+          "mc_se": 0.0034395749010597224,
+          "z": 173.71359169134945
+        }
+      },
+      "reproduces_table_s64": false
+    }
+  }
+}

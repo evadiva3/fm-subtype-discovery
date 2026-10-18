@@ -1,0 +1,564 @@
+{
+  "purpose": "Corrected consensus guard on the saved depression label vectors; no encoder retraining",
+  "seed": 20260821,
+  "bootstrap_n": 1000,
+  "source_sha256": "cb54bae1bb1fbc84c83a02fb12e0753d265c36c12f0b57610d2a444a3b0f4564",
+  "cells": {
+    "fixed_arch": {
+      "protocol": "fixed_arch",
+      "n_runs": 20,
+      "n_files_found": 20,
+      "n_subjects": 51,
+      "guard": 8,
+      "guard_satisfied": true,
+      "consensus_k": 4,
+      "consensus_silhouette": 0.31224409546585047,
+      "consensus_sizes": [
+        11,
+        14,
+        10,
+        16
+      ],
+      "consensus_labels": [
+        3,
+        2,
+        1,
+        1,
+        4,
+        4,
+        4,
+        2,
+        4,
+        3,
+        3,
+        3,
+        2,
+        4,
+        4,
+        4,
+        3,
+        3,
+        2,
+        4,
+        2,
+        1,
+        2,
+        1,
+        1,
+        3,
+        1,
+        4,
+        4,
+        2,
+        4,
+        1,
+        2,
+        3,
+        2,
+        2,
+        3,
+        1,
+        2,
+        4,
+        4,
+        4,
+        4,
+        2,
+        3,
+        1,
+        2,
+        1,
+        2,
+        4,
+        1
+      ],
+      "subject_ids": [
+        "sub-01",
+        "sub-02",
+        "sub-03",
+        "sub-04",
+        "sub-05",
+        "sub-06",
+        "sub-07",
+        "sub-08",
+        "sub-09",
+        "sub-10",
+        "sub-11",
+        "sub-12",
+        "sub-13",
+        "sub-14",
+        "sub-15",
+        "sub-16",
+        "sub-17",
+        "sub-18",
+        "sub-19",
+        "sub-20",
+        "sub-21",
+        "sub-22",
+        "sub-23",
+        "sub-24",
+        "sub-25",
+        "sub-26",
+        "sub-27",
+        "sub-28",
+        "sub-29",
+        "sub-30",
+        "sub-31",
+        "sub-32",
+        "sub-33",
+        "sub-34",
+        "sub-35",
+        "sub-36",
+        "sub-37",
+        "sub-38",
+        "sub-39",
+        "sub-40",
+        "sub-41",
+        "sub-42",
+        "sub-43",
+        "sub-44",
+        "sub-45",
+        "sub-46",
+        "sub-47",
+        "sub-48",
+        "sub-49",
+        "sub-50",
+        "sub-51"
+      ],
+      "run_k": [
+        4,
+        5,
+        5,
+        4,
+        5,
+        4,
+        2,
+        4,
+        5,
+        4,
+        4,
+        4,
+        4,
+        5,
+        5,
+        5,
+        4,
+        5,
+        5,
+        5
+      ],
+      "cooccurrence_mean": 0.22866666666666668,
+      "cooccurrence_sd": 0.2166621583075615,
+      "cooccurrence_frac_below_0_25": 0.6196078431372549,
+      "cooccurrence_frac_above_0_75": 0.029019607843137254,
+      "ari_run_vs_consensus_mean": 0.3319598494021706,
+      "ari_run_vs_consensus_sd": 0.13978763853204765,
+      "ari_run_vs_consensus_min": 0.1713275729466436,
+      "ari_run_vs_consensus_max": 0.671992976610891,
+      "ari_run_vs_consensus": [
+        0.22544943663839898,
+        0.24292014980630344,
+        0.671992976610891,
+        0.32496231524352615,
+        0.25419481565197927,
+        0.39937385706013784,
+        0.23364516033283533,
+        0.19447035109359487,
+        0.22430184896292085,
+        0.26076025524463187,
+        0.6524973754340628,
+        0.2905654905425593,
+        0.39805556773308065,
+        0.4413047672801961,
+        0.1713275729466436,
+        0.19812761675441593,
+        0.3651095075325991,
+        0.36473958172914034,
+        0.4399859013637719,
+        0.28541244008172345
+      ],
+      "ari_pairwise_runs_mean": 0.23306644845728752,
+      "ari_pairwise_runs_sd": 0.11002100306546275,
+      "ari_pairwise_runs_min": -0.0071713522307709455,
+      "ari_pairwise_runs_max": 0.5537200665898322,
+      "n_pairs": 190,
+      "bootstrap_n": 1000,
+      "bootstrap_guard_failures": 0,
+      "ari_bootstrap_consensus_mean": 0.5243061951695375,
+      "ari_bootstrap_consensus_sd": 0.19815159031144627,
+      "ari_bootstrap_consensus_q05": 0.24419484703170943,
+      "ari_bootstrap_consensus_q50": 0.5138791668031896,
+      "ari_bootstrap_consensus_q95": 0.8596583100959293,
+      "bootstrap_k_counts": {
+        "2": 21,
+        "3": 238,
+        "4": 572,
+        "5": 169
+      },
+      "consensus_more_stable": true,
+      "stability_gain": 0.29123974671224995
+    },
+    "search_vary": {
+      "protocol": "search_vary",
+      "n_runs": 20,
+      "n_files_found": 20,
+      "n_subjects": 51,
+      "guard": 8,
+      "guard_satisfied": true,
+      "consensus_k": 5,
+      "consensus_silhouette": 0.3876068751865861,
+      "consensus_sizes": [
+        9,
+        11,
+        12,
+        8,
+        11
+      ],
+      "consensus_labels": [
+        2,
+        2,
+        3,
+        3,
+        1,
+        4,
+        4,
+        2,
+        1,
+        5,
+        2,
+        2,
+        5,
+        4,
+        1,
+        1,
+        2,
+        2,
+        5,
+        1,
+        5,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        1,
+        4,
+        3,
+        4,
+        3,
+        5,
+        2,
+        2,
+        5,
+        2,
+        3,
+        5,
+        1,
+        4,
+        1,
+        4,
+        5,
+        4,
+        3,
+        5,
+        3,
+        5,
+        1,
+        5
+      ],
+      "subject_ids": [
+        "sub-01",
+        "sub-02",
+        "sub-03",
+        "sub-04",
+        "sub-05",
+        "sub-06",
+        "sub-07",
+        "sub-08",
+        "sub-09",
+        "sub-10",
+        "sub-11",
+        "sub-12",
+        "sub-13",
+        "sub-14",
+        "sub-15",
+        "sub-16",
+        "sub-17",
+        "sub-18",
+        "sub-19",
+        "sub-20",
+        "sub-21",
+        "sub-22",
+        "sub-23",
+        "sub-24",
+        "sub-25",
+        "sub-26",
+        "sub-27",
+        "sub-28",
+        "sub-29",
+        "sub-30",
+        "sub-31",
+        "sub-32",
+        "sub-33",
+        "sub-34",
+        "sub-35",
+        "sub-36",
+        "sub-37",
+        "sub-38",
+        "sub-39",
+        "sub-40",
+        "sub-41",
+        "sub-42",
+        "sub-43",
+        "sub-44",
+        "sub-45",
+        "sub-46",
+        "sub-47",
+        "sub-48",
+        "sub-49",
+        "sub-50",
+        "sub-51"
+      ],
+      "run_k": [
+        4,
+        2,
+        4,
+        4,
+        5,
+        5,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5,
+        5,
+        4,
+        4,
+        4,
+        5,
+        5,
+        4,
+        5
+      ],
+      "cooccurrence_mean": 0.2359607843137255,
+      "cooccurrence_sd": 0.21433826835259512,
+      "cooccurrence_frac_below_0_25": 0.6149019607843137,
+      "cooccurrence_frac_above_0_75": 0.03607843137254902,
+      "ari_run_vs_consensus_mean": 0.37005177451217064,
+      "ari_run_vs_consensus_sd": 0.15628842995282102,
+      "ari_run_vs_consensus_min": 0.013335066768196423,
+      "ari_run_vs_consensus_max": 0.6272719025009829,
+      "ari_run_vs_consensus": [
+        0.4599035933391762,
+        0.013335066768196423,
+        0.4286501377410468,
+        0.49347721050088583,
+        0.20182989225305484,
+        0.6272719025009829,
+        0.5174031103431251,
+        0.5559961712019691,
+        0.2647382920110193,
+        0.3248794916739702,
+        0.4661095636025998,
+        0.3717816683831102,
+        0.322463768115942,
+        0.5027631756301388,
+        0.17363045496750232,
+        0.26819363222871995,
+        0.31657266290651626,
+        0.3695795203062384,
+        0.18074507255793806,
+        0.5417111032112809
+      ],
+      "ari_pairwise_runs_mean": 0.2259159405224658,
+      "ari_pairwise_runs_sd": 0.13598731657775304,
+      "ari_pairwise_runs_min": -0.004541727117895666,
+      "ari_pairwise_runs_max": 0.6232439335887612,
+      "n_pairs": 190,
+      "bootstrap_n": 1000,
+      "bootstrap_guard_failures": 0,
+      "ari_bootstrap_consensus_mean": 0.5667467725744727,
+      "ari_bootstrap_consensus_sd": 0.13708950488450442,
+      "ari_bootstrap_consensus_q05": 0.339408694808848,
+      "ari_bootstrap_consensus_q50": 0.571000719573661,
+      "ari_bootstrap_consensus_q95": 0.8020326063942409,
+      "bootstrap_k_counts": {
+        "2": 6,
+        "3": 80,
+        "4": 719,
+        "5": 195
+      },
+      "consensus_more_stable": true,
+      "stability_gain": 0.3408308320520069
+    }
+  },
+  "inputs": [
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed000.json",
+      "sha256": "29f7f74e78868b770e83e0e46abc72c49bde71a279a1ea0189340d96ae4b9ea8"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed001.json",
+      "sha256": "351a7a2d4324def9d377f264e635b9fc69053a1c3ec44cb72b5c2f1afbe1dd98"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed002.json",
+      "sha256": "9efda07429df9f2fc57f746f6d47f14fcac8ae9c232ec4804fcd15b38d636274"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed003.json",
+      "sha256": "05b7d62ca16a84f1c515ae1f7f5d804189e506ccf6802f1047fded217e2d9bb7"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed004.json",
+      "sha256": "70863a968ac518b449493f6b9c8be973e2f38035868cd648fbbc97651e465adb"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed005.json",
+      "sha256": "16db3cf19af2251f2f6e356f90a3c443295ae93ccff9a32618e6fa079f81c20a"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed006.json",
+      "sha256": "dfa68d1a302e6d5c9b3692a13288749be905730593ab57e6cfc3abc086e2c517"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed007.json",
+      "sha256": "f7b10a53a24528ac81c68a981a30872a67475ee616dd0468a666e0a3f66d0ff0"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed008.json",
+      "sha256": "cc00487153898b8445bfa9f0ef49b763e2bf20540479b3e1f8d3a56402a6a550"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed009.json",
+      "sha256": "6e1ffcb4e7c71542ca8907e39194c34febdffbe49b13d10fdcfa3e16c9aeba4f"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed010.json",
+      "sha256": "d343b3c9dc9226a81fc09e6cb7a0aacfbbae5b09a656514d55f78a975536b784"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed011.json",
+      "sha256": "b7eb50bf4877a1af3fb0310e612f45bfca01107c744a4bcc5266ab28ef9cee3f"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed012.json",
+      "sha256": "79b1853fe495982e4267e1decb4899d39c8e7f265322a39d5a0e3159db9a695f"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed013.json",
+      "sha256": "6a5ec231e9873a2e6edbee7781616089a9767e0f5a533c558130c192ffca85df"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed014.json",
+      "sha256": "3582852d80c0786f0b3bdffb83e306253a66028a9ce202799b47bb390602e20d"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed015.json",
+      "sha256": "66159b19f820f7f09d7908e7263482266f08a7fb3601c86cc0866d518508728c"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed016.json",
+      "sha256": "0fd799d9dc4480047d8e5ca4a647c62e7cadf1e5bc7fcc3a0ddfb5ac6efa275f"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed017.json",
+      "sha256": "2618dc0fa3812997b50d3438d43e31c5515bc9dc2615eb44a0d678ec784aaedb"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed018.json",
+      "sha256": "4fceed04a24bad8cab2c0a6dc90b1ee9dc833667101adafd23befb2ff83cc577"
+    },
+    {
+      "path": "results/mdd/fixed_arch_control/runs/seed019.json",
+      "sha256": "8a335a5560a5f381a6ea9095f20771283b7b9fea99bde10990b55f61d7f8a48f"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run10_labels.csv",
+      "sha256": "cb54a675d4c3d8c946bf28693598660cc98090baabf988aba6dfeab925dd0b87"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run11_labels.csv",
+      "sha256": "5d61b735ef3fd2dec715f1e9bae92b8c3c964ac1b890f53ba3498efff664ac9c"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run12_labels.csv",
+      "sha256": "836e2dd5a1e70912f5c7ea43f5f1148760bd752220a7f5888536638a5d7b319e"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run13_labels.csv",
+      "sha256": "3de7d882f6a77e7b340f491b71a73273bbfc49e37d8a38200f31acff5d2837c6"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run14_labels.csv",
+      "sha256": "b1a08be25c421a7d9c7f587c8d494cf9f8b8a3e1aa42d6fbfe8933f40b62f80d"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run15_labels.csv",
+      "sha256": "406c7a6282b70c07d575435a0d95b2aec3064188655366f7ba2444fa690a70e4"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run16_labels.csv",
+      "sha256": "d94d5c206b67124ede20bf18412f2f943d3527504b6aea44acba25ac59a8d3c3"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run17_labels.csv",
+      "sha256": "278db399beb9c79e4a9e6411dbac472736296f3f78ec449c772d3be882c9fcb8"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run18_labels.csv",
+      "sha256": "2360d43408af8d03812d26f3a37f03e5e4965d7e90c5eb64536421790ee3390a"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run19_labels.csv",
+      "sha256": "dd5886da08902ea31cfefb156f49b526f44007ef27cb1698d00f0b82427874e7"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run1_labels.csv",
+      "sha256": "bcd42f9b5be3889e809a19a9427b6d7575204653e98bef3c5ebe3f5662ea2dfb"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run20_labels.csv",
+      "sha256": "d5c9d9df74b850051333b8399026058d0adf3f47a170dbf6832d7a7a1eeb40c3"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run2_labels.csv",
+      "sha256": "ee1fcdb9fb3378d5fbd100ccf4850f8dd94a9962554e328467d6cd91cd558929"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run3_labels.csv",
+      "sha256": "30be68cd7980778f711012c17cb26733cd41ad3b4e138000d4f60fc8cb60046e"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run4_labels.csv",
+      "sha256": "d0bd967d858313dbb7a641925714a1654aa1c88f57b5e02f30a09875d424f5f9"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run5_labels.csv",
+      "sha256": "ce121a8d5e9ccee3ff8cc3461e5752abe7eea890f833d74bcc25a821a323e103"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run6_labels.csv",
+      "sha256": "4ae58e76e34954fffe831e4baf48a68691d9944f596c2f22d9f42567e4037dcc"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run7_labels.csv",
+      "sha256": "1913e3243e1f71ebc8768afe8c88279de4234ab78e6c618e46d138b5f737f7a6"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run8_labels.csv",
+      "sha256": "63c603322d58e165c6ff4d5b6486fe30ce3c64361fb6a6e0c267241820f724eb"
+    },
+    {
+      "path": "results/mdd/multirun_v2/by_run/run9_labels.csv",
+      "sha256": "91e90fd66ccce88080c67c34be1629c41134722376f3750d336338b7f9ba7580"
+    }
+  ],
+  "limitations": [
+    "No fibromyalgia label vectors available for this analysis",
+    "Bootstrap resamples training runs and does not calibrate a population-subtype test",
+    "Historical outputs are preserved; this is a corrected analysis of the same saved labels"
+  ]
+}
