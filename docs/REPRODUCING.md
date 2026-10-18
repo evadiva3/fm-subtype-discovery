@@ -1,6 +1,6 @@
 # Reproducing
 
-Run everything from the repo root. Simulations use only synthetic data, so no imaging download is needed. Output folders must be new; drivers refuse to overwrite.
+Run all commands from the repository root. The simulations use only synthetic data, so you do not need to download imaging data. Choose new output folders for fresh runs; the drivers refuse to overwrite existing results.
 
 ## Setup
 
@@ -10,7 +10,7 @@ Python 3.12:
 python -m pip install -r requirements/simulation-lock.txt
 ```
 
-Other environments: `requirements/test-lock.txt` (tests), `requirements/figures.txt` (figures, plus Poppler), `requirements/applied.txt` (encoder and depression pipeline). Results match to floating-point tolerance, not bit for bit, across machines and library versions.
+For other tasks, use these environments: `requirements/test-lock.txt` (tests), `requirements/figures.txt` (figures, plus Poppler), `requirements/applied.txt` (encoder and depression pipeline). Across machines and library versions, results match within floating-point tolerance rather than bit for bit.
 
 ## Check stored results
 
@@ -19,7 +19,7 @@ python reproduce.py verify
 python reproduce.py test
 ```
 
-`verify` recomputes the reported rates and intervals from the stored records and checks source checksums, with some exact replays. It covers the v9 angular studies, S9, S14 to S20, S22, S24 to S26, S29, S31, S32 and the consensus replay (S6.2). It does not rerun the simulations.
+`verify` recomputes the reported rates and intervals from the stored records, checks the source checksums, and runs some exact replays. It covers the v9 angular studies, S9, S14 to S20, S22, S24 to S26, S29, S31, S32 and the consensus replay (S6.2). It does not rerun the simulations.
 
 ## Rerun studies
 
@@ -30,7 +30,7 @@ python reproduce.py validation --output results/my_s16 --workers 4
 python reproduce.py followup --output results/my_followup --workers 32
 ```
 
-`power` is the corrected eigenvector studies, `geometry` is S9, `validation` is S16 from its frozen copy, and `followup` is S18 to S20, S22, S24 to S26, S29, S31 and S32 in order. `followup` takes hours. To run one study on its own, use the driver lines in `reproduce.py`, e.g.
+`power` runs the corrected eigenvector studies, `geometry` runs S9, and `validation` runs S16 from its frozen copy. `followup` runs S18 to S20, S22, S24 to S26, S29, S31 and S32 in that order. `followup` takes hours. To run a single study, use its driver command from `reproduce.py`. For example:
 
 ```text
 python analysis/headline_recorded.py --output results/my_s18 --workers 32
@@ -55,7 +55,7 @@ Consensus (S6.2): `python analysis/recheck_consensus.py --output results/my_cons
 
 ## Depression reproduction (S21)
 
-Needs `requirements/applied.txt` and the parcel time series in `../resting_state_dep_data/`:
+This requires `requirements/applied.txt` and the parcel time series in `../resting_state_dep_data/`:
 
 ```text
 python analysis/reproduce_mdd_from_timeseries.py
@@ -64,7 +64,7 @@ python experiments/ds002748_mdd/propagated_null/mdd_fixed_arch_control.py 0 1
 python analysis/compare_mdd_retraining.py --fresh <new folder> --seed 0
 ```
 
-The first line rebuilds the stored embedding from the canonical checkpoint. The last three retrain one seed and compare it with the saved run. The fMRIPrep derivatives and preprocessed fibromyalgia images were not kept, so preprocessing cannot be rerun from this repo. The R selective-inference comparison also needs R with `clusterpval`, `KmeansInference` and `jsonlite`.
+The first command rebuilds the stored embedding from the canonical checkpoint. The remaining three lines retrain one seed and compare it with the saved run. The fMRIPrep derivatives and preprocessed fibromyalgia images were not kept, so preprocessing cannot be rerun from this repo. The R selective-inference comparison also needs R with `clusterpval`, `KmeansInference` and `jsonlite`.
 
 ## Figures
 
@@ -72,7 +72,7 @@ The first line rebuilds the stored embedding from the canonical checkpoint. The 
 python reproduce.py figures
 ```
 
-See `paper/figures/README.md` for which file is which figure.
+See `paper/figures/README.md` to match each file to its figure in the submission.
 
 ## Rules
 

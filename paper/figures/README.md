@@ -1,6 +1,6 @@
 # Figures
 
-PDF files retain vector text and shapes; PNG files are rendered from them. File names keep the earlier numbering; the table gives each file's place in the PLOS ONE submission.
+The PDFs preserve vector text and shapes, and the PNGs are rendered from those PDFs. The filenames still use the earlier numbering. The table below shows where each file appears in the PLOS ONE submission.
 
 | File | Figure | Built by |
 |---|---|---|
@@ -15,6 +15,6 @@ PDF files retain vector text and shapes; PNG files are rendered from them. File 
 | `Figure7.png`, `Figure8.png` | Figures S5 and S6 | `followup_figures.py`, from the recorded follow-ups in `results/revision_20260924/` |
 | `Figure3.png` | Figure S7 | `followup_figures.py`; its third panel retains the historical centered-law control from Table S61 |
 
-Fig 1 is drawn from the closed-form result in Materials and methods and uses no stored data. The submitted Fig 2 and Fig 6 are the same data as `Figure4` and `Figure9`, laid out at the 7.5 in PLOS width.
+Fig 1 uses the closed-form result in Materials and methods and does not rely on stored data. The submitted Fig 2 and Fig 6 show the same data as `Figure4` and `Figure9`, with the layout set to the 7.5 in PLOS width.
 
 Run `python reproduce.py figures` from the repository root to regenerate these files in the correct order.

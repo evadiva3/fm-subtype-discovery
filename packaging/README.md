@@ -1,6 +1,6 @@
 # Statistical implementations
 
-Install with `python -m pip install ./packaging` if you need the modules outside the repository. The paper drivers also load this local source directly. Use the pinned environment in `requirements/simulation-lock.txt` for the corrected runs.
+Install with `python -m pip install ./packaging` if you need the modules outside the repository. The drivers used in the paper can also load this local source directly. Use the pinned environment in `requirements/simulation-lock.txt` for the corrected runs.
 
 | Module | Role |
 |---|---|
@@ -10,6 +10,6 @@ Install with `python -m pip install ./packaging` if you need the modules outside
 | `angular_gof` | W, fourth-moment D4, kernel K and bootstrap E comparison |
 | `angular_fourth`, `angular_balanced` | Earlier fourth-moment and kernel follow-up studies |
 
-The ideal ACG argument assumes independent centered directions and Tyler existence conditions, with n greater than projected dimension. Numerical shape fits fail explicitly. An angular test does not by itself calibrate shared representation training or establish clinical subtypes. Refer to the manuscript for finite-sample evidence and scope.
+The ideal ACG argument assumes independent centered directions and requires the Tyler existence conditions to hold, with n greater than the projected dimension. Numerical shape fits report failures explicitly. An angular test does not by itself calibrate shared representation training or establish clinical subtypes. The manuscript describes the finite-sample evidence and the limits of these claims.
 
-Historical protocols in `docs/PROTOCOL_*` and source hashes in the result configurations identify earlier executions. Do not restyle or change hash-locked numerical files merely to make formatting consistent. Run `python reproduce.py verify` to check the evidence and `python reproduce.py test` for the tests.
+The historical protocols in `docs/PROTOCOL_*` and the source hashes in the result configurations identify earlier runs. Do not reformat or otherwise change numerical files with recorded hashes just to make the formatting consistent. Run `python reproduce.py verify` to check the evidence and `python reproduce.py test` for the tests.
