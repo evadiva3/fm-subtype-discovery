@@ -37,3 +37,6 @@ Stored results are not overwritten; fresh runs must use a new output path. Files
 ## License
 
 Code is released under the MIT License; see [LICENSE](LICENSE). The OpenNeuro source datasets keep their own licenses.
+
+
+## This README was written by Claude. 
