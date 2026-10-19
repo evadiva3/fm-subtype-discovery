@@ -1,6 +1,6 @@
 # Cluster-reference calibration on normalized representations
 
-This repository contains the code and evidence for Bangsil and Joshi, "Calibration and sensitivity of cluster tests on normalized neuroimaging representations" (PLOS ONE submission). The study examines how Gaussian and angular cluster references behave after row normalization, how to calibrate them, and which kinds of structure they detect. The clinical cohorts illustrate the fitted pipelines; they do not establish disease subtypes.
+This repository contains the code and evidence for Bangsil and Joshi, "Calibration and sensitivity of cluster tests on normalized neuroimaging representations". The study examines how Gaussian and angular cluster references behave after row normalization, how to calibrate them, and which kinds of structure they detect. The clinical cohorts illustrate the fitted pipelines; they do not establish disease subtypes.
 
 The section and table numbers below refer to S1 File and S2 File of the submission. S2 File identifies the code and stored result for each table and figure. Section S30 of S1 File lists every folder in `results/`.
 
