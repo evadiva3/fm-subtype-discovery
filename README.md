@@ -39,7 +39,7 @@ Use a new output path for every fresh run so that stored results are not overwri
 The code is released under the MIT License; see [LICENSE](LICENSE). The OpenNeuro source datasets keep their own licenses.
 
 ## Disclosure
-This project was conceived, designed and carried out by the authors, who set the research questions and hypotheses, wrote the core pipeline code, drafted the manuscript, and interpreted the results. Claude Opus 5.5 (Anthropic) and GPT-6 (OpenAI) supported the work by editing the writing for clarity, generating or substantially editing the files listed below, helping with debugging, auditing the code for errors, and organizing the repository. The authors reviewed all of this work and take full responsibility for the code, analyses and conclusions. The reported results can be reproduced with python reproduce.py verify.
+This project was conceived, designed and carried out by the authors, who set the research questions and hypotheses, wrote the core pipeline code, drafted the manuscript, and interpreted the results. Claude Opus 5.5 (Anthropic) and GPT-6 Astra (OpenAI) supported the work by editing the writing for clarity, generating or substantially editing the files listed below, helping with debugging, auditing the code for errors, and organizing the repository. The authors reviewed all of this work and take full responsibility for the code, analyses and conclusions. The reported results can be reproduced with python reproduce.py verify.
 
 Files generated or substantially edited with AI assistance:
 
