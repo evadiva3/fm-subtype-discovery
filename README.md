@@ -37,3 +37,67 @@ Use a new output path for every fresh run so that stored results are not overwri
 ## License
 
 The code is released under the MIT License; see [LICENSE](LICENSE). The OpenNeuro source datasets keep their own licenses.
+
+## Disclosure
+The authors wrote the core pipeline code and the first drafts of the manuscript. Claude Opus 5.5 (Anthropic) and Codex GPT-6 Astra made the writing clearer, generated or substantially edited the files listed below, helped with debugging, and audited the code several times for flaws. The authors thoroughly reviewed all choices, code and text. The ideas, hypotheses and conclusions are the authors’ own, and the authors take full responsibility for this work.
+
+Files generated or substantially edited with AI assistance:
+
+Documentation
+- README.md
+- archive/README.md
+- data/README.md
+- packaging/README.md
+- paper/figures/README.md
+- reproducibility/s16/README.md
+- results/overnight/RESULTS.md
+- docs/REPRODUCING.md
+- docs/S36_POSTHOC_OBSERVED_NOTE_20261009.md
+
+Protocols
+- docs/PROTOCOL_V8.md
+- docs/PROTOCOL_V8_FOLLOWUP.md
+- docs/PROTOCOL_V9.md
+- docs/PROTOCOL_V9_APPLIED.md
+- docs/PROTOCOL_V9_KERNEL_FOLLOWUP.md
+- docs/FOLLOWUP_PROTOCOL_20260924.md
+- docs/FOLLOWUP_PROTOCOL_S20_20260924.md
+- docs/FOLLOWUP_PROTOCOL_S22_20260924.md
+- docs/FOLLOWUP_PROTOCOL_S24_S26_20260925.md
+- docs/FOLLOWUP_PROTOCOL_S29_20260925.md
+- docs/FOLLOWUP_PROTOCOL_S31_S32_20260926.md
+- docs/FOLLOWUP_PROTOCOL_S35_S36_20261008.md
+- docs/FOLLOWUP_PROTOCOL_S36_AMENDMENT_20261009.md
+
+Audit and check scripts
+- analysis/audit_angular_gof_v9.py
+- analysis/audit_balanced_v9.py
+- analysis/audit_v9_claims.py
+- analysis/audit_validation_v7.py
+- analysis/seed_overlap_audit.py
+- analysis/sign_rule_audit.py
+- analysis/pooled_null_check.py
+- analysis/cohort_observed_check.py
+- analysis/cohort_restart_check.py
+- analysis/cohort_restart_check_amendment.py
+- reproducibility/audits/recheck_angular_records.py
+- reproducibility/audits/recheck_counts.py
+
+Analysis scripts
+- analysis/mdd_geometry_calibrated.py
+- analysis/shape_aware_minor_axis.py
+- analysis/shape_aware_detection_floor.py
+- analysis/shape_aware_at_article_geometry.py
+- analysis/validate_cluster_nulls.py
+- analysis/reproduce_mdd_from_timeseries.py
+- analysis/sample_size_detection.py
+- analysis/grid_recorded.py
+- analysis/calibrated_cohort.py
+- analysis/evaluate.py
+- analysis/compare_mdd_retraining.py
+- packaging/nullcal_validation.py
+- reproducibility/s16/modules/nullcal_validation.py
+- reproducibility/s16/run_validation.py
+- experiments/ds002748_mdd/propagated_null/nullcal.py
+- experiments/ds002748_mdd/propagated_null/ov_common.py
+- experiments/ds002748_mdd/propagated_null/r1c_selective_inference.R
