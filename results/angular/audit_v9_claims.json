@@ -1,0 +1,333 @@
+{
+ "source": [
+  "results/angular_v9/summary.json",
+  "results/angular_v9_balanced/summary.json",
+  "results/embeddings_v9/summary.json"
+ ],
+ "design": {
+  "n_primary_cells": 36,
+  "n_followup_cells": 36,
+  "primary_datasets_per_cell": 200,
+  "followup_datasets_per_cell": 200,
+  "draws": 199
+ },
+ "intervals_excluding_nominal": [
+  [
+   "anisotropic_n240_q05",
+   "D4",
+   9.5,
+   [
+    5.8,
+    14.4
+   ]
+  ],
+  [
+   "anisotropic_n240_q05",
+   "W",
+   9.0,
+   [
+    5.4,
+    13.9
+   ]
+  ],
+  [
+   "anisotropic_n60_q10",
+   "D4",
+   9.0,
+   [
+    5.4,
+    13.9
+   ]
+  ],
+  [
+   "gaussian_n60_q05",
+   "K",
+   8.5,
+   [
+    5.0,
+    13.3
+   ]
+  ]
+ ],
+ "checks": [
+  {
+   "claim": "null cells in the primary comparison",
+   "claimed": 12,
+   "found": 12,
+   "agrees": true
+  },
+  {
+   "claim": "null rejection range, W",
+   "claimed": [
+    3.5,
+    9.0
+   ],
+   "found": [
+    3.5,
+    9.0
+   ],
+   "agrees": true
+  },
+  {
+   "claim": "null rejection range, D4",
+   "claimed": [
+    2.0,
+    9.5
+   ],
+   "found": [
+    2.0,
+    9.5
+   ],
+   "agrees": true
+  },
+  {
+   "claim": "null rejection range, K",
+   "claimed": [
+    3.5,
+    8.5
+   ],
+   "found": [
+    3.5,
+    8.5
+   ],
+   "agrees": true
+  },
+  {
+   "claim": "null rejection range, E",
+   "claimed": [
+    3.5,
+    7.5
+   ],
+   "found": [
+    3.5,
+    7.5
+   ],
+   "agrees": true
+  },
+  {
+   "claim": "pointwise intervals excluding .05, of 48",
+   "claimed": 4,
+   "found": 4,
+   "agrees": true
+  },
+  {
+   "claim": "two_modes_n240_q05 W",
+   "claimed": 10.0,
+   "found": 10.0,
+   "agrees": true
+  },
+  {
+   "claim": "two_modes_n240_q05 D4",
+   "claimed": 56.0,
+   "found": 56.0,
+   "agrees": true
+  },
+  {
+   "claim": "two_modes_n240_q05 K",
+   "claimed": 5.0,
+   "found": 5.0,
+   "agrees": true
+  },
+  {
+   "claim": "two_modes_n240_q05 E",
+   "claimed": 9.0,
+   "found": 9.0,
+   "agrees": true
+  },
+  {
+   "claim": "six_modes_n240_q05 W",
+   "claimed": 9.0,
+   "found": 9.0,
+   "agrees": true
+  },
+  {
+   "claim": "six_modes_n240_q05 D4",
+   "claimed": 77.0,
+   "found": 77.0,
+   "agrees": true
+  },
+  {
+   "claim": "six_modes_n240_q05 K",
+   "claimed": 5.0,
+   "found": 5.0,
+   "agrees": true
+  },
+  {
+   "claim": "six_modes_n240_q05 E",
+   "claimed": 4.0,
+   "found": 4.0,
+   "agrees": true
+  },
+  {
+   "claim": "two_modes_n240_q20 W",
+   "claimed": 6.5,
+   "found": 6.5,
+   "agrees": true
+  },
+  {
+   "claim": "two_modes_n240_q20 D4",
+   "claimed": 10.5,
+   "found": 10.5,
+   "agrees": true
+  },
+  {
+   "claim": "two_modes_n240_q20 K",
+   "claimed": 5.0,
+   "found": 5.0,
+   "agrees": true
+  },
+  {
+   "claim": "two_modes_n240_q20 E",
+   "claimed": 44.5,
+   "found": 44.5,
+   "agrees": true
+  },
+  {
+   "claim": "offset_n60_q10 W",
+   "claimed": 11.5,
+   "found": 11.5,
+   "agrees": true
+  },
+  {
+   "claim": "offset_n60_q10 D4",
+   "claimed": 5.0,
+   "found": 5.0,
+   "agrees": true
+  },
+  {
+   "claim": "offset_n60_q10 K",
+   "claimed": 99.0,
+   "found": 99.0,
+   "agrees": true
+  },
+  {
+   "claim": "offset_n60_q10 E",
+   "claimed": 97.5,
+   "found": 97.5,
+   "agrees": true
+  },
+  {
+   "claim": "six_modes_n60_q20 W",
+   "claimed": 5.0,
+   "found": 5.0,
+   "agrees": true
+  },
+  {
+   "claim": "six_modes_n60_q20 D4",
+   "claimed": 4.0,
+   "found": 4.0,
+   "agrees": true
+  },
+  {
+   "claim": "six_modes_n60_q20 K",
+   "claimed": 4.0,
+   "found": 4.0,
+   "agrees": true
+  },
+  {
+   "claim": "six_modes_n60_q20 E",
+   "claimed": 6.0,
+   "found": 6.0,
+   "agrees": true
+  },
+  {
+   "claim": "shape_mixture_n240_q20 W",
+   "claimed": 4.0,
+   "found": 4.0,
+   "agrees": true
+  },
+  {
+   "claim": "shape_mixture_n240_q20 D4",
+   "claimed": 24.0,
+   "found": 24.0,
+   "agrees": true
+  },
+  {
+   "claim": "shape_mixture_n240_q20 K",
+   "claimed": 4.5,
+   "found": 4.5,
+   "agrees": true
+  },
+  {
+   "claim": "shape_mixture_n240_q20 E",
+   "claimed": 5.0,
+   "found": 5.0,
+   "agrees": true
+  },
+  {
+   "claim": "offset_n240_q20 W",
+   "claimed": 12.5,
+   "found": 12.5,
+   "agrees": true
+  },
+  {
+   "claim": "offset_n240_q20 D4",
+   "claimed": 6.5,
+   "found": 6.5,
+   "agrees": true
+  },
+  {
+   "claim": "offset_n240_q20 K",
+   "claimed": 100.0,
+   "found": 100.0,
+   "agrees": true
+  },
+  {
+   "claim": "offset_n240_q20 E",
+   "claimed": 100.0,
+   "found": 100.0,
+   "agrees": true
+  },
+  {
+   "claim": "kernel follow-up null range, KB",
+   "claimed": [
+    1.5,
+    6.5
+   ],
+   "found": [
+    1.5,
+    6.5
+   ],
+   "agrees": true
+  },
+  {
+   "claim": "follow-up two_modes_n240_q05 K",
+   "claimed": 4.5,
+   "found": 4.5,
+   "agrees": true
+  },
+  {
+   "claim": "follow-up two_modes_n240_q05 KB",
+   "claimed": 46.5,
+   "found": 46.5,
+   "agrees": true
+  },
+  {
+   "claim": "follow-up six_modes_n240_q05 K",
+   "claimed": 5.5,
+   "found": 5.5,
+   "agrees": true
+  },
+  {
+   "claim": "follow-up six_modes_n240_q05 KB",
+   "claimed": 72.0,
+   "found": 72.0,
+   "agrees": true
+  },
+  {
+   "claim": "follow-up six_modes_n60_q05 KB",
+   "claimed": 11.0,
+   "found": 11.0,
+   "agrees": true
+  },
+  {
+   "claim": "applied input arrays",
+   "claimed": 23,
+   "found": 23,
+   "agrees": true
+  }
+ ],
+ "n_checks": 41,
+ "n_disagreements": 0,
+ "disagreements": []
+}

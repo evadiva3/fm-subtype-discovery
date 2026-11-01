@@ -5,7 +5,6 @@ R=Path(__file__).resolve().parents[1];P=R/"results/recorded/s6_s9";a=json.loads(
 assert same("experiments/ds002748_mdd/propagated_null/e11_consensus.py",a["source_sha256"])
 
 def norm(x):
-    #the saved record has the old folder names and the hash of the original e11_consensus.py
     x={k:v for k,v in x.items() if k!="source_sha256"}
     x["inputs"]=[dict(i,path=here(i["path"]).relative_to(R).as_posix()) for i in x["inputs"]]
     return x

@@ -40,16 +40,21 @@ The code is released under the MIT License; see [LICENSE](LICENSE). The OpenNeur
 
 ## Use of AI
 
-The authors wrote all initial code and drafted the initial versions of the writing. Claude Opus 5.5 (Anthropic) was then used in four ways:
+The authors set the research questions, hypotheses and study design, wrote the core pipeline code (`models/`, `src/`, `preprocessing/`, `config.py` and the depression pipeline scripts in `experiments/ds002748_mdd/`), drafted the manuscript and interpreted the results. Generative AI tools (Claude and Claude Code, Anthropic; Codex, OpenAI) were used to:
 
-- It made the authors' writing clearer, and it wrote this README and the other .md files.
-- It generated some of the analysis scripts. The files it generated are listed below.
-- It helped with debugging.
-- It audited the code several times to look for flaws.
+- edit the writing for clarity, and draft this README and the other .md files
+- draft or edit the simulation, verification and figure code and the tests, which the authors then edited and reviewed
+- run some of the simulation studies
+- help with debugging
+- repo organization and file naming/headings
+- audit the code for errors several times
+- help organize the repository and the stored results
 
-The authors thoroughly reviewed every analysis choice and all AI-generated code and text. The ideas, hypotheses and conclusions are the authors' own, and the authors take full responsibility for this work.
+The authors reviewed every analysis choice and all AI-assisted code and text. The ideas, hypotheses and conclusions are the authors' own, and the authors take full responsibility for the code, analyses and conclusions. The reported results can be checked with `python reproduce.py verify`.
 
-Files generated with AI assistance:
+Eva Bangsil wrote the original manuscript draft and the initial versions of the student-authored scripts. The list below is a selected inventory; AI also assisted with small revisions to student-authored files not individually listed.
+
+Selected files generated or substantially edited with AI assistance:
 
 Documentation
 - README.md
@@ -61,6 +66,7 @@ Documentation
 - results/exploratory/screens_e1_e18/RESULTS.md
 - docs/REPRODUCING.md
 - docs/S36_POSTHOC_OBSERVED_NOTE_20261009.md
+- results/README.md
 
 Protocols
 - docs/PROTOCOL_V8.md
@@ -90,6 +96,11 @@ Audit and check scripts
 - analysis/cohort_restart_check_amendment.py
 - reproducibility/audits/recheck_angular_records.py
 - reproducibility/audits/recheck_counts.py
+- analysis/verify_corrected_power.py
+- analysis/verify_geometry_surface.py
+- analysis/verify_repository.py
+- reproducibility/s16/verify_results.py
+- reproduce.py
 
 Analysis scripts
 - analysis/mdd_geometry_calibrated.py
@@ -109,3 +120,28 @@ Analysis scripts
 - experiments/ds002748_mdd/propagated_null/nullcal.py
 - experiments/ds002748_mdd/propagated_null/ov_common.py
 - experiments/ds002748_mdd/propagated_null/r1c_selective_inference.R
+- analysis/analyze_saved_gof_v9.py
+- analysis/geometry_surface.py
+- analysis/scope_detection.py
+- analysis/validate_angular_fourth_v8.py
+- analysis/validate_angular_gof_v9.py
+- analysis/validate_angular_null.py
+- analysis/validate_balanced_v9.py
+- packaging/angular_fourth.py
+- packaging/angular_gof.py
+- packaging/angular_null.py
+- reproducibility/s16/modules/angular_gof.py
+- reproducibility/s16/modules/angular_null.py
+
+Experiment scripts
+- experiments/ds002748_mdd/run_mdd_pipeline.sh
+
+Tests
+- tests/conftest.py
+- tests/test_angular_fourth.py
+- tests/test_angular_gof.py
+- tests/test_asymmetric_detection.py
+- tests/test_execution_regressions.py
+
+Archived copies
+- archive/recorded_source/ (exact copies of the drivers that wrote the stored records)
