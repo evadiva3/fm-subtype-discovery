@@ -1,0 +1,52 @@
+{
+  "study": "S36",
+  "draws": 20000,
+  "random_state": 42,
+  "restarts": [
+    20,
+    5
+  ],
+  "k_range": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "stored_table_s64": {
+    "fibromyalgia": {
+      "M": 0.1685,
+      "G": 0.463,
+      "S": 0.4033,
+      "C": 0.7009
+    },
+    "depression": {
+      "M": 0.0508,
+      "G": 0.154,
+      "S": 0.2782,
+      "C": 0.3843
+    }
+  },
+  "inputs": {
+    "fibromyalgia": [
+      "b0ca63b7ff5b8a88585b528bc90a67563ad58bfeb3f053e9c16aebcd51bca134",
+      "ced10c065471d7401e93fb2d377f36d88990780bdfcea165517cbf1125937a4c"
+    ],
+    "depression": [
+      "5cc4ec3618d5cb9460e9fe4dcd3c2bff8e48591e5c752484c17225089e5964fa",
+      "940324b6a2580cd803162ea6400f8fa5ad078f695c3eb26ddb7300a35d27cf33"
+    ]
+  },
+  "protocol_sha256": "886051d165379135f5f57138ee5a79247cd1251b379bdd9948c301bf7d2b3f9a",
+  "source_sha256": {
+    "analysis/cohort_restart_check.py": "cb7bcb93fbb1ea65b2265860cb62e659fcb07f91df23bae8f238e12cfb4a28a4",
+    "analysis/evaluate.py": "1a37aa0e024906fafcc9c66f67a2271028b905b5d9873f44260ff7a62ec1fecc",
+    "config.py": "466082cb8ec30ed1510f8af9a4012d1db0fdd1bedf2f68b0b9a03492dcab9308"
+  },
+  "versions": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "sklearn": "1.7.2"
+  }
+}

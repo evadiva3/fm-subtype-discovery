@@ -1,0 +1,158 @@
+{
+ "header": {
+  "experiment": "R1D C-only verification",
+  "purpose": "re-test every C-only discordance of the regenerated sweeps at 2,000 draws",
+  "written_utc": "20260831T223031Z",
+  "d": 119,
+  "n_datasets": 120,
+  "n_draws_screen": 200,
+  "n_draws_deep": 2000,
+  "alpha": 0.05,
+  "n_init": 5,
+  "k_grid": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "seed_base_sweep_A": 3100000,
+  "seed_base_sweep_B": 3200000,
+  "seed_rule": "dataset i uses seed_base + 1000*i; draws use seed_base + 1000*i + 7",
+  "protocol": "Section 3.3 and S3.1 of the article",
+  "versions": {
+   "python": "3.13.9",
+   "numpy": "2.3.5",
+   "scipy": "1.16.3",
+   "scikit_learn": "1.7.2",
+   "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "total_C_only": 2,
+  "total_persisting_at_2000": 0
+ },
+ "cells": {
+  "A_n28_tau0.5": {
+   "sweep": "A",
+   "n": 28,
+   "tau": 0.5,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "A_n28_tau1": {
+   "sweep": "A",
+   "n": 28,
+   "tau": 1.0,
+   "n_datasets": 120,
+   "C_only_at_200": 2,
+   "discordant": [
+    {
+     "dataset": 26,
+     "pM_200": 0.05970149253731343,
+     "pC_200": 0.03980099502487562,
+     "pM_2000": 0.03248375812093953,
+     "pC_2000": 0.059470264867566215,
+     "steps_from_alpha_200": 2.05,
+     "persists_at_2000": false
+    },
+    {
+     "dataset": 55,
+     "pM_200": 0.05970149253731343,
+     "pC_200": 0.04975124378109453,
+     "pM_2000": 0.046476761619190406,
+     "pC_2000": 0.06846576711644178,
+     "steps_from_alpha_200": 0.05,
+     "persists_at_2000": false
+    }
+   ]
+  },
+  "A_n28_tau2": {
+   "sweep": "A",
+   "n": 28,
+   "tau": 2.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "A_n28_tau3": {
+   "sweep": "A",
+   "n": 28,
+   "tau": 3.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "A_n28_tau5": {
+   "sweep": "A",
+   "n": 28,
+   "tau": 5.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "A_n28_tau8": {
+   "sweep": "A",
+   "n": 28,
+   "tau": 8.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "A_n28_tau15": {
+   "sweep": "A",
+   "n": 28,
+   "tau": 15.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "A_n28_tau40": {
+   "sweep": "A",
+   "n": 28,
+   "tau": 40.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "A_n28_tauinf": {
+   "sweep": "A",
+   "n": 28,
+   "tau": null,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "B_n28_tau3": {
+   "sweep": "B",
+   "n": 28,
+   "tau": 3.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "B_n50_tau3": {
+   "sweep": "B",
+   "n": 50,
+   "tau": 3.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "B_n100_tau3": {
+   "sweep": "B",
+   "n": 100,
+   "tau": 3.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  },
+  "B_n200_tau3": {
+   "sweep": "B",
+   "n": 200,
+   "tau": 3.0,
+   "n_datasets": 120,
+   "C_only_at_200": 0,
+   "discordant": []
+  }
+ }
+}

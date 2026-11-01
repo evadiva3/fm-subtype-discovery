@@ -1,0 +1,113 @@
+{
+ "experiment": "geometry-only and selection-only arms at the headline geometry",
+ "written_utc": "20260919T004515Z",
+ "embedding": "data/outputs/trained_fm_embeddings.npy",
+ "embedding_shape": [
+  28,
+  119
+ ],
+ "n_datasets": 2000,
+ "n_draws": 1000,
+ "n_init": 5,
+ "k_grid": [
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "alpha": 0.05,
+ "n_skipped": 0,
+ "seed_rule": "ov_common.hashed_seed(20260918, 36, 0, 0, i, purpose)",
+ "arm_definitions": {
+  "M": "neither error repaired",
+  "G": "geometry matched only",
+  "S": "selection matched only",
+  "C": "both matched"
+ },
+ "pr": {
+  "mean": 4.205362151558123,
+  "sd": 0.27755933059223664
+ },
+ "arms": {
+  "M": {
+   "label": "M",
+   "events": 398,
+   "n": 2000,
+   "rejection_rate": 0.199,
+   "wilson95": [
+    0.18208679439047215,
+    0.21706726807338278
+   ],
+   "mean_p": 0.21051898101898103,
+   "ks_D_vs_uniform": 0.45642357642357645
+  },
+  "G": {
+   "label": "G",
+   "events": 83,
+   "n": 2000,
+   "rejection_rate": 0.0415,
+   "wilson95": [
+    0.03360238318369259,
+    0.05115554917403986
+   ],
+   "mean_p": 0.36133116883116884,
+   "ks_D_vs_uniform": 0.25508141858141864
+  },
+  "S": {
+   "label": "S",
+   "events": 52,
+   "n": 2000,
+   "rejection_rate": 0.026,
+   "wilson95": [
+    0.01988208767671712,
+    0.03393527314676199
+   ],
+   "mean_p": 0.35245104895104895,
+   "ks_D_vs_uniform": 0.2715354645354646
+  },
+  "C": {
+   "label": "C",
+   "events": 13,
+   "n": 2000,
+   "rejection_rate": 0.0065,
+   "wilson95": [
+    0.003802596493606414,
+    0.011089529173876582
+   ],
+   "mean_p": 0.5477137862137863,
+   "ks_D_vs_uniform": 0.11674925074925074
+  }
+ },
+ "paired": {
+  "M_vs_G": {
+   "a_only": 315,
+   "b_only": 0
+  },
+  "M_vs_S": {
+   "a_only": 347,
+   "b_only": 1
+  },
+  "M_vs_C": {
+   "a_only": 385,
+   "b_only": 0
+  },
+  "G_vs_C": {
+   "a_only": 70,
+   "b_only": 0
+  },
+  "S_vs_C": {
+   "a_only": 39,
+   "b_only": 0
+  }
+ },
+ "versions": {
+  "python": "3.13.9",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3",
+  "scikit_learn": "1.7.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "n_workers": 47
+ },
+ "total_wall_s": 1526.4
+}

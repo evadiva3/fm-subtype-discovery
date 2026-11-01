@@ -1,0 +1,168 @@
+{
+  "config": {
+    "study": "S32",
+    "root_seed": 20260926,
+    "experiment": 88,
+    "d": 119,
+    "cells": {
+      "reversal": {
+        "spectrum": "two_block",
+        "n": 28,
+        "source": "results/overnight/e2_spectrum_shape.json",
+        "key": "two_block_pr4.5",
+        "param": "1/0.00504807"
+      }
+    },
+    "groups": {
+      "per_block": 400,
+      "blocks": 4
+    },
+    "draws": 200,
+    "retest_draws": 2000,
+    "arms": [
+      "M",
+      "C"
+    ],
+    "alpha": 0.05,
+    "rule": "p < 0.05",
+    "k_grid": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "n_init": 5,
+    "protocol_sha256": "4c994bd9f1717695bb06d709a4b46babe7f3b1c0308545bdd8b3bdf3aef8082e",
+    "source_sha256": {
+      "analysis/recorded_controls.py": "a32a6b7004e2259791154ae6ffc89a4917ba01e5e6caaac2bcd975649bda2bfe",
+      "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+      "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443",
+      "analysis/popcov_control.py": "726b4e77960dfd30dc21a5ed9649391e3aa03b4e25bf023f9e5398cff9df88b4"
+    },
+    "input_sha256": {
+      "results/overnight/e2_spectrum_shape.json": "ff3137e4c4631d49409a84dee60808b6cb552a27adba07aaf484952afaf0f54b"
+    },
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "sklearn": "1.9.1"
+    }
+  },
+  "records_sha256": "250c8ed16105cdafd4eeca6639e05fbcd582d7040b116ee76f8bd1a828295166",
+  "summary_source_sha256": "a32a6b7004e2259791154ae6ffc89a4917ba01e5e6caaac2bcd975649bda2bfe",
+  "n": 1600,
+  "observed_guard_failures": 0,
+  "participation_ratio_mean": 4.8511465831597045,
+  "M": {
+    "events": 673,
+    "n": 1600,
+    "rate": 0.420625,
+    "wilson95": [
+      0.39665448696933253,
+      0.44497574487011576
+    ]
+  },
+  "C": {
+    "events": 1013,
+    "n": 1600,
+    "rate": 0.633125,
+    "wilson95": [
+      0.6092170728723574,
+      0.6563952154599066
+    ]
+  },
+  "M_only": 10,
+  "C_only": 350,
+  "mcnemar_exact_p": 7.784621300438758e-90,
+  "persisted_at_retest": {
+    "C_only": 207,
+    "M_only": 3
+  },
+  "blocks": {
+    "0": {
+      "M": {
+        "events": 156,
+        "n": 400,
+        "rate": 0.39,
+        "wilson95": [
+          0.34346411118920095,
+          0.43862859356531725
+        ]
+      },
+      "C": {
+        "events": 247,
+        "n": 400,
+        "rate": 0.6175,
+        "wilson95": [
+          0.5689692933599579,
+          0.6637953174704434
+        ]
+      }
+    },
+    "1": {
+      "M": {
+        "events": 165,
+        "n": 400,
+        "rate": 0.4125,
+        "wilson95": [
+          0.36531214408785684,
+          0.461352507421419
+        ]
+      },
+      "C": {
+        "events": 248,
+        "n": 400,
+        "rate": 0.62,
+        "wilson95": [
+          0.5715045437262202,
+          0.6662125056324874
+        ]
+      }
+    },
+    "2": {
+      "M": {
+        "events": 173,
+        "n": 400,
+        "rate": 0.4325,
+        "wilson95": [
+          0.38481873705969716,
+          0.48146542267603
+        ]
+      },
+      "C": {
+        "events": 254,
+        "n": 400,
+        "rate": 0.635,
+        "wilson95": [
+          0.5867439222005686,
+          0.6806877583279773
+        ]
+      }
+    },
+    "3": {
+      "M": {
+        "events": 179,
+        "n": 400,
+        "rate": 0.4475,
+        "wilson95": [
+          0.39950089321583937,
+          0.4964978976897262
+        ]
+      },
+      "C": {
+        "events": 264,
+        "n": 400,
+        "rate": 0.66,
+        "wilson95": [
+          0.6122516850785729,
+          0.7047043807330373
+        ]
+      }
+    }
+  },
+  "checks": {
+    "C_above_M": true
+  }
+}

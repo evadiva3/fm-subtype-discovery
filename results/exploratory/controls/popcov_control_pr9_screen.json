@@ -1,0 +1,195 @@
+{
+ "experiment": "population covariance control at PR 9, screening pass",
+ "purpose": "check that cells 5 and 6 are off the ceiling before spending the full run",
+ "written_utc": "20260910T214332Z",
+ "config": {
+  "d": 119,
+  "n": 180,
+  "pr_target": 9.0,
+  "pr_tolerance": 0.05,
+  "n_datasets": 100,
+  "n_draws": 200,
+  "n_init": 5,
+  "k_grid": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "alpha": 0.05,
+  "arms": [
+   "M_est",
+   "C_est"
+  ],
+  "covariance": "estimated only",
+  "seed_base": 6000000,
+  "seed_rule": "dataset i uses seed_base + 1000*i + cell_offset; its draws use that + 7919",
+  "prefix_note": "datasets i = 0 .. 99 of the full run's seed rule, so the screen is a prefix of the full run and not an extra set of datasets",
+  "accept_band": [
+   0.05,
+   0.95
+  ],
+  "versions": {
+   "python": "3.13.9",
+   "numpy": "2.3.5",
+   "scipy": "1.16.3",
+   "scikit_learn": "1.7.2",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "n_workers": 47
+  }
+ },
+ "cells": {
+  "cell5_exp_n180": {
+   "spectrum": "exp",
+   "n": 180,
+   "d": 119,
+   "regime": "n > d",
+   "pr_target": 9.0,
+   "pr_mean": 8.791850920327688,
+   "pr_sd": 0.27775356609047536,
+   "n_datasets": 100,
+   "n_skipped": 0,
+   "n_errors": 0,
+   "error_sample": null,
+   "n_draws": 200,
+   "arms": {
+    "M_est": {
+     "label": "M, covariance estimated",
+     "n_datasets": 100,
+     "events": 38,
+     "rejection_rate": 0.38,
+     "wilson95": [
+      0.29097599250562445,
+      0.47790244706806495
+     ],
+     "mean_p": 0.09074626865671644,
+     "ks_D_vs_uniform": 0.7260696517412935,
+     "in_accept_band": true
+    },
+    "C_est": {
+     "label": "C, covariance estimated",
+     "n_datasets": 100,
+     "events": 12,
+     "rejection_rate": 0.12,
+     "wilson95": [
+      0.06999406436137383,
+      0.19812099428864266
+     ],
+     "mean_p": 0.149452736318408,
+     "ks_D_vs_uniform": 0.626318407960199,
+     "in_accept_band": true
+    }
+   },
+   "discordance": {
+    "M_only": 26,
+    "C_only": 0,
+    "n_discordant": 26
+   },
+   "k_counts": {
+    "2": 96,
+    "3": 2,
+    "4": 2
+   },
+   "wall_s": 23.2,
+   "param_name": "tau",
+   "param_value": 4.016066862466169,
+   "tuned_pr": 8.822789153121887,
+   "tuned_ok": true,
+   "tune_note": "",
+   "sphere_spectrum_sum": 0.9999999999999992,
+   "sphere_spectrum_top10": [
+    0.18950394182144,
+    0.1569118114441983,
+    0.12899641138011553,
+    0.10533145907565523,
+    0.08546731086127506,
+    0.0689491489014835,
+    0.05533309812909662,
+    0.04419928790475426,
+    0.035161354916630555,
+    0.027872347817126927
+   ],
+   "in_accept_band": true
+  },
+  "cell6_two_block_n180": {
+   "spectrum": "two_block",
+   "n": 180,
+   "d": 119,
+   "regime": "n > d",
+   "pr_target": 9.0,
+   "pr_mean": 9.56918131599428,
+   "pr_sd": 1.231951692995564,
+   "n_datasets": 100,
+   "n_skipped": 0,
+   "n_errors": 0,
+   "error_sample": null,
+   "n_draws": 200,
+   "arms": {
+    "M_est": {
+     "label": "M, covariance estimated",
+     "n_datasets": 100,
+     "events": 100,
+     "rejection_rate": 1.0,
+     "wilson95": [
+      0.963006501776294,
+      0.9999999999999999
+     ],
+     "mean_p": 0.005223880597014923,
+     "ks_D_vs_uniform": 0.9900497512437811,
+     "in_accept_band": false
+    },
+    "C_est": {
+     "label": "C, covariance estimated",
+     "n_datasets": 100,
+     "events": 100,
+     "rejection_rate": 1.0,
+     "wilson95": [
+      0.963006501776294,
+      0.9999999999999999
+     ],
+     "mean_p": 0.00507462686567164,
+     "ks_D_vs_uniform": 0.9900497512437811,
+     "in_accept_band": false
+    }
+   },
+   "discordance": {
+    "M_only": 0,
+    "C_only": 0,
+    "n_discordant": 0
+   },
+   "k_counts": {
+    "2": 100
+   },
+   "wall_s": 20.5,
+   "param_name": "m/eps",
+   "param_value": "1/0.0107461",
+   "tuned_pr": 9.448410800345947,
+   "tuned_ok": true,
+   "tune_note": "",
+   "sphere_spectrum_sum": 1.0,
+   "sphere_spectrum_top10": [
+    0.3093738282038627,
+    0.005852764167763875,
+    0.005852764167763875,
+    0.005852764167763875,
+    0.005852764167763875,
+    0.005852764167763875,
+    0.005852764167763875,
+    0.005852764167763875,
+    0.005852764167763875,
+    0.005852764167763875
+   ],
+   "in_accept_band": false
+  }
+ },
+ "decision": {
+  "all_rates_in_band": false,
+  "band": [
+   0.05,
+   0.95
+  ],
+  "rule": "proceed to the full run only if every screened rate falls strictly between 0.05 and 0.95"
+ },
+ "total_wall_s": 43.7
+}
