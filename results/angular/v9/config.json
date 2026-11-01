@@ -1,0 +1,41 @@
+{
+  "arms": [
+    "W",
+    "D4",
+    "K",
+    "E"
+  ],
+  "auxiliary": 200,
+  "datasets": 200,
+  "draws": 199,
+  "families": [
+    "gaussian",
+    "anisotropic",
+    "two_modes",
+    "six_modes",
+    "offset",
+    "shape_mixture"
+  ],
+  "n": [
+    60,
+    240
+  ],
+  "numpy": "2.5.2",
+  "protocol_sha256": "7dcf7b2559724ce1ba4070c4a8fe0e32c9b81b1db360d115dbfa0757ec6e55f4",
+  "python": "3.13.9",
+  "q": [
+    5,
+    10,
+    20
+  ],
+  "scipy": "1.18.1",
+  "sklearn": "1.8.0",
+  "source_sha256": {
+    "angular_gof.py": "76965c438ae343738857f02812439f61cadc277cc707983b26043d0bda524765",
+    "angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+    "nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d",
+    "validate_angular_gof_v9.py": "93cf9e68ea75f6197d5872494f3e222217c7c09b3e996068455c2141a214d9e3"
+  },
+  "threshold": "p <= .05",
+  "version": "2026-09-15.v9.1"
+}

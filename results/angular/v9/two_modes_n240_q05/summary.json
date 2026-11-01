@@ -1,0 +1,71 @@
+{
+  "arms": {
+    "D4": {
+      "ci": [
+        0.4882502690746968,
+        0.6299444206609564
+      ],
+      "count": 112,
+      "rate": 0.56
+    },
+    "E": {
+      "ci": [
+        0.05421425445609641,
+        0.13850820847382217
+      ],
+      "count": 18,
+      "rate": 0.09
+    },
+    "K": {
+      "ci": [
+        0.02423416547210856,
+        0.09002753770135138
+      ],
+      "count": 10,
+      "rate": 0.05
+    },
+    "W": {
+      "ci": [
+        0.0621593662540661,
+        0.15021278786775571
+      ],
+      "count": 20,
+      "rate": 0.1
+    }
+  },
+  "family": "two_modes",
+  "guard_failures": 0,
+  "kind": "alternative",
+  "max_observed_residual": 1.622462923110178e-09,
+  "max_reference_residual": 3.1989523179823936e-09,
+  "n": 240,
+  "n_datasets": 200,
+  "numerical_failures": 0,
+  "pairs": {
+    "K_vs_E": {
+      "a_only": 8,
+      "b_only": 16,
+      "difference_b_minus_a": 0.04,
+      "exact_p": 0.15158963203430176
+    },
+    "W_vs_D4": {
+      "a_only": 7,
+      "b_only": 99,
+      "difference_b_minus_a": 0.46,
+      "exact_p": 6.454479575071314e-22
+    },
+    "W_vs_E": {
+      "a_only": 19,
+      "b_only": 17,
+      "difference_b_minus_a": -0.01,
+      "exact_p": 0.8679394004284404
+    },
+    "W_vs_K": {
+      "a_only": 19,
+      "b_only": 9,
+      "difference_b_minus_a": -0.05,
+      "exact_p": 0.08715855330228806
+    }
+  },
+  "q": 5
+}

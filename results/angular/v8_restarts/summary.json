@@ -1,0 +1,165 @@
+{
+  "config": {
+    "version": "2026-09-15.1",
+    "root_seed": 20260915,
+    "datasets": 50,
+    "draws": 199,
+    "n_init": 20,
+    "q": [
+      5
+    ],
+    "cells": [
+      "exp_n28",
+      "spike_n28"
+    ],
+    "threshold": "p <= .05",
+    "python": "3.13.9",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "sklearn": "1.8.0",
+    "v7_populations_sha256": "a651b168819700ea3bf74cb4234d55f6de6a4821af55d9a9f54dbe1fe0b46ae2",
+    "source_sha256": {
+      "validate_angular_null.py": "fa37461d34ddea1a138a1e165a2bdb89549caf75e8ba170ce6d1d5b9f5df8454",
+      "angular_null.py": "ba23032646508646ba7e33981bbc7d07fea99a648d2aa95038b0d7d95caa48dd",
+      "nullcal_validation.py": "140f7bff5ec2f17d75b361da5e49eca0fc730fc05a684ca84c6d6af7404e852d"
+    }
+  },
+  "cells": {
+    "exp_n28_q05": {
+      "n": 50,
+      "numerical_failures": 0,
+      "raw_guard_failures": 0,
+      "whitened_guard_failures": 0,
+      "arms": {
+        "C": {
+          "count": 6,
+          "rate": 0.12,
+          "ci": [
+            0.04533532077366383,
+            0.24310131670556245
+          ]
+        },
+        "T": {
+          "count": 0,
+          "rate": 0.0,
+          "ci": [
+            0.0,
+            0.07112173646419766
+          ]
+        },
+        "W": {
+          "count": 3,
+          "rate": 0.06,
+          "ci": [
+            0.01254858783533407,
+            0.1654819466037729
+          ]
+        },
+        "N": {
+          "count": 1,
+          "rate": 0.02,
+          "ci": [
+            0.0005062279830408294,
+            0.10646954571149989
+          ]
+        }
+      },
+      "comparisons": {
+        "C_vs_W": {
+          "a_only": 6,
+          "b_only": 3,
+          "difference_b_minus_a": -0.06,
+          "exact_p": 0.5078125
+        },
+        "T_vs_W": {
+          "a_only": 0,
+          "b_only": 3,
+          "difference_b_minus_a": 0.06,
+          "exact_p": 0.25
+        },
+        "N_vs_W": {
+          "a_only": 0,
+          "b_only": 2,
+          "difference_b_minus_a": 0.04,
+          "exact_p": 0.5
+        }
+      },
+      "max_fit_iterations": 41,
+      "max_fit_residual": 6.679602851802269e-09,
+      "max_reference_fit_iterations": 55,
+      "kind": "calibration",
+      "q": 5,
+      "source_cell": "exp_n28",
+      "n_subjects": 28,
+      "d": 119
+    },
+    "spike_n28_q05": {
+      "n": 50,
+      "numerical_failures": 0,
+      "raw_guard_failures": 0,
+      "whitened_guard_failures": 0,
+      "arms": {
+        "C": {
+          "count": 9,
+          "rate": 0.18,
+          "ci": [
+            0.08576207810966366,
+            0.3143694112856504
+          ]
+        },
+        "T": {
+          "count": 0,
+          "rate": 0.0,
+          "ci": [
+            0.0,
+            0.07112173646419766
+          ]
+        },
+        "W": {
+          "count": 0,
+          "rate": 0.0,
+          "ci": [
+            0.0,
+            0.07112173646419766
+          ]
+        },
+        "N": {
+          "count": 0,
+          "rate": 0.0,
+          "ci": [
+            0.0,
+            0.07112173646419766
+          ]
+        }
+      },
+      "comparisons": {
+        "C_vs_W": {
+          "a_only": 9,
+          "b_only": 0,
+          "difference_b_minus_a": -0.18,
+          "exact_p": 0.00390625
+        },
+        "T_vs_W": {
+          "a_only": 0,
+          "b_only": 0,
+          "difference_b_minus_a": 0.0,
+          "exact_p": 1.0
+        },
+        "N_vs_W": {
+          "a_only": 0,
+          "b_only": 0,
+          "difference_b_minus_a": 0.0,
+          "exact_p": 1.0
+        }
+      },
+      "max_fit_iterations": 38,
+      "max_fit_residual": 4.3324622707925814e-09,
+      "max_reference_fit_iterations": 56,
+      "kind": "calibration",
+      "q": 5,
+      "source_cell": "spike_n28",
+      "n_subjects": 28,
+      "d": 119
+    }
+  }
+}
