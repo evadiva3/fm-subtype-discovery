@@ -1,6 +1,6 @@
 # Cluster-reference calibration on normalized representations
 
-This repository contains the code and evidence for Bangsil and Joshi, "Calibration and sensitivity of cluster tests on normalized neuroimaging representations" (PLOS ONE submission). The study examines how Gaussian and angular cluster references behave after row normalization, how to calibrate them, and which kinds of structure they detect. The clinical cohorts illustrate the fitted pipelines; they do not establish disease subtypes.
+This repository contains the code and evidence for Bangsil and Joshi, "Calibration and sensitivity of cluster tests on normalized neuroimaging representations". The study examines how Gaussian and angular cluster references behave after row normalization, how to calibrate them, and which kinds of structure they detect. The clinical cohorts illustrate the fitted pipelines; they do not establish disease subtypes.
 
 The section and table numbers below refer to S1 File and S2 File of the submission. S2 File identifies the code and stored result for each table and figure. Section S30 of S1 File lists every folder in `results/`.
 
@@ -23,17 +23,12 @@ These commands recalculate the reported rates, check the stored records and sour
 | `analysis/` | Simulation drivers, summaries and verifiers for the recorded studies |
 | `experiments/ds002748_mdd/` | Depression pipeline, the exploratory screens E1 to E18 and the headline recalibration runs (`propagated_null/`) |
 | `models/`, `src/`, `preprocessing/`, `config.py` | Encoder, training, clustering and preprocessing used to produce the stored embeddings |
-| `results/` | Stored records for every study; see `results/README.md` and the register in Section S30 |
+| `results/` | Stored records for the studies; see `results/README.md` and the register in Section S30 |
 | `reproducibility/s16/` | Frozen independent validation (S16), with its code and 1,800 records |
 | `reproducibility/audits/` | Reproduction checks, paired-count calculations and recovered historical records |
 | `docs/` | Study protocols and the reproduction guide |
-<<<<<<< HEAD
 | `paper/build/`, `paper/figures/` | Figure scripts and the rendered figures |
 | `archive/` | Original drivers behind the stored records, superseded source and figure inputs |
-=======
-| `paper/figures/` | Figure scripts and the rendered figures |
-| `archive/` | Superseded source and figure inputs that current code or S2 File depends on |
->>>>>>> f8110da88487923f03b7229791f97c3d0488a3c2
 | `data/` | Applied inputs and saved embeddings; see `data/README.md` |
 | `tests/` | Tests of the drivers and package |
 
@@ -45,23 +40,23 @@ The code is released under the MIT License; see [LICENSE](LICENSE). The OpenNeur
 
 ## Use of AI
 
-The authors set the research questions, hypotheses and study design, wrote the core pipeline code (`models/`, `src/`, `preprocessing/`, `config.py` and the depression pipeline scripts in `experiments/ds002748_mdd/`), drafted the manuscript and interpreted the results. Generative AI tools (Claude and Claude Code, Anthropic; Codex, OpenAI) were used to:
+The authors set the research questions, hypotheses and study design, wrote the core pipeline code (`models/`, `src/`, `preprocessing/`, `config.py` and the depression pipeline scripts in `experiments/ds002748_mdd/`), drafted the manuscript and interpreted the results. Generative AI tools from Anthropic and OpenAI, including Claude, Claude Code and Codex, were used to:
 
-- edit the writing for clarity, and draft this README and the other .md files
-- draft or edit the simulation, verification and figure code and the tests, which the authors then edited and reviewed
+- edit the writing for clarity and draft this README and other Markdown files
+- draft or edit simulation, verification and figure code and tests, which the authors then edited and reviewed
 - run some of the simulation studies
 - help with debugging
-- repo organization and file naming/headings
-- audit the code for errors several times
-- help organize the repository and the stored results
+- audit the code for errors
+- help organize the repository, stored results, file names and headings
 
 The authors reviewed every analysis choice and all AI-assisted code and text. The ideas, hypotheses and conclusions are the authors' own, and the authors take full responsibility for the code, analyses and conclusions. The reported results can be checked with `python reproduce.py verify`.
 
-Eva Bangsil wrote the original manuscript draft and the initial versions of the student-authored scripts. The list below is a selected inventory; AI also assisted with small revisions to student-authored files not individually listed.
+Eva Bangsil wrote the original manuscript draft and the initial versions of the student-authored scripts. Inclusion below does not necessarily mean that AI wrote a file's original version: the inventory includes both generated files and substantially edited files. The list is selected rather than exhaustive; AI also assisted with revisions to student-authored files not individually listed.
 
-Selected files generated or substantially edited with AI assistance:
+### Selected files generated or substantially edited with AI assistance
 
-Documentation
+#### Documentation
+
 - README.md
 - archive/README.md
 - data/README.md
@@ -73,7 +68,8 @@ Documentation
 - docs/S36_POSTHOC_OBSERVED_NOTE_20261009.md
 - results/README.md
 
-Protocols
+#### Protocols
+
 - docs/PROTOCOL_V8.md
 - docs/PROTOCOL_V8_FOLLOWUP.md
 - docs/PROTOCOL_V9.md
@@ -88,7 +84,8 @@ Protocols
 - docs/FOLLOWUP_PROTOCOL_S35_S36_20261008.md
 - docs/FOLLOWUP_PROTOCOL_S36_AMENDMENT_20261009.md
 
-Audit and check scripts
+#### Audit and check scripts
+
 - analysis/audit_angular_gof_v9.py
 - analysis/audit_balanced_v9.py
 - analysis/audit_v9_claims.py
@@ -107,7 +104,8 @@ Audit and check scripts
 - reproducibility/s16/verify_results.py
 - reproduce.py
 
-Analysis scripts
+#### Analysis scripts
+
 - analysis/mdd_geometry_calibrated.py
 - analysis/shape_aware_minor_axis.py
 - analysis/shape_aware_detection_floor.py
@@ -138,15 +136,18 @@ Analysis scripts
 - reproducibility/s16/modules/angular_gof.py
 - reproducibility/s16/modules/angular_null.py
 
-Experiment scripts
+#### Experiment scripts
+
 - experiments/ds002748_mdd/run_mdd_pipeline.sh
 
-Tests
+#### Tests
+
 - tests/conftest.py
 - tests/test_angular_fourth.py
 - tests/test_angular_gof.py
 - tests/test_asymmetric_detection.py
 - tests/test_execution_regressions.py
 
-Archived copies
+#### Archived copies
+
 - archive/recorded_source/ (exact copies of the drivers that wrote the stored records)
