@@ -12,7 +12,7 @@ for _p in (_R,_R/"src",_R/"models",_R/"analysis"):
     if str(_p) not in sys.path:
         sys.path.insert(0,str(_p))
 from config import config
-o=config.resultsRoot
+o=config.resultsRoot/"exploratory/controls"
 KR=config.kmeansKRange
 NI=config.kmeansNInit
 SD=config.randomSeed

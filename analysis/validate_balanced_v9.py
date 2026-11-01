@@ -49,7 +49,7 @@ def main():
         python=platform.python_version(),numpy=np.__version__,scipy=scipy.__version__,sklearn=sklearn.__version__,
         protocol_sha256=primary.sha(ROOT/'docs/PROTOCOL_V9_KERNEL_FOLLOWUP.md'),
         source_sha256={p.name:primary.sha(p) for p in (Path(__file__),Path(ab.__file__),Path(an.__file__),Path(nv.__file__),Path(primary.__file__),Path(primary.gof.__file__))})
-    out=ROOT/'results/angular_v9_balanced';out.mkdir(exist_ok=True,parents=True);cp=out/'config.json'
+    out=ROOT/'results/angular/v9_balanced';out.mkdir(exist_ok=True,parents=True);cp=out/'config.json'
     if cp.exists() and json.loads(cp.read_text())!=cfg:raise RuntimeError('Configuration changed')
     primary.dump(cp,cfg);cells={}
     with ProcessPoolExecutor(max_workers=a.workers) as pool:

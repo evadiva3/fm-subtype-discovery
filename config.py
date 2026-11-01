@@ -7,7 +7,7 @@ class Config:
     @property
     def figuresDir(self):return self.dataRoot/'figures'
     @property
-    def exclusionManifestPath(self):return self.resultsRoot/'subject_exclusions.csv'
+    def exclusionManifestPath(self):return self.resultsRoot/'cohorts/fm/subject_exclusions.csv'
     @property
     def fcDataFolder(self):return self.dataRoot/'FCData'
     @property

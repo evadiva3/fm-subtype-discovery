@@ -32,7 +32,7 @@ def arm_stats(p,label):
     c=int(np.sum(p<ALPHA));ks=kstest(p,"uniform")
     return{"label":label,"n_datasets":int(p.size),"events":c,"rejection_rate":float(c/p.size),"wilson95":list(nc._wilson(c,p.size)),"clopper_pearson95":list(clopper_pearson(c,p.size)),"mean_p":float(p.mean()),"median_p":float(np.median(p)),"ks_D_vs_uniform":float(ks.statistic),"ks_p":float(ks.pvalue),"ks_D_nullcal":float(nc._ks_uniform(p)),"p_deciles":[float(x) for x in np.quantile(p,np.arange(0,11)/10)],"p_histogram_20bins":[int(x) for x in np.histogram(p,bins=20,range=(0,1))[0]]}
 def main():
-    sp=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"phase1"/sp;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1a_headline_recalibration.json";t=time.time()
+    sp=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"exploratory/headline_recalibration"/sp;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1a_headline_recalibration.json";t=time.time()
     print("tuning tau ...",flush=True);tu,p,ok,n=ov.bisect_param(N,D,lambda t:ov.spec_exp(D,t),0.2,60.0,PR_TARGET,tol=PR_TOL,m=TUNE_M);d=abs(p-PR_TARGET)/PR_TARGET
     print(f"tau={tu:.6f}  tuned sphere PR={p:.4f}  deviation={d * 100:.2f}%  ok={ok} {n}",flush=True);l=ov.spec_exp(D,tu)
     import scipy

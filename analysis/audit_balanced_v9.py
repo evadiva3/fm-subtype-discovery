@@ -8,7 +8,7 @@ import validate_balanced_v9 as follow
 ROOT=Path(__file__).resolve().parents[1]
 def main():
     p=argparse.ArgumentParser();p.add_argument("--repo",type=Path,default=ROOT);p.add_argument("--replay",action="store_true");p.add_argument("--workers",type=int,default=8)
-    a=p.parse_args();repo=a.repo.resolve();folder=ROOT/"results/angular_v9_balanced"
+    a=p.parse_args();repo=a.repo.resolve();folder=ROOT/"results/angular/v9_balanced"
     result=json.loads((folder/"summary.json").read_text());cfg=result["config"]
     assert cfg==json.loads((folder/"config.json").read_text())
     assert follow.primary.sha(ROOT/"docs/PROTOCOL_V9_KERNEL_FOLLOWUP.md")==cfg["protocol_sha256"]
@@ -16,7 +16,7 @@ def main():
         p=ROOT/("analysis" if name.startswith("validate_") else "packaging")/name
         assert follow.primary.sha(p)==digest
     prior=set()
-    for base,dirname,key in [(repo,"validation_v7","data_sha256"),(repo,"angular_v8","source_data_sha256"),(repo,"angular_v8_fourth","source_data_sha256"),(ROOT,"angular_v9","source_data_sha256")]:
+    for base,dirname,key in [(repo,"validation/v7","data_sha256"),(repo,"angular/v8","source_data_sha256"),(repo,"angular/v8_fourth","source_data_sha256"),(ROOT,"angular/v9","source_data_sha256")]:
         for p in (base/"results"/dirname).glob("*/*.json"):
             r=json.loads(p.read_text())
             if key in r:prior.add(r[key])

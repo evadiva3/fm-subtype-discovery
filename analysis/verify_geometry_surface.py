@@ -5,6 +5,7 @@ import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"experiments/ds002748_mdd/propagated_null"))
 import nullcal as nc
+from moves import same
 
 def verify(path):
     saved=json.loads(path.read_text());rows=saved["records"];cfg=saved["config"]
@@ -14,7 +15,7 @@ def verify(path):
     assert len(set(seeds))==len(seeds)
     assert len({r["source_sha256"] for r in rows})==1560
     for name,expected in cfg["source_sha256"].items():
-        assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==expected,name
+        assert same(name,expected),name
     for r in rows:
         assert all(0<r[k]<=1 and abs(r[k]*201-round(r[k]*201))<1e-9 for k in ("pM","pC"))
         if r["guard_failed"]:assert r["pM"]==r["pC"]==1.
@@ -36,5 +37,5 @@ def verify(path):
     print(json.dumps(report,indent=2))
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--input",type=Path,default=ROOT/"results/revision_20260923/geometry_surface_fresh.json")
+    p.add_argument("--input",type=Path,default=ROOT/"results/recorded/s6_s9/geometry_surface_fresh.json")
     verify(p.parse_args().input)

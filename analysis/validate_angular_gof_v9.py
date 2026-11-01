@@ -62,7 +62,7 @@ def summarize(rows):
         max_observed_residual=max(r['shape_fit']['whitened_moment_residual'] for r in rows),
         max_reference_residual=max(r['max_reference_residual'] for r in rows))
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,default=ROOT/'results/angular_v9')
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,default=ROOT/'results/angular/v9')
     p.add_argument('--workers',type=int,default=36);p.add_argument('--datasets',type=int,default=200)
     p.add_argument('--draws',type=int,default=199);p.add_argument('--families',nargs='+',default=list(FAMILIES))
     p.add_argument('--n',nargs='+',type=int,default=[60,240]);p.add_argument('--q',nargs='+',type=int,default=[5,10,20])

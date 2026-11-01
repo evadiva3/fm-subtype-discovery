@@ -16,10 +16,10 @@ def verify_sources(cfg,protocol):
 def main():
     p=argparse.ArgumentParser();p.add_argument("--repo",type=Path,default=ROOT);p.add_argument("--workers",type=int,default=8)
     p.add_argument("--replay",action="store_true");a=p.parse_args();repo=a.repo.resolve()
-    folder=ROOT/"results/angular_v9";result=json.loads((folder/"summary.json").read_text());cfg=result["config"]
+    folder=ROOT/"results/angular/v9";result=json.loads((folder/"summary.json").read_text());cfg=result["config"]
     assert cfg==json.loads((folder/"config.json").read_text());verify_sources(cfg,"PROTOCOL_V9.md")
     prior=set()
-    for dirname,key in [("validation_v7","data_sha256"),("angular_v8","source_data_sha256"),("angular_v8_fourth","source_data_sha256")]:
+    for dirname,key in [("validation/v7","data_sha256"),("angular/v8","source_data_sha256"),("angular/v8_fourth","source_data_sha256")]:
         for file in (repo/"results"/dirname).glob("*/*.json"):
             r=json.loads(file.read_text())
             if key in r:prior.add(r[key])
@@ -50,12 +50,12 @@ def main():
                 count=sum(v<=.05 for v in values)
                 arms[arm]=dict(count=count,rate=count/len(values),ci=study.interval(count,len(values)))
             combined[f"{family}_n{n}"]=dict(family=family,n=n,arms=arms)
-    empirical=json.loads((ROOT/"results/embeddings_v9/summary.json").read_text());ecfg=empirical["config"]
+    empirical=json.loads((ROOT/"results/angular/embeddings_v9/summary.json").read_text());ecfg=empirical["config"]
     verify_sources(ecfg,"PROTOCOL_V9_APPLIED.md");applied_tasks=[]
     for s in empirical["sources"]:
         assert applied.sha(repo/s["path"])==s["sha256"]
         for row in s["q_results"]:
-            assert row==json.loads((ROOT/"results/embeddings_v9"/f"source{s["id"]:02}_q{row["q"]:02}.json").read_text())
+            assert row==json.loads((ROOT/"results/angular/embeddings_v9"/f"source{s["id"]:02}_q{row["q"]:02}.json").read_text())
             raw=np.load(repo/s["path"],allow_pickle=False)
             proj=study.an.fixed_projection(raw.shape[1],row["q"],int(row["projection_seed"]))
             x=study.nv.normalize(study.nv.normalize(raw@proj))

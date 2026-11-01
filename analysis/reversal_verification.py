@@ -13,8 +13,8 @@ import numpy as np
 _R=Path(__file__).resolve().parents[1];sys.path.insert(0,str(_R/"experiments"/"ds002748_mdd"/"propagated_null"))
 import nullcal as nc
 import ov_common as ov
-D=ov.D;N=28;NDS=400;N_DRAWS=200;DEEP_DRAWS=2000;N_RUNS=4;N_WORKERS=47;ROOT_SEED=20260917;EXPERIMENT_ID=32;SHAPE=_R/"results"/"overnight"/"e2_spectrum_shape.json"
-OUT=_R/"results"/"reversal_verification.json"
+D=ov.D;N=28;NDS=400;N_DRAWS=200;DEEP_DRAWS=2000;N_RUNS=4;N_WORKERS=47;ROOT_SEED=20260917;EXPERIMENT_ID=32;SHAPE=_R/"results"/"exploratory/screens_e1_e18"/"e2_spectrum_shape.json"
+OUT=_R/"results"/"exploratory/controls/reversal_verification.json"
 CELLS=["exp_pr4.5","power_pr3.0","power_pr4.5","power_pr6.0","one_spike_pr3.0","one_spike_pr4.5","one_spike_pr6.0","two_block_pr3.0","two_block_pr4.5","two_block_pr6.0"];_LAM=None
 def spectrum(cell):
     f=cell["family"];pv=cell["param_value"]
@@ -41,7 +41,7 @@ def main():
     import scipy
     import sklearn
     se=json.loads(SHAPE.read_text())["cells"];s1=json.loads(OUT.read_text()) if OUT.exists() else{"cells":{}}
-    s1["config"]=dict(experiment="reversal verification on disjoint seed blocks",written_utc=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),n=N,d=D,n_datasets=NDS,n_draws=N_DRAWS,deep_draws=DEEP_DRAWS,n_runs=N_RUNS,n_init=ov.N_INIT,k_grid=list(ov.K_GRID),alpha=ov.ALPHA,seed_rule="ov_common.hashed_seed(%d, %d, cell_id, run, i, purpose); purpose 0 data, 1 draws; observed search random_state=i"%(ROOT_SEED,EXPERIMENT_ID),spectra_from="results/overnight/e2_spectrum_shape.json",versions={"python":platform.python_version(),"numpy":np.__version__,"scipy":scipy.__version__,"scikit_learn":sklearn.__version__,"platform":platform.platform(),"n_workers":N_WORKERS})
+    s1["config"]=dict(experiment="reversal verification on disjoint seed blocks",written_utc=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),n=N,d=D,n_datasets=NDS,n_draws=N_DRAWS,deep_draws=DEEP_DRAWS,n_runs=N_RUNS,n_init=ov.N_INIT,k_grid=list(ov.K_GRID),alpha=ov.ALPHA,seed_rule="ov_common.hashed_seed(%d, %d, cell_id, run, i, purpose); purpose 0 data, 1 draws; observed search random_state=i"%(ROOT_SEED,EXPERIMENT_ID),spectra_from="results/exploratory/screens_e1_e18/e2_spectrum_shape.json",versions={"python":platform.python_version(),"numpy":np.__version__,"scipy":scipy.__version__,"scikit_learn":sklearn.__version__,"platform":platform.platform(),"n_workers":N_WORKERS})
     t0=time.time()
     for cd,k in enumerate(CELLS):
         if k in s1["cells"]:

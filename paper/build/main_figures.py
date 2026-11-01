@@ -39,7 +39,7 @@ def done(c,name):
     convert_from_path(O/f"{name}.pdf",dpi=300,poppler_path=P)[0].save(O/f"{name}.png")
 
 def mechanism():
-    s=load("results/revision_20260926/mechanism_control/summary.json")
+    s=load("results/recorded/s31_s32/mechanism_control/summary.json")
     c=canvas.Canvas(str(O/"Main_Figure2.pdf"),pagesize=(W,250))
     arms=[("M_fit","M","fitted",3),("C_fit","C","fitted",1),("M_H","M","moment H",3),("C_H","C","moment H",1),("C_genlaw","C","generating law",0)]
     titles={"cell1":"Exponential spectrum, n = 28","cell3":"Two-block spectrum, n = 28","cell6":"Two-block spectrum, n = 180"}
@@ -56,7 +56,7 @@ def mechanism():
     done(c,"Main_Figure2")
 
 def embedding():
-    h=load("results/revision_20260924/headline/summary.json")["summary"]
+    h=load("results/recorded/s18_s22/headline/summary.json")["summary"]
     c=canvas.Canvas(str(O/"Main_Figure3.pdf"),pagesize=(W,230))
     x,y,w,ht=40,50,190,140
     frame(c,x,y,w,ht,.25,[0,.05,.1,.15,.2,.25],"A  Rejection of null datasets (%)")
@@ -76,7 +76,7 @@ def embedding():
     done(c,"Main_Figure3")
 
 def by_n():
-    src={28:"results/revision_20260924/scope_detection_n28",50:"results/revision_20260925/sample_size_n50",100:"results/revision_20260924/scope_detection_n100",200:"results/revision_20260925/sample_size_n200"}
+    src={28:"results/recorded/s18_s22/scope_detection_n28",50:"results/recorded/s24_s29/sample_size_n50",100:"results/recorded/s18_s22/scope_detection_n100",200:"results/recorded/s24_s29/sample_size_n200"}
     out={}
     for n,p in src.items():
         cells=load(p+"/summary.json")["cells"]

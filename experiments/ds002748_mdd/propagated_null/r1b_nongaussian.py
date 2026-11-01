@@ -65,7 +65,7 @@ def summarize(res):
     cl["shift"]={"ambient_null_mean":ab,"sphere_null_mean":sh,"raw":float(sh-ab),"in_ambient_sd":float((sh-ab)/s) if s else None,"sign":int(np.sign(sh-ab))};pM=np.array([r["pM"] for r in g])
     pC=np.array([r["pC"] for r in g]);cl["M_only"]=int(np.sum((pM<ALPHA)&(pC>=ALPHA)));cl["C_only"]=int(np.sum((pC<ALPHA)&(pM>=ALPHA)));cl["C_minus_M"]=float(cl["C"]["rej"]-cl["M"]["rej"]);return cl
 def main():
-    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"phase1"/s;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1b_nongaussian.json";t=time.time();cg,g=({},{})
+    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"exploratory/headline_recalibration"/s;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1b_nongaussian.json";t=time.time();cg,g=({},{})
     for pr in PR_TARGETS:
         for n in NS:
             k=f"pr{pr:g}_n{n}";tu,p,ok,ne=ov.bisect_param(n,D,lambda t:ov.spec_exp(D,t),0.2,200.0,pr,tol=0.05,m=100);rg=np.random.default_rng(SEED_ROOT+hash(k)%100000)

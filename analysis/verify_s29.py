@@ -5,15 +5,16 @@ import argparse,hashlib,json
 from pathlib import Path
 import numpy as np
 import robustness_detection as rd
+from moves import same,summary_ok
 R=Path(__file__).resolve().parents[1]
-D=R/"results/revision_20260925"
+D=R/"results/recorded/s24_s29"
 
 def rows(d):
     return [json.loads(l) for l in (d/"records.jsonl").read_text(encoding="utf-8").splitlines()]
 
 def checksums(cfg):
     for p,v in cfg["source_sha256"].items():
-        assert rd.sha(R/p)==v,p
+        assert same(p,v),p
     assert rd.sha(rd.PROTOCOL)==cfg["protocol_sha256"],"Protocol changed after execution"
 
 def audit_a(d,replay):
@@ -65,7 +66,7 @@ def audit_b(d,replay):
         for a in ("M","C"):
             z=r["p"][a]*(cfg["draws"]+1)
             assert r["guard_failed"] or (np.isclose(z,round(z)) and 1<=round(z)<=cfg["draws"]+1)
-    assert rd.summarize_b(d)==json.loads((d/"summary.json").read_text(encoding="utf-8")),"Summary mismatch"
+    assert summary_ok(rd.summarize_b(d),json.loads((d/"summary.json").read_text(encoding="utf-8")),"analysis/robustness_detection.py"),"Summary mismatch"
     replayed=[]
     if replay:
         for key in [("skew",0),("heavy",999)]:

@@ -14,7 +14,7 @@ import numpy as np
 _R=Path(__file__).resolve().parents[1];sys.path.insert(0,str(_R/"experiments"/"ds002748_mdd"/"propagated_null"))
 import nullcal as nc
 import ov_common as ov
-EMB=_R/"data"/"outputs"/"trained_fm_embeddings.npy";OUT=_R/"results"/"headline_embedding.json";N_DATASETS=10000;N_BLOCKS=5;N_DRAWS=1000;N_WORKERS=47;ROOT_SEED=20260917;EXPERIMENT_ID=33;_G={}
+EMB=_R/"data"/"outputs"/"trained_fm_embeddings.npy";OUT=_R/"results"/"exploratory/controls/headline_embedding.json";N_DATASETS=10000;N_BLOCKS=5;N_DRAWS=1000;N_WORKERS=47;ROOT_SEED=20260917;EXPERIMENT_ID=33;_G={}
 def _init(mean,factor,n):_G["mean"],_G["factor"],_G["n"]=(mean,factor,n)
 def one(args):
     b,i,sd,d=args

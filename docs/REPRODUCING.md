@@ -76,4 +76,4 @@ See `paper/figures/README.md` to match each file to its figure in the submission
 
 ## Rules
 
-Don't edit files whose SHA-256 is stored in `results/` or `reproducibility/` (protocols, drivers, inputs). Don't pool the historical headline run with S18.
+Don't edit files whose SHA-256 is stored in `results/` or `reproducibility/` (protocols, drivers, inputs). The drivers that only had their result paths updated keep their originals in `archive/recorded_source/`. Don't pool the historical headline run with S18.

@@ -54,8 +54,8 @@ def audit(path,replay=False):
 def main():
     p=argparse.ArgumentParser();p.add_argument("--replay",action="store_true")
     args=p.parse_args()
-    primary,rows=audit(ROOT/"results/validation_v7",args.replay)
-    resolution,high=audit(ROOT/"results/validation_v7_resolution",args.replay)
+    primary,rows=audit(ROOT/"results/validation/v7",args.replay)
+    resolution,high=audit(ROOT/"results/validation/v7_resolution",args.replay)
     paired={}
     for name,rr in high.items():
         low=rows[name][:len(rr)]
@@ -63,7 +63,7 @@ def main():
         paired[name]=dict(low=study.summarize(low),high=study.summarize(rr),decision_changes={
             arm:sum((a["p"][arm]<=.05)!=(b["p"][arm]<=.05) for a,b in zip(low,rr)) for arm in rr[0]["p"]})
     result=dict(primary=primary,resolution=resolution,paired_resolution=paired)
-    out=ROOT/"results/validation_v7/audit.json";out.write_text(json.dumps(result,indent=2))
+    out=ROOT/"results/validation/v7/audit.json";out.write_text(json.dumps(result,indent=2))
     print(json.dumps(dict(primary=primary,resolution=resolution),indent=2))
 
 if __name__=="__main__":main()

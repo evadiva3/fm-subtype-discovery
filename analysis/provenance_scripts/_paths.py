@@ -5,7 +5,7 @@ from pathlib import Path
 RP=Path(os.environ.get("FM_REPO_ROOT") or Path(__file__).resolve().parents[2])
 if str(RP) not in sys.path:
     sys.path.insert(0,str(RP))
-RUNS=Path(os.environ.get("FM_RUNS_ROOT") or RP/"results"/"handoff_20260802")
+RUNS=Path(os.environ.get("FM_RUNS_ROOT") or RP/"results"/"historical/handoff")
 CAN=Path(os.environ.get("FM_CANON_DIR") or RP/"data"/"outputs")
 
 def out(name):

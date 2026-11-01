@@ -18,7 +18,7 @@ PROTOCOL = R / "docs/FOLLOWUP_PROTOCOL_S35_S36_20261008.md"
 DRAWS = 20000
 COHORTS = {
     "fibromyalgia": (R / "data/outputs/trained_fm_embeddings.npy", R / "data/outputs/K-Means-Labeling.csv"),
-    "depression": (R / "results/mdd/canonical_single/Embeddings.npy", R / "results/mdd/canonical_single/K-Means-Labeling.csv"),
+    "depression": (R / "results/cohorts/mdd/canonical_single/Embeddings.npy", R / "results/cohorts/mdd/canonical_single/K-Means-Labeling.csv"),
 }
 # Table S64 values (20,000 draws), and the construction flags used by analysis/null_progression.py
 STORED = {"fibromyalgia": {"M": 0.1685, "G": 0.4630, "S": 0.4033, "C": 0.7009},

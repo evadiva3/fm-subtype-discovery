@@ -147,9 +147,9 @@ def fig8(d,e=None):
     done(c,8)
 
 if __name__=="__main__":
-    h=json.loads((R/"results/revision_20260924/headline/summary.json").read_text(encoding="utf-8"))["summary"]
-    d=json.loads((R/"results/revision_20260924/calibrated_detection/summary.json").read_text(encoding="utf-8"))
-    ep=R/"results/revision_20260924/asymmetric_detection/summary.json"
+    h=json.loads((R/"results/recorded/s18_s22/headline/summary.json").read_text(encoding="utf-8"))["summary"]
+    d=json.loads((R/"results/recorded/s18_s22/calibrated_detection/summary.json").read_text(encoding="utf-8"))
+    ep=R/"results/recorded/s18_s22/asymmetric_detection/summary.json"
     e=json.loads(ep.read_text(encoding="utf-8")) if ep.exists() else None
     fig3(h)
     fig7(d)

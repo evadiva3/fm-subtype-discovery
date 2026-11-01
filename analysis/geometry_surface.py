@@ -40,7 +40,7 @@ def one(task):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output',type=Path,default=ROOT/'results/revision_20260923/geometry_surface_fresh.json')
+    parser.add_argument('--output',type=Path,default=ROOT/'results/recorded/s6_s9/geometry_surface_fresh.json')
     parser.add_argument('--workers',type=int,default=4)
     parser.add_argument('--datasets',type=int,default=120)
     parser.add_argument('--draws',type=int,default=200)

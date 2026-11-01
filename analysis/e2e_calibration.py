@@ -13,7 +13,7 @@ for _p in (_R,_R/"src",_R/"models",_R/"analysis"):
         sys.path.insert(0,str(_p))
 from config import config
 from evaluate import cluster_evaluate
-o=config.resultsRoot
+o=config.resultsRoot/"exploratory/controls"
 K=int(os.environ.get("E2E_K",7))
 ND=int(os.environ.get("NDATASETS",200))
 NR=int(os.environ.get("NDRAWS",200))

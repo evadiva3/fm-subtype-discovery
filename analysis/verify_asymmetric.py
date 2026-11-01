@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 from summarize_detection import summarize
 import asymmetric_detection as ad
+from moves import same
 R=Path(__file__).resolve().parents[1]
 
 def sha(p):
@@ -14,7 +15,7 @@ def sha(p):
 def audit(d,replay=False):
     cfg=json.loads((d/"config.json").read_text(encoding="utf-8"))
     for p,v in cfg["source_sha256"].items():
-        assert sha(R/p)==v,p
+        assert same(p,v),p
     assert sha(ad.PROTOCOL)==cfg["protocol_sha256"],"Protocol changed after execution"
     rs=[json.loads(l) for l in (d/"records.jsonl").read_text(encoding="utf-8").splitlines()]
     keys={(r["spectrum"],r["q"],r["group"],r["index"]) for r in rs}
@@ -48,7 +49,7 @@ def audit(d,replay=False):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser()
-    p.add_argument("--directory",type=Path,default=R/"results/revision_20260924/asymmetric_detection")
+    p.add_argument("--directory",type=Path,default=R/"results/recorded/s18_s22/asymmetric_detection")
     p.add_argument("--replay",action="store_true")
     a=p.parse_args()
     audit(a.directory,a.replay)

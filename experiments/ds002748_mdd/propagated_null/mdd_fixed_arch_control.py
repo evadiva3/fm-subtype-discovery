@@ -21,7 +21,7 @@ def _subs():
     return sorted((f.name for f in _sf.ROOT.iterdir() if f.is_dir() and (_sf.ROOT/_sf.TS_PAT.format(s=f.name)).exists()))
 _sf.get_included_subjects_mdd=_subs
 import dataset_mdd as _dm
-ROOT=Path(os.environ.get("MDD_CTRL_ROOT",os.path.join(RP,"results","mdd","fixed_arch_control","_run")))
+ROOT=Path(os.environ.get("MDD_CTRL_ROOT",os.path.join(RP,"results","cohorts","mdd","fixed_arch_control","_run")))
 CK=ROOT/"ckpt"
 RES=ROOT/"runs"
 for d in (CK,RES):

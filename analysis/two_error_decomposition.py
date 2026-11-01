@@ -13,7 +13,7 @@ import numpy as np
 _R=Path(__file__).resolve().parents[1];sys.path.insert(0,str(_R/"experiments"/"ds002748_mdd"/"propagated_null"))
 import nullcal as nc
 import ov_common as ov
-EMB=_R/"data"/"outputs"/"trained_fm_embeddings.npy";OUT=_R/"results"/"two_error_decomposition.json";N_DATASETS=2000;N_DRAWS=1000;N_WORKERS=47;ROOT_SEED=20260918;EXPERIMENT_ID=36
+EMB=_R/"data"/"outputs"/"trained_fm_embeddings.npy";OUT=_R/"results"/"exploratory/controls/two_error_decomposition.json";N_DATASETS=2000;N_DRAWS=1000;N_WORKERS=47;ROOT_SEED=20260918;EXPERIMENT_ID=36
 ARMS={"M":dict(reproject=False,match_selection=False),"G":dict(reproject=True,match_selection=False),"S":dict(reproject=False,match_selection=True),"C":dict(reproject=True,match_selection=True)};_G={}
 def _init(mean,factor,n):_G["mean"],_G["factor"],_G["n"]=(mean,factor,n)
 def one(args):

@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 import numpy as np
-_R=Path(__file__).resolve().parents[1];SRC=_R/"results"/"ambient_control.json";OUT=_R/"results"/"cell2_direction_check.json";ALPHA=0.05;FEATURES=["pr","obs","pc1","mean_norm"]
+_R=Path(__file__).resolve().parents[1];SRC=_R/"results"/"exploratory/controls/ambient_control.json";OUT=_R/"results"/"exploratory/controls/cell2_direction_check.json";ALPHA=0.05;FEATURES=["pr","obs","pc1","mean_norm"]
 def describe(rows):
     if not rows:return dict(n=0)
     o=dict(n=len(rows))
@@ -20,7 +20,7 @@ def main():
     p=float(np.mean([r["pr"] for r in rs]))
     for r in rs:r["pr_dev"]=abs(r["pr"]-p)
     d=lambda r:rj(r,"C_est") and(not rj(r,"C_known"))
-    o=dict(source="results/ambient_control.json, replay__cell2_exp_n200",reproduction=c["reproduction"],reproduces_archive=all((v["identical_events"] for v in c["reproduction"].values())),n_datasets=len(rs),pr_mean=p,arms={a:dict(events=v["events"],rate=v["rejection_rate"],wilson95=v["wilson95"]) for a,v in c["arms"].items()},paired=c["paired"],groups={k:describe(v) for k,v in gs.items()},rank_of_downward_datasets={f:ranks(rs,f,d) for f in FEATURES+["pr_dev"]},exceedances_of_downward_datasets=[dict(i=r["i"],pr=r["pr"],obs=r["obs"],k=r["k"],exceed_C_est=r["exceed_C_est"],exceed_C_known=r["exceed_C_known"],exceed_C_ambient=r["exceed_C_ambient"]) for r in gs["C_est_reject_C_known_accept"]])
+    o=dict(source="results/exploratory/controls/ambient_control.json, replay__cell2_exp_n200",reproduction=c["reproduction"],reproduces_archive=all((v["identical_events"] for v in c["reproduction"].values())),n_datasets=len(rs),pr_mean=p,arms={a:dict(events=v["events"],rate=v["rejection_rate"],wilson95=v["wilson95"]) for a,v in c["arms"].items()},paired=c["paired"],groups={k:describe(v) for k,v in gs.items()},rank_of_downward_datasets={f:ranks(rs,f,d) for f in FEATURES+["pr_dev"]},exceedances_of_downward_datasets=[dict(i=r["i"],pr=r["pr"],obs=r["obs"],k=r["k"],exceed_C_est=r["exceed_C_est"],exceed_C_known=r["exceed_C_known"],exceed_C_ambient=r["exceed_C_ambient"]) for r in gs["C_est_reject_C_known_accept"]])
     OUT.write_text(json.dumps(o,indent=1));print(json.dumps({k:o[k] for k in("reproduces_archive","arms","paired")},indent=1));print(json.dumps(o["rank_of_downward_datasets"],indent=1))
     for k,g in o["groups"].items():print(k,g.get("n"),{f:round(g[f]["mean"],4) for f in FEATURES if f in g},g.get("k_counts"))
 if __name__=="__main__":main()

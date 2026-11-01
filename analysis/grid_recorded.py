@@ -13,7 +13,7 @@ import nullcal as nc
 import ov_common as ov
 EXP=80
 PROTOCOL=R/'docs/FOLLOWUP_PROTOCOL_S24_S26_20260925.md'
-HIST=R/'results/overnight/e1_grid.json'
+HIST=R/'results/exploratory/screens_e1_e18/e1_grid.json'
 _h=json.loads(HIST.read_text(encoding='utf-8'))['cells']
 CELLS=[dict(key=k,n=c['n'],pr_target=c['pr_target'],tau=c['tau']) for k,c in sorted(_h.items(),key=lambda kc:(kc[1]['pr_target'],kc[1]['n']))]
 

@@ -76,7 +76,7 @@ json.dump({"n_draws":ND,"observed_sil_ambient":float(obs_amb),
 
 print("\ntodo 2.5: fm bootstrap-vs-cross-run ratio, 14-run ari")
 cr=json.load(open((RUNS/"crossrun_ari_summary.json")))["mean_ari"]
-bp=RP/"results/bootstrap_stability.csv"
+bp=RP/"results/cohorts/fm/bootstrap_stability.csv"
 if bp.exists():
     bs=pd.read_csv(bp)
     ac=[c for c in bs.columns if "ari" in c.lower()]
@@ -91,5 +91,5 @@ if bp.exists():
     else:
         print(f"  no ARI column in bootstrap_stability.csv; columns: {list(bs.columns)}")
 else:
-    print("  results/bootstrap_stability.csv not found")
+    print("  results/cohorts/fm/bootstrap_stability.csv not found")
 print(f"\n  wrote {OUT}")

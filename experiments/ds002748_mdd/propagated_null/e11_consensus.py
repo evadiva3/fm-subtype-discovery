@@ -13,7 +13,7 @@ K_RANGE=range(2,9)
 SEED=20260821
 
 def load_fixed_arch():
-    C=sorted(glob.glob(str(ROOT/'results/mdd/fixed_arch_control/runs/seed*.json')))
+    C=sorted(glob.glob(str(ROOT/'results/cohorts/mdd/fixed_arch_control/runs/seed*.json')))
     A,ids= ([],None)
     for D in C:
         B=json.loads(Path(D).read_text())
@@ -24,7 +24,7 @@ def load_fixed_arch():
     return (np.array(A)if A else None,ids,len(C))
 
 def load_search_vary():
-    B=sorted(glob.glob(str(ROOT/'results/mdd/multirun_v2/by_run/run*_labels.csv')),key=lambda p:int(Path(p).stem.split('_')[0][3:]))
+    B=sorted(glob.glob(str(ROOT/'results/cohorts/mdd/multirun_v2/by_run/run*_labels.csv')),key=lambda p:int(Path(p).stem.split('_')[0][3:]))
     A,ids= ([],None)
     for D in B:
         C=list(csv.DictReader(open(D)))
@@ -114,7 +114,7 @@ def main():
         C['cells'][B]=A
         ov.save_state(OUT,C)
         print('[E11] %-12s runs=%d n=%d  consensus k=%d sizes=%s  ARI run-vs-consensus %.4f+-%.4f  pairwise runs %.4f+-%.4f  bootstrap-consensus %.4f+-%.4f  gain=%+.4f'% (B,A['n_runs'],A['n_subjects'],A['consensus_k'],A['consensus_sizes'],A['ari_run_vs_consensus_mean'],A['ari_run_vs_consensus_sd'],A['ari_pairwise_runs_mean'],A['ari_pairwise_runs_sd'],A['ari_bootstrap_consensus_mean'],A['ari_bootstrap_consensus_sd'],A['stability_gain']),flush=True)
-    I=ROOT/'results/fm_fixed_arch_control'
+    I=ROOT/'results/cohorts/fm/fixed_arch_control'
     if'fm_note'not in C['cells']:
         J=bool(glob.glob(str(I/'**/*labels*'),recursive=True))
         C['cells']['fm_note']=dict(protocol='fm_fixed_arch',skipped=True,reason='fibromyalgia fixed-architecture control stores only per-run summary statistics (run, seed, k_selected, silhouette, perm_p) in fixed_arch_control_runs.csv; no per-run label vectors and no per-run embeddings are on disk, so no consensus can be built for that cohort without retraining, which is out of scope.',labels_found=J)

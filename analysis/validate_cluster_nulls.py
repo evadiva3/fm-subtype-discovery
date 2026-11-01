@@ -116,7 +116,7 @@ def main():
     parser.add_argument("--root-seed",type=int,default=20260914)
     parser.add_argument("--n-init",type=int,default=5)
     parser.add_argument("--cells",nargs="*",default=[c["name"] for c in CELLS])
-    parser.add_argument("--output",type=Path,default=ROOT/"results"/"validation_v7")
+    parser.add_argument("--output",type=Path,default=ROOT/"results"/"validation/v7")
     args = parser.parse_args()
     if args.datasets < 1 or args.draws < 2 or args.workers < 1 or args.n_init < 1:
         parser.error("positive datasets, workers, n-init and at least two draws required")

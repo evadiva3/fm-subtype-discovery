@@ -30,8 +30,8 @@ import angular_null as an
 import nullcal_validation as nv
 import ov_common as ov
 
-OUT = _R / "results" / "revision_20260923" / "shape_aware_article_geometry_eigenvector_corrected.json"
-SHAPE = _R / "results" / "overnight" / "e2_spectrum_shape.json"
+OUT = _R / "results" / "recorded/s6_s9" / "shape_aware_article_geometry_eigenvector_corrected.json"
+SHAPE = _R / "results" / "exploratory/screens_e1_e18" / "e2_spectrum_shape.json"
 N = 28
 D = ov.D
 NDS = 200

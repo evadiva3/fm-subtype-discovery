@@ -16,8 +16,8 @@ import ov_common as ov
 from popcov_control import sphere_spectrum
 PROTOCOL=R/"docs/FOLLOWUP_PROTOCOL_S31_S32_20260926.md"
 D=ov.D
-CELLS={"cell1":("exp",28,"popcov_control.json","cell1_exp_n28"),"cell3":("two_block",28,"popcov_control.json","cell3_two_block_n28"),"cell6":("two_block",180,"popcov_control_cells567.json","cell6_two_block_n180")}
-REVERSAL=("two_block",28,"overnight/e2_spectrum_shape.json","two_block_pr4.5")
+CELLS={"cell1":("exp",28,"exploratory/controls/popcov_control.json","cell1_exp_n28"),"cell3":("two_block",28,"exploratory/controls/popcov_control.json","cell3_two_block_n28"),"cell6":("two_block",180,"exploratory/controls/popcov_control_cells567.json","cell6_two_block_n180")}
+REVERSAL=("two_block",28,"exploratory/screens_e1_e18/e2_spectrum_shape.json","two_block_pr4.5")
 ARMS=("M_fit","C_fit","M_H","C_H","C_genlaw")
 BLOCKS=4
 _G={}
@@ -113,7 +113,7 @@ def spectra(root):
 
 def config(study,root,groups):
     src=[Path(__file__),Path(nc.__file__),Path(ov.__file__),R/"analysis/popcov_control.py"]
-    inputs=["popcov_control.json","popcov_control_cells567.json"] if study=="S31" else [REVERSAL[2]]
+    inputs=["exploratory/controls/popcov_control.json","exploratory/controls/popcov_control_cells567.json"] if study=="S31" else [REVERSAL[2]]
     cells={c:dict(spectrum=v[0],n=v[1],source=f"results/{v[2]}",key=v[3],param=stored(v[2],v[3])) for c,v in CELLS.items()} if study=="S31" else {"reversal":dict(spectrum=REVERSAL[0],n=REVERSAL[1],source=f"results/{REVERSAL[2]}",key=REVERSAL[3],param=stored(REVERSAL[2],REVERSAL[3]))}
     return dict(study=study,root_seed=root,experiment=87 if study=="S31" else 88,d=D,cells=cells,groups=groups,draws=200,retest_draws=2000 if study=="S32" else None,arms=list(ARMS) if study=="S31" else ["M","C"],alpha=ov.ALPHA,rule="p < 0.05",k_grid=list(ov.K_GRID),n_init=ov.N_INIT,
                 protocol_sha256=sha(PROTOCOL),source_sha256={str(f.resolve().relative_to(R)).replace("\\","/"):sha(f) for f in src},input_sha256={f"results/{f}":sha(R/"results"/f) for f in inputs},

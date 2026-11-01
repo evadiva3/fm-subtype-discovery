@@ -31,7 +31,7 @@ def summarize(rows):
     n=len(rows);count=sum(r['p']<=.05 for r in rows);ci=binomtest(count,n).proportion_ci(method='exact')
     return dict(n=n,count=count,rate=count/n,ci=[float(ci.low),float(ci.high)],numerical_failures=0)
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,default=ROOT/'results/angular_v8_fourth')
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,default=ROOT/'results/angular/v8_fourth')
     p.add_argument('--workers',type=int,default=36);p.add_argument('--datasets',type=int,default=200)
     p.add_argument('--draws',type=int,default=199);a=p.parse_args()
     cfg=dict(protocol='outcome-motivated independent follow-up',datasets=a.datasets,draws=a.draws,n=60,d=20,

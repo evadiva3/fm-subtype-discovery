@@ -5,11 +5,11 @@ from reportlab.lib.colors import HexColor,Color
 from pdf2image import convert_from_path
 R=Path(__file__).resolve().parents[2];P=R/"paper/figures"
 # Prefer the fully recorded S26 grid; fall back to the historical aggregate grid.
-D=R/"results/revision_20260925/grid_recorded/summary.json"
+D=R/"results/recorded/s24_s29/grid_recorded/summary.json"
 if D.exists():
  d=json.loads(D.read_text());cs={(c["pr_target"],c["n"]):{"rej_M":c["M"]["rate"],"rej_C":c["C"]["rate"]} for c in d["cells"].values()}
 else:
- D=R/"results/overnight/e1_grid.json";d=json.loads(D.read_text());cs={(c["pr_target"],c["n"]):c for c in d["cells"].values()}
+ D=R/"results/exploratory/screens_e1_e18/e1_grid.json";d=json.loads(D.read_text());cs={(c["pr_target"],c["n"]):c for c in d["cells"].values()}
 ps=sorted({p for p,n in cs});ns=sorted({n for p,n in cs})
 c=canvas.Canvas(str(P/"Figure4.pdf"),pagesize=(960,450));a=HexColor("#FFF8FB");b=HexColor("#E7A8C2");ink=HexColor("#30272C");nom=HexColor("#806F78")
 def col(v):return Color(a.red+(b.red-a.red)*v,a.green+(b.green-a.green)*v,a.blue+(b.blue-a.blue)*v)

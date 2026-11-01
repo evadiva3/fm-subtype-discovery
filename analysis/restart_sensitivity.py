@@ -13,7 +13,7 @@ import numpy as np
 _R=Path(__file__).resolve().parents[1];sys.path.insert(0,str(_R/"experiments"/"ds002748_mdd"/"propagated_null"))
 import nullcal as nc
 import ov_common as ov
-SHAPE=_R/"results"/"overnight"/"e2_spectrum_shape.json";OUT=_R/"results"/"restart_sensitivity.json";N=28;NDS=400;N_DRAWS=200;RESTARTS=[5,20];CELLS=["two_block_pr4.5","exp_pr4.5"];N_WORKERS=47
+SHAPE=_R/"results"/"exploratory/screens_e1_e18"/"e2_spectrum_shape.json";OUT=_R/"results"/"exploratory/controls/restart_sensitivity.json";N=28;NDS=400;N_DRAWS=200;RESTARTS=[5,20];CELLS=["two_block_pr4.5","exp_pr4.5"];N_WORKERS=47
 ROOT_SEED=20260918;EXPERIMENT_ID=37;_LAM=None
 def _init(lam):
     global _LAM;_LAM=lam

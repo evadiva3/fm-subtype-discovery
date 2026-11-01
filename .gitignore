@@ -13,7 +13,7 @@ wandb/
 
 # training checkpoints, except the depression canonical checkpoint used by S21
 *.pt
-!results/mdd/canonical_single/bestMddModel.pt
+!results/cohorts/mdd/canonical_single/bestMddModel.pt
 
 # local imaging inputs; only these are distributed
 data/*

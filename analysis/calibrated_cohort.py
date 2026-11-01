@@ -12,7 +12,7 @@ sys.path.insert(0,str(R/"analysis"))
 import mc_calibrated_sensitivity as s24
 from summarize_detection import cutoff
 nc,ov=s24.nc,s24.ov
-CAL=R/"results/revision_20260925/mc_calibrated_sensitivity"
+CAL=R/"results/recorded/s24_s29/mc_calibrated_sensitivity"
 OUT=R/"reproducibility/audits/s24_observed_cohort.json"
 NSEED=20
 

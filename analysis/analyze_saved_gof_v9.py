@@ -24,9 +24,9 @@ def one(task):
     except Exception:return dict(base,error=traceback.format_exc())
     return dict(base,**r)
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,default=ROOT);p.add_argument('--output',type=Path,default=ROOT/'results/embeddings_v9')
+    p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,default=ROOT);p.add_argument('--output',type=Path,default=ROOT/'results/angular/embeddings_v9')
     p.add_argument('--workers',type=int,default=8);a=p.parse_args();repo=a.repo.resolve()
-    sources=json.loads((repo/'results/embeddings_v8/config.json').read_text())['input_sources']
+    sources=json.loads((repo/'results/angular/embeddings_v8/config.json').read_text())['input_sources']
     assert len(sources)==23
     for s in sources:assert sha(repo/s['path'])==s['sha256']
     cfg=dict(version=gof.VERSION,draws=999,auxiliary=200,q=[5,10],input_sources=sources,

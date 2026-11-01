@@ -6,7 +6,7 @@ import os
 
 R=Path(__file__).resolve().parents[2]
 P=R/"paper/figures"
-B=R/"archive/pre_pink_20260923/paper/figures"
+B=R/"archive/figure_inputs"
 
 def rgb(c):
     r,g,b=map(float,c)
@@ -18,7 +18,7 @@ def rgb(c):
 def figs():
     from pdf2image import convert_from_path
     a=[]
-    fresh=(R/"results/revision_20260924/calibrated_detection/summary.json").exists()
+    fresh=(R/"results/recorded/s18_s22/calibrated_detection/summary.json").exists()
     for n in ((1,5,6) if fresh else (1,5,6,7,8)):
         p=B/f"Figure{n}.pdf";d=PdfReader(p);txt=d.pages[0].extract_text();w=PdfWriter()
         for pg in d.pages:
