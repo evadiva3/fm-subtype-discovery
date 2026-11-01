@@ -27,8 +27,13 @@ These commands recalculate the reported rates, check the stored records and sour
 | `reproducibility/s16/` | Frozen independent validation (S16), with its code and 1,800 records |
 | `reproducibility/audits/` | Reproduction checks, paired-count calculations and recovered historical records |
 | `docs/` | Study protocols and the reproduction guide |
+<<<<<<< HEAD
 | `paper/build/`, `paper/figures/` | Figure scripts and the rendered figures |
 | `archive/` | Original drivers behind the stored records, superseded source and figure inputs |
+=======
+| `paper/figures/` | Figure scripts and the rendered figures |
+| `archive/` | Superseded source and figure inputs that current code or S2 File depends on |
+>>>>>>> f8110da88487923f03b7229791f97c3d0488a3c2
 | `data/` | Applied inputs and saved embeddings; see `data/README.md` |
 | `tests/` | Tests of the drivers and package |
 
