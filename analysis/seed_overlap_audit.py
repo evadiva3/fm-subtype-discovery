@@ -5,7 +5,7 @@ from itertools import combinations
 from pathlib import Path
 _R=Path(__file__).resolve().parents[1];sys.path.insert(0,str(_R/"experiments"/"ds002748_mdd"/"propagated_null"))
 import nullcal as nc
-OVN=_R/"results"/"overnight";OUT=_R/"results"/"seed_overlap_audit.json";STRIDE=1000
+OVN=_R/"results"/"exploratory/screens_e1_e18";OUT=_R/"results"/"exploratory/controls/seed_overlap_audit.json";STRIDE=1000
 def load(path):return json.loads(Path(path).read_text())
 def overlap(bases,nds,stride=STRIDE):
     bs=[set((b+stride*i for i in range(nds))) for b in bases];p={"%d_vs_%d"%(bases[a],bases[b]):len(bs[a]&bs[b])/nds for a,b in combinations(range(len(bases)),2)};u=set().union(*bs)
@@ -32,7 +32,7 @@ def audit_conly(name,path,base_key):
         ss=[g["seed"] for g in cl["discordant"]];c["recorded_C_only_distinct_seeds"]=dict(recorded=len(ss),distinct=len(set(ss)),records_complete=len(ss)==cl["total_C_only"]);o["cells"][k]=c
     return o
 def audit_e16():
-    s=load(OVN/"e16_nwb_check.json");n=s["config"]["n_datasets"];o=dict(artifact="results/overnight/e16_nwb_check.json",cells={})
+    s=load(OVN/"e16_nwb_check.json");n=s["config"]["n_datasets"];o=dict(artifact="results/exploratory/screens_e1_e18/e16_nwb_check.json",cells={})
     for k,cl in s["cells"].items():
         bs=[r["base"] for r in cl["replications"]];bp={j:b for j,b in enumerate(bs)}
         c=dict(overlap=overlap(bs,n),stride_check=check_stride(cl["discordant"],bp),pooled_as_published=dict(pooled_M=cl["pooled_M"],pooled_M_ci=cl["pooled_M_ci"],pooled_C=cl["pooled_C"],pooled_C_ci=cl["pooled_C_ci"],total_C_only=cl["total_C_only"],total_M_only=cl["total_M_only"],deep=cl["deep"]),base0_only=reps_fallback(cl,[0]),base0_plus_base1=reps_fallback(cl,[0,1]))
@@ -43,7 +43,7 @@ def audit_e16():
     return o
 def audit_e9():
     s=load(OVN/"e9_calibration_seeds.json");c=s["config"];r=[s["cells"]["rep%d"%j] for j in range(c["n_replications"])]
-    return dict(artifact="results/overnight/e9_calibration_seeds.json",overlap=overlap(c["seed_bases"],c["n_datasets"]),published=dict(C_rates=s["summary"]["C_rates"],C_mean=s["summary"]["C_mean"],M_mean=s["summary"]["M_mean"],M_sd=s["summary"]["M_sd"]),base0_only=dict(M=rate(r[0]["count_M"],r[0]["n_datasets"]),C=rate(r[0]["count_C"],r[0]["n_datasets"])),note="consecutive bases are 100,000 apart with 300 datasets at stride 1,000, so adjacent replications share two thirds of their datasets and only the pairs listed under disjoint_pairs are independent")
+    return dict(artifact="results/exploratory/screens_e1_e18/e9_calibration_seeds.json",overlap=overlap(c["seed_bases"],c["n_datasets"]),published=dict(C_rates=s["summary"]["C_rates"],C_mean=s["summary"]["C_mean"],M_mean=s["summary"]["M_mean"],M_sd=s["summary"]["M_sd"]),base0_only=dict(M=rate(r[0]["count_M"],r[0]["n_datasets"]),C=rate(r[0]["count_C"],r[0]["n_datasets"])),note="consecutive bases are 100,000 apart with 300 datasets at stride 1,000, so adjacent replications share two thirds of their datasets and only the pairs listed under disjoint_pairs are independent")
 def audit_popcov(path):
     s=load(path);n=s["config"]["n_datasets"];o=dict(artifact=str(Path(path).relative_to(_R)),cells={})
     for k,c in s["cells"].items():
@@ -57,6 +57,6 @@ def audit_popcov(path):
         o["cells"][k]=dict(overlap=overlap(v["seed_bases"],n),pooled_as_published=p,base0_only=b0,deep_as_published=v.get("deep"))
     return o
 def main():
-    r=dict(purpose="dataset overlap across four-seed verification replications",seed_rule="dataset i of replication j uses base_j + 1000*i + cell_offset",e1_conly_check=audit_conly("e1",OVN/"e1_conly_check.json","extra_seed_bases"),e2_conly_check=audit_conly("e2",OVN/"e2_conly_check.json","extra_bases"),e16_nwb_check=audit_e16(),e9_calibration_seeds=audit_e9(),popcov_control=audit_popcov(_R/"results"/"popcov_control.json"),popcov_control_cells567=audit_popcov(_R/"results"/"popcov_control_cells567.json"),e2_spectra_seeds="results/overnight/e2_spectra_seeds.json does not exist; the per-seed verification behind the reversal is e2_conly_check.json")
+    r=dict(purpose="dataset overlap across four-seed verification replications",seed_rule="dataset i of replication j uses base_j + 1000*i + cell_offset",e1_conly_check=audit_conly("e1",OVN/"e1_conly_check.json","extra_seed_bases"),e2_conly_check=audit_conly("e2",OVN/"e2_conly_check.json","extra_bases"),e16_nwb_check=audit_e16(),e9_calibration_seeds=audit_e9(),popcov_control=audit_popcov(_R/"results"/"exploratory/controls/popcov_control.json"),popcov_control_cells567=audit_popcov(_R/"results"/"exploratory/controls/popcov_control_cells567.json"),e2_spectra_seeds="results/exploratory/screens_e1_e18/e2_spectra_seeds.json does not exist; the per-seed verification behind the reversal is e2_conly_check.json")
     OUT.write_text(json.dumps(r,indent=1));print("wrote %s"%OUT)
 if __name__=="__main__":main()

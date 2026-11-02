@@ -21,40 +21,55 @@ These commands recalculate the reported rates, check the stored records and sour
 |---|---|
 | `packaging/` | `nullcal` reference constructions and angular statistics, with package tests |
 | `analysis/` | Simulation drivers, summaries and verifiers for the recorded studies |
-| `experiments/ds002748_mdd/` | Depression pipeline and the exploratory screens E1 to E18 and phase 1 runs (`propagated_null/`) |
+| `experiments/ds002748_mdd/` | Depression pipeline, the exploratory screens E1 to E18 and the headline recalibration runs (`propagated_null/`) |
 | `models/`, `src/`, `preprocessing/`, `config.py` | Encoder, training, clustering and preprocessing used to produce the stored embeddings |
-| `results/` | Stored records for every study; see the register in Section S30 |
+| `results/` | Stored records for the studies; see `results/README.md` and the register in Section S30 |
 | `reproducibility/s16/` | Frozen independent validation (S16), with its code and 1,800 records |
 | `reproducibility/audits/` | Reproduction checks, paired-count calculations and recovered historical records |
 | `docs/` | Study protocols and the reproduction guide |
-| `paper/figures/` | Figure scripts and the rendered figures |
-| `archive/` | Superseded source and figure inputs that current code or S2 File depends on |
+| `paper/build/`, `paper/figures/` | Figure scripts and the rendered figures |
+| `archive/` | Original drivers behind the stored records, superseded source and figure inputs |
 | `data/` | Applied inputs and saved embeddings; see `data/README.md` |
 | `tests/` | Tests of the drivers and package |
 
-Use a new output path for every fresh run so that stored results are not overwritten. Do not edit files whose SHA-256 is recorded in `results/` or `reproducibility/`; those records pin the files to their existing contents.
+Use a new output path for every fresh run so that stored results are not overwritten. Do not edit files whose SHA-256 is recorded in `results/` or `reproducibility/`; those records pin the files to their existing contents. When the results folders were renamed, the drivers that name those folders got the new paths, and their exact originals were kept in `archive/recorded_source/`. Verify checks the stored checksums against those copies.
 
 ## License
 
 The code is released under the MIT License; see [LICENSE](LICENSE). The OpenNeuro source datasets keep their own licenses.
 
-## Disclosure
-This project was conceived, designed and carried out by the authors, who set the research questions and hypotheses, wrote the core pipeline code, drafted the manuscript, and interpreted the results. Claude Opus 5.5 (Anthropic) and GPT-6 Astra (OpenAI) supported the work by editing the writing for clarity, generating or substantially editing the files listed below, helping with debugging, auditing the code for errors, and organizing the repository. The authors reviewed all of this work and take full responsibility for the code, analyses and conclusions. The reported results can be reproduced with python reproduce.py verify.
+## Use of AI
 
-Files generated or substantially edited with AI assistance:
+The authors set the research questions, hypotheses and study design, wrote the core pipeline code (`models/`, `src/`, `preprocessing/`, `config.py` and the depression pipeline scripts in `experiments/ds002748_mdd/`), drafted the manuscript and interpreted the results. Generative AI tools from Anthropic and OpenAI, including Claude, Claude Code and Codex, were used to:
 
-Documentation
+- edit the writing for clarity and draft this README and other Markdown files
+- draft or edit simulation, verification and figure code and tests, which the authors then edited and reviewed
+- run some of the simulation studies
+- help with debugging
+- audit the code for errors
+- help organize the repository, stored results, file names and headings
+
+The authors reviewed every analysis choice and all AI-assisted code and text. The ideas, hypotheses and conclusions are the authors' own, and the authors take full responsibility for the code, analyses and conclusions. The reported results can be checked with `python reproduce.py verify`.
+
+Eva Bangsil wrote the original manuscript draft and the initial versions of the student-authored scripts. Inclusion below does not necessarily mean that AI wrote a file's original version: the inventory includes both generated files and substantially edited files. The list is selected rather than exhaustive; AI also assisted with revisions to student-authored files not individually listed.
+
+### Selected files generated or substantially edited with AI assistance
+
+#### Documentation
+
 - README.md
 - archive/README.md
 - data/README.md
 - packaging/README.md
 - paper/figures/README.md
 - reproducibility/s16/README.md
-- results/overnight/RESULTS.md
+- results/exploratory/screens_e1_e18/RESULTS.md
 - docs/REPRODUCING.md
 - docs/S36_POSTHOC_OBSERVED_NOTE_20261009.md
+- results/README.md
 
-Protocols
+#### Protocols
+
 - docs/PROTOCOL_V8.md
 - docs/PROTOCOL_V8_FOLLOWUP.md
 - docs/PROTOCOL_V9.md
@@ -69,7 +84,8 @@ Protocols
 - docs/FOLLOWUP_PROTOCOL_S35_S36_20261008.md
 - docs/FOLLOWUP_PROTOCOL_S36_AMENDMENT_20261009.md
 
-Audit and check scripts
+#### Audit and check scripts
+
 - analysis/audit_angular_gof_v9.py
 - analysis/audit_balanced_v9.py
 - analysis/audit_v9_claims.py
@@ -82,8 +98,14 @@ Audit and check scripts
 - analysis/cohort_restart_check_amendment.py
 - reproducibility/audits/recheck_angular_records.py
 - reproducibility/audits/recheck_counts.py
+- analysis/verify_corrected_power.py
+- analysis/verify_geometry_surface.py
+- analysis/verify_repository.py
+- reproducibility/s16/verify_results.py
+- reproduce.py
 
-Analysis scripts
+#### Analysis scripts
+
 - analysis/mdd_geometry_calibrated.py
 - analysis/shape_aware_minor_axis.py
 - analysis/shape_aware_detection_floor.py
@@ -101,3 +123,31 @@ Analysis scripts
 - experiments/ds002748_mdd/propagated_null/nullcal.py
 - experiments/ds002748_mdd/propagated_null/ov_common.py
 - experiments/ds002748_mdd/propagated_null/r1c_selective_inference.R
+- analysis/analyze_saved_gof_v9.py
+- analysis/geometry_surface.py
+- analysis/scope_detection.py
+- analysis/validate_angular_fourth_v8.py
+- analysis/validate_angular_gof_v9.py
+- analysis/validate_angular_null.py
+- analysis/validate_balanced_v9.py
+- packaging/angular_fourth.py
+- packaging/angular_gof.py
+- packaging/angular_null.py
+- reproducibility/s16/modules/angular_gof.py
+- reproducibility/s16/modules/angular_null.py
+
+#### Experiment scripts
+
+- experiments/ds002748_mdd/run_mdd_pipeline.sh
+
+#### Tests
+
+- tests/conftest.py
+- tests/test_angular_fourth.py
+- tests/test_angular_gof.py
+- tests/test_asymmetric_detection.py
+- tests/test_execution_regressions.py
+
+#### Archived copies
+
+- archive/recorded_source/ (exact copies of the drivers that wrote the stored records)

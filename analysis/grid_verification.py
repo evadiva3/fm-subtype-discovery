@@ -13,7 +13,7 @@ import numpy as np
 _R=Path(__file__).resolve().parents[1];sys.path.insert(0,str(_R/"experiments"/"ds002748_mdd"/"propagated_null"))
 import nullcal as nc
 import ov_common as ov
-ARCHIVE=_R/"results"/"overnight"/"e1_conly_check.json";OUT=_R/"results"/"grid_verification.json";N_RUNS=4;N_WORKERS=47;ROOT_SEED=20260918;EXPERIMENT_ID=35;_LAM=None
+ARCHIVE=_R/"results"/"exploratory/screens_e1_e18"/"e1_conly_check.json";OUT=_R/"results"/"exploratory/controls/grid_verification.json";N_RUNS=4;N_WORKERS=47;ROOT_SEED=20260918;EXPERIMENT_ID=35;_LAM=None
 def _init(lam):
     global _LAM;_LAM=lam
 def one(args):

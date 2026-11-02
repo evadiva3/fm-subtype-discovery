@@ -13,8 +13,8 @@ for p in (R, R / "analysis"):
     sys.path.insert(0, str(p))
 from config import config
 from evaluate import cluster_evaluate
-EMB = R / "results/mdd/canonical_single/Embeddings.npy"
-LAB = R / "results/mdd/canonical_single/K-Means-Labeling.csv"
+EMB = R / "results/cohorts/mdd/canonical_single/Embeddings.npy"
+LAB = R / "results/cohorts/mdd/canonical_single/K-Means-Labeling.csv"
 DRAWS = 20000
 
 

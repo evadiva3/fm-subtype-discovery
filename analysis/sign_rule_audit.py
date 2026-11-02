@@ -1,11 +1,11 @@
 #How often the sign of the re-projection shift predicts the worse construction.
 import json
 from pathlib import Path
-_R=Path(__file__).resolve().parents[1];SRC=_R/"results"/"overnight"/"e18_boundary_surface.json";OUT=_R/"results"/"sign_rule_audit.json";BAND=0.03;GAPS=[0.0,0.02,0.05,0.1]
+_R=Path(__file__).resolve().parents[1];SRC=_R/"results"/"exploratory/screens_e1_e18"/"e18_boundary_surface.json";OUT=_R/"results"/"exploratory/controls/sign_rule_audit.json";BAND=0.03;GAPS=[0.0,0.02,0.05,0.1]
 def agrees(v):return(v["shift"]<0)==(v["rej_C"]>v["rej_M"])
 def main():
     c=json.loads(SRC.read_text())["cells"];r=[v for v in c.values() if not v.get("failed") and v.get("shift") is not None];d=[v for v in r if v["rej_C"]!=v["rej_M"]]
-    o=dict(source="results/overnight/e18_boundary_surface.json",rule="a negative shift predicts that C rejects more often than M, a positive shift the reverse",indeterminate_band_in_sd=BAND,n_cells=len(r),datasets_per_cell=r[0]["n_datasets"],n_cells_with_equal_rates=len(r)-len(d),n_cells_compared=len(d),n_agree=sum((agrees(v) for v in d)),n_disagree=sum((not agrees(v) for v in d)))
+    o=dict(source="results/exploratory/screens_e1_e18/e18_boundary_surface.json",rule="a negative shift predicts that C rejects more often than M, a positive shift the reverse",indeterminate_band_in_sd=BAND,n_cells=len(r),datasets_per_cell=r[0]["n_datasets"],n_cells_with_equal_rates=len(r)-len(d),n_cells_compared=len(d),n_agree=sum((agrees(v) for v in d)),n_disagree=sum((not agrees(v) for v in d)))
     o["exceptions_inside_band"]=sum((1 for v in d if not agrees(v) and abs(v["shift_in_sd"])<BAND))
     o["by_rate_gap"]=[dict(min_gap=g,n=sum((1 for v in d if abs(v["rej_C"]-v["rej_M"])>=g)),agree=sum((1 for v in d if abs(v["rej_C"]-v["rej_M"])>=g and agrees(v)))) for g in GAPS]
     oe=[v for v in d if abs(v["shift_in_sd"])>=BAND];o["outside_band"]=dict(n=len(oe),agree=sum((agrees(v) for v in oe)))

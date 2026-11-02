@@ -43,7 +43,7 @@ def summarize(res,arms):
         pM=np.array([r["pM"] for r in g]);pC=np.array([r["pC"] for r in g]);cl["M_only"]=int(np.sum((pM<ALPHA)&(pC>=ALPHA)));cl["C_only"]=int(np.sum((pC<ALPHA)&(pM>=ALPHA)))
     return(cl,g)
 def main():
-    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"phase1"/s;o1.mkdir(parents=True,exist_ok=True);ot=o1/"r1d_geometry_sweeps.json"
+    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"exploratory/headline_recalibration"/s;o1.mkdir(parents=True,exist_ok=True);ot=o1/"r1d_geometry_sweeps.json"
     import sklearn
     import scipy
     h={"experiment":"R1D regenerated geometry sweeps","purpose":"replace the unarchived Sections 3.1 and 3.2 sweep artifacts","written_utc":s,"d":D,"n_draws":N_DRAWS,"n_init":N_INIT,"k_grid":list(K_GRID),"alpha":ALPHA,"n_datasets_sweep":NDS_SWEEP,"n_datasets_companion":NDS_COMPANION,"seed_base_sweep_A":SEED_A,"seed_base_sweep_B":SEED_B,"seed_base_companion":SEED_COMP,"seed_rule":"dataset i uses seed_base + 1000*i; its draws use seed_base + 1000*i + 7","sweep_A_taus":["inf" if np.isinf(t) else t for t in SWEEP_A_TAUS],"sweep_B_ns":SWEEP_B_NS,"sweep_B_tau":SWEEP_B_TAU,"generative_model":"single unimodal Gaussian, eigenvalues exp(-i/tau) in a random orthonormal basis, rows L2-normalized","versions":{"python":platform.python_version(),"numpy":np.__version__,"scipy":scipy.__version__,"scikit_learn":sklearn.__version__,"platform":platform.platform()}}

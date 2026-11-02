@@ -1,7 +1,8 @@
 # Superseded source
 
-This folder keeps the archived files still needed by the current code or documentation.
+Archived files that current code or the supplement still uses.
 
-- `pre_revision_20260923/` preserves the files replaced by the September 23 cleanup. Its shape-aware drivers apply coordinate offsets after covariance rotation. Their historical results remain in `results/`. The corrected drivers now in `analysis/` use covariance eigenvectors and write to different output filenames. Do not mix the two designs.
-- `pre_pink_20260923/paper/figures/` keeps only the vector inputs used by `paper/build/pink_theme.py`: Figures 1, 5 and 6.
-- `pre_baby_pink_20260923/experiments/ds002748_mdd/propagated_null/e11_consensus.py` contains the consensus source as it stood before the minimum-cluster-size guard fix described in Section S6.2.
+- `recorded_source/` has the exact drivers that wrote the stored records. The current copies differ only in the results paths, which changed when the results folders were renamed. `python reproduce.py verify` checks the stored checksums against these files. Git keeps their bytes unchanged (`.gitattributes`), so the checksums also match on other systems.
+- `shape_aware_before_fix/` has the shape-aware drivers replaced on September 23. They apply coordinate offsets after covariance rotation. Their results are in `results/exploratory/controls/`. The corrected drivers in `analysis/` use covariance eigenvectors and write to other file names. Do not mix the two designs.
+- `figure_inputs/` has the vector inputs used by `paper/build/pink_theme.py` (Figures 1, 5 and 6).
+- `e11_consensus_before_guard_fix.py` is the consensus source from before the minimum-cluster-size guard fix in Section S6.2.

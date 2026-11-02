@@ -1,0 +1,35 @@
+{
+  "n_patients": 28,
+  "n_features": 19900,
+  "participation_ratio_raw": 15.439928273091361,
+  "participation_ratio_sphere": 20.52068272722774,
+  "observed_silhouette": 0.05737027075111319,
+  "observed_k": 2,
+  "n_draws": 1000,
+  "rungs": {
+    "Misspecified (ambient draws, fixed k)": {
+      "p": 0.991008991008991,
+      "null_mean": 0.09037951719596705,
+      "null_sd": 0.018059766090396657,
+      "embedding_space_p": "0.1685"
+    },
+    "Geometry corrected only (sphere, fixed k)": {
+      "p": 0.996003996003996,
+      "null_mean": 0.08733420283017326,
+      "null_sd": 0.015067863284605479,
+      "embedding_space_p": "0.4630"
+    },
+    "Selection corrected only (ambient, k-search)": {
+      "p": 0.995004995004995,
+      "null_mean": 0.0912724757847492,
+      "null_sd": 0.017655629362017214,
+      "embedding_space_p": "0.4033"
+    },
+    "Fully corrected (sphere, k-search)": {
+      "p": 0.998001998001998,
+      "null_mean": 0.08866762136757271,
+      "null_sd": 0.014470277548666527,
+      "embedding_space_p": "0.7009"
+    }
+  }
+}

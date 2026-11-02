@@ -5,6 +5,7 @@ import hashlib
 import json
 import sys
 import numpy as np
+from moves import same
 from scipy.stats import binomtest
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -13,8 +14,8 @@ def sha(path):
 
 def audit(output):
     out={"scope":"Stored records and internal consistency; not a full simulation replay","angular":{},"paired":{},"source_hashes":{}}
-    for study in ("angular_v9","angular_v9_balanced"):
-        folder=ROOT/"results"/study
+    for study,sub in (("angular_v9","v9"),("angular_v9_balanced","v9_balanced")):
+        folder=ROOT/"results/angular"/sub
         summary=json.loads((folder/"summary.json").read_text())
         cfg=summary["config"]
         seen=set()
@@ -32,12 +33,12 @@ def audit(output):
             total+=len(recs)
         out["angular"][study]={"records":total,"unique_sources":len(seen),"cells":len(summary["cells"]),"all_rates_and_intervals_match":True}
         for key,digest in cfg["source_sha256"].items():
-            path=ROOT/("analysis" if key.startswith(("validate_","analyze_")) else "packaging")/key
-            assert sha(path)==digest,(key,"source checksum mismatch")
-            out["source_hashes"][path.relative_to(ROOT).as_posix()]=digest
+            path=("analysis/" if key.startswith(("validate_","analyze_")) else "packaging/")+key
+            assert same(path,digest),(key,"source checksum mismatch")
+            out["source_hashes"][path]=digest
     summ=json.loads((ROOT/"reproducibility/audits/audit_results.json").read_text())["paired_comparisons"]
     for name in ("reversal_verification","grid_verification","statistic_verification"):
-        res=json.loads((ROOT/"results"/(name+".json")).read_text())
+        res=json.loads((ROOT/"results/exploratory/controls"/(name+".json")).read_text())
         for key,cell in res["cells"].items():
             label="grid_"+key if name=="grid_verification" else {"nwb":"negative_within_between","ndb":"negative_Davies_Bouldin"}.get(key,key)
             disc=cell["discordant"]
@@ -50,7 +51,7 @@ def audit(output):
             pval=binomtest(conly,conly+monly,0.5).pvalue if conly+monly else 1.0
             assert np.isclose(pval,summ[label]["exact_two_sided_McNemar_p"],rtol=1e-10,atol=1e-300)
             out["paired"][label]={"C_only":conly,"M_only":monly,"discordant_records":len(disc),"verified":True}
-    head=json.loads((ROOT/"results/headline_embedding.json").read_text())
+    head=json.loads((ROOT/"results/exploratory/controls/headline_embedding.json").read_text())
     for arm in ("M","C"):
         assert sum((r[arm+"_events"] for r in head["blocks"]))==head[arm]["events"]
         assert head[arm]["events"]/head["n_datasets"]==head[arm]["rejection_rate"]
@@ -67,5 +68,5 @@ def audit(output):
     print(json.dumps(out,indent=2))
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output",type=Path,default=ROOT/"results/revision_20260923/repository_audit.json")
+    parser.add_argument("--output",type=Path,default=ROOT/"results/recorded/s6_s9/repository_audit.json")
     audit(parser.parse_args().output)

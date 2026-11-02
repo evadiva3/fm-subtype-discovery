@@ -12,7 +12,7 @@ for _p in (Path(__file__).resolve().parent,_R,_R/"src",_R/"models",_R/"analysis"
 from config import config
 from clustering import cluster
 import bootstrap_stability as bs
-OUT=Path(os.environ.get("MDD_OUT_DIR") or Path(config.resultsRoot)/"mdd")
+OUT=Path(os.environ.get("MDD_OUT_DIR") or Path(config.resultsRoot)/"cohorts/mdd")
 
 class mddCluster(cluster):
 

@@ -71,8 +71,8 @@ def one(task):
     return dict(base,**result)
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--v7-root',type=Path,default=ROOT/'results/validation_v7')
-    p.add_argument('--output',type=Path,default=ROOT/'results/angular_v8')
+    p=argparse.ArgumentParser();p.add_argument('--v7-root',type=Path,default=ROOT/'results/validation/v7')
+    p.add_argument('--output',type=Path,default=ROOT/'results/angular/v8')
     p.add_argument('--datasets',type=int,default=200);p.add_argument('--draws',type=int,default=199)
     p.add_argument('--workers',type=int,default=36);p.add_argument('--n-init',type=int,default=5)
     p.add_argument('--q',nargs='+',type=int,default=[5,10]);p.add_argument('--cells',nargs='*')

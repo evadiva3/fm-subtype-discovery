@@ -10,7 +10,7 @@ for _p in (_R,_R/"src",_R/"models",_R/"analysis"):
         sys.path.insert(0,str(_p))
 from config import config
 from evaluate import cluster_evaluate
-o=config.resultsRoot/"null_guarded_v7"
+o=config.resultsRoot/"exploratory/null_guarded_v7"
 MODES=[("ambient_fixed_guarded",False,False), ("projected_fixed_guarded",True,False), ("ambient_searched",False,True), ("projected_searched",True,True)]
 
 def main(n=None):

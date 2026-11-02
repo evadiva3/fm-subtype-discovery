@@ -1,0 +1,142 @@
+{
+  "config": {
+    "study": "S35b",
+    "experiment": 92,
+    "bootstrap_address": 93,
+    "groups": {
+      "skew": 1000,
+      "heavy": 1000
+    },
+    "calibration": "results/revision_20261008/mdd_calibrated_sensitivity",
+    "root_seed": 20261008,
+    "n": 51,
+    "d": 68,
+    "arms": [
+      "M",
+      "C"
+    ],
+    "draws": 499,
+    "k_grid": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "restarts": 5,
+    "guard": 8,
+    "bootstrap_resamples": 2000,
+    "input_sha256": "5cc4ec3618d5cb9460e9fe4dcd3c2bff8e48591e5c752484c17225089e5964fa",
+    "protocol_sha256": "886051d165379135f5f57138ee5a79247cd1251b379bdd9948c301bf7d2b3f9a",
+    "source_sha256": {
+      "analysis/mdd_geometry_calibrated.py": "d47a62273a461a310f631981f92c5a68fc0181ac0c12b11cec8d77a5f09459fa",
+      "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+      "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443",
+      "analysis/summarize_detection.py": "50d815caf9152f9fa14bb1fca9df58a4fb21b42e7275e874009765fa4ff4de90"
+    },
+    "versions": {
+      "python": "3.13.9",
+      "numpy": "2.5.2",
+      "scipy": "1.18.1",
+      "sklearn": "1.8.0"
+    }
+  },
+  "records_sha256": "208e7741de49b046159477d2b5ce782427b366a5e384e57b8f5ad99d7d6ef768",
+  "calibration_records_sha256": "19f2e3fdac08d7c0c02655c263b8651e36c9d52b4e36fcf8405366ac1073ae72",
+  "cells": {
+    "skew": {
+      "n": 1000,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0,
+      "arms": {
+        "M": {
+          "cutoff": 0.07,
+          "boundary_probability": 0.6666666666666666,
+          "calibrated_events": 715,
+          "calibrated_rate": 0.715,
+          "conditional_wilson95": [
+            0.686240270829361,
+            0.7421142230210808
+          ],
+          "two_stage_bootstrap95": [
+            0.678,
+            0.769
+          ],
+          "nominal_events": 667,
+          "nominal_rate": 0.667,
+          "nominal_wilson95": [
+            0.6371997660070617,
+            0.6955220966581653
+          ]
+        },
+        "C": {
+          "cutoff": 0.376,
+          "boundary_probability": 0.5,
+          "calibrated_events": 652,
+          "calibrated_rate": 0.652,
+          "conditional_wilson95": [
+            0.621946065566373,
+            0.6808905998534743
+          ],
+          "two_stage_bootstrap95": [
+            0.5969749999999999,
+            0.7
+          ],
+          "nominal_events": 150,
+          "nominal_rate": 0.15,
+          "nominal_wilson95": [
+            0.12921007250852232,
+            0.1734686584326187
+          ]
+        }
+      }
+    },
+    "heavy": {
+      "n": 1000,
+      "observed_guard_failures": 0,
+      "reference_guard_failures": 0,
+      "arms": {
+        "M": {
+          "cutoff": 0.07,
+          "boundary_probability": 0.6666666666666666,
+          "calibrated_events": 68,
+          "calibrated_rate": 0.068,
+          "conditional_wilson95": [
+            0.05399245780560125,
+            0.08531386152746426
+          ],
+          "two_stage_bootstrap95": [
+            0.048,
+            0.09502499999999986
+          ],
+          "nominal_events": 44,
+          "nominal_rate": 0.044,
+          "nominal_wilson95": [
+            0.0329382145861849,
+            0.0585517891542731
+          ]
+        },
+        "C": {
+          "cutoff": 0.376,
+          "boundary_probability": 0.5,
+          "calibrated_events": 41,
+          "calibrated_rate": 0.041,
+          "conditional_wilson95": [
+            0.03036497107996454,
+            0.05514799321141753
+          ],
+          "two_stage_bootstrap95": [
+            0.023,
+            0.06
+          ],
+          "nominal_events": 0,
+          "nominal_rate": 0.0,
+          "nominal_wilson95": [
+            0.0,
+            0.0038267584873443055
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,12 +1,12 @@
 #Compare a fresh fixed-architecture retraining run with the saved run for the same seed.
 #Run experiments/ds002748_mdd/propagated_null/mdd_fixed_arch_control.py with MDD_CTRL_ROOT set to a fresh
-#directory first. The saved runs are results/mdd/fixed_arch_control/runs/seed###.json and emb###.npy.
+#directory first. The saved runs are results/cohorts/mdd/fixed_arch_control/runs/seed###.json and emb###.npy.
 import argparse,hashlib,json
 from pathlib import Path
 import numpy as np
 from sklearn.metrics import adjusted_rand_score
 R=Path(__file__).resolve().parents[1]
-S=R/"results/mdd/fixed_arch_control/runs"
+S=R/"results/cohorts/mdd/fixed_arch_control/runs"
 
 def main():
     a=argparse.ArgumentParser()

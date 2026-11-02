@@ -22,7 +22,7 @@ def measure_floor(n,d,A,seed=987654,m=200):
         rg=np.random.default_rng(seed+31*j);r,l=r1b.draw_raw("gmm_R0.3",n,d,A,0.0,rg);v.append(nc.separation_ratio(nc.l2_normalize(r),l))
     return(float(np.mean(v)),float(np.std(v,ddof=1)))
 def main():
-    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"phase1"/s;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1b_gmm_n28_refit.json";t=time.time();cg,g=({},{})
+    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"exploratory/headline_recalibration"/s;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1b_gmm_n28_refit.json";t=time.time();cg,g=({},{})
     for pr in PR_TARGETS:
         k=f"pr{pr:g}_n{N}";tu,p,ok,n=ov.bisect_param(N,D,lambda t:ov.spec_exp(D,t),0.2,200.0,pr,tol=0.05,m=100);rg=np.random.default_rng(SEED_ROOT+hash(k)%100000);A=ov.factor(D,ov.spec_exp(D,tu),rg)
         f,fd=measure_floor(N,D,A);d,r=r1b.tune_delta(N,D,A,R_TARGET);cg[k]={"d":D,"A":A,"delta":{"gmm_R0.3":d}}

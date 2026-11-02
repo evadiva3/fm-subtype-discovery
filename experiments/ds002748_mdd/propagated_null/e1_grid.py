@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore")
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import nullcal as nc
 ROOT=Path(__file__).resolve().parents[3]
-OUTDIR=ROOT/"results"/"overnight"
+OUTDIR=ROOT/"results"/"exploratory/screens_e1_e18"
 OUT=OUTDIR/"e1_grid.json"
 CSV=OUTDIR/"e1_grid.csv"
 D=119

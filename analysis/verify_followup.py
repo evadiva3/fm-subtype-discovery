@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 from headline_recorded import summary,init,one,ov,nc
 from summarize_detection import summarize
+from moves import same
 R=Path(__file__).resolve().parents[1]
 
 def sha(p):
@@ -24,7 +25,7 @@ def audit(d,replay=False):
     assert len({r["data_sha256"] for r in rs})==n
     assert sha(R/"data/outputs/trained_fm_embeddings.npy")==c["input_sha256"]
     for p,v in c["source_sha256"].items():
-        assert sha(R/p)==v,p
+        assert same(p,v),p
     for r in rs:
         for a in ("M","C"):
             if r["guard_failed"]:
@@ -54,7 +55,7 @@ def audit(d,replay=False):
     d2=d/"calibrated_detection"
     cfg=load(d2/"config.json")
     for p,v in cfg["source_sha256"].items():
-        assert sha(R/p)==v,p
+        assert same(p,v),p
     assert sha(R/"docs/FOLLOWUP_PROTOCOL_20260924.md")==cfg["protocol_sha256"]
     cr=[json.loads(l) for l in (d2/"records.jsonl").read_text(encoding="utf-8").splitlines()]
     assert len({r["reference_seed"] for r in cr}|{r["bootstrap_seed"] for r in cr})==2*len(cr)
@@ -74,7 +75,7 @@ def audit(d,replay=False):
 
 if __name__=="__main__":
     p=argparse.ArgumentParser()
-    p.add_argument("--directory",type=Path,default=R/"results/revision_20260924")
+    p.add_argument("--directory",type=Path,default=R/"results/recorded/s18_s22")
     p.add_argument("--replay",action="store_true")
     a=p.parse_args()
     audit(a.directory,a.replay)

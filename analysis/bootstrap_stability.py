@@ -51,7 +51,7 @@ def structural_self_test():
     print("[self-test] duplicate-collapse + ARI alignment ...");f,s=_summary_frame(a);assert len(f)==n and s["n_resamples"]==n,"summary shape mismatch"
     print("[self-test] Good! Bootstrap resampling + ARI logic are sound.");return True
 def main():
-    c=list(config.conditions);r=config.resultsRoot;os.makedirs(r,exist_ok=True);bs=[];print("="*70);print("Bootstrap stability analysis (subtype reproducibility under resampling)")
+    c=list(config.conditions);r=config.resultsRoot/"cohorts/fm";os.makedirs(r,exist_ok=True);bs=[];print("="*70);print("Bootstrap stability analysis (subtype reproducibility under resampling)")
     print(f"  BOOTSTRAP_N_RESAMPLES = {config.bootstrapNResamples}");print("="*70);rs,s,bk=run_real(c)
     if rs is not None:
         o=r/"bootstrap_stability.csv";rs.to_csv(o,index=False);print(f"[bootstrap] wrote {o}")

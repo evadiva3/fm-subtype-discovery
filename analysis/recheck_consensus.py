@@ -6,7 +6,7 @@ import e11_consensus as e
 a=argparse.ArgumentParser();a.add_argument("--output",required=True);p=Path(a.parse_args().output);assert not p.exists(),p
 h=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 d={"purpose":"Corrected consensus guard on the saved depression label vectors; no encoder retraining","seed":e.SEED,"bootstrap_n":e.N_BOOT,"source_sha256":h(P/"e11_consensus.py"),"cells":{},"inputs":[]}
-for n,f,pat in [("fixed_arch",e.load_fixed_arch,"results/mdd/fixed_arch_control/runs/seed*.json"),("search_vary",e.load_search_vary,"results/mdd/multirun_v2/by_run/run*_labels.csv")]:
+for n,f,pat in [("fixed_arch",e.load_fixed_arch,"results/cohorts/mdd/fixed_arch_control/runs/seed*.json"),("search_vary",e.load_search_vary,"results/cohorts/mdd/multirun_v2/by_run/run*_labels.csv")]:
  l,ids,nf=f();assert l is not None and l.shape==(20,51),(n,None if l is None else l.shape)
  if n=="fixed_arch":
   js=[json.loads(q.read_text()) for q in sorted(R.glob(pat)) if "labels"in json.loads(q.read_text())]

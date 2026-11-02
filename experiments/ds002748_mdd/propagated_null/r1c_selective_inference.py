@@ -50,14 +50,14 @@ def gen_cells(work):
     return c
 def real_embeddings():
     f={}
-    for n,r in(("fibromyalgia","data/outputs/trained_fm_embeddings.npy"),("depression","results/mdd/Embeddings.npy")):
+    for n,r in(("fibromyalgia","data/outputs/trained_fm_embeddings.npy"),("depression","results/cohorts/mdd/Embeddings.npy")):
         p=ov.ROOT/r
         if p.exists():f[n]=np.load(p)
     return f
 def main():
     if not RSCRIPT:
         print("Rscript was not found. Add it to PATH or set RSCRIPT to its executable path.");sys.exit(2)
-    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"phase1"/s;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1c_selective_inference.json";w=o1/"_cells";t=time.time()
+    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"exploratory/headline_recalibration"/s;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1c_selective_inference.json";w=o1/"_cells";t=time.time()
     v=R_DRIVER.parent/"_r1c_versions.R"
     v.write_text('cat(R.version.string, "|"); for (p in c("clusterpval","KmeansInference","jsonlite")) cat(p, as.character(packageVersion(p)), "|")\n',encoding="utf-8")
     rv=subprocess.run(RCMD+[str(v)],capture_output=True,text=True);print("R stack:",rv.stdout.strip(),flush=True)

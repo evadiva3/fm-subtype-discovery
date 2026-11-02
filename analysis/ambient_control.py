@@ -15,13 +15,13 @@ import nullcal as nc
 import ov_common as ov
 import popcov_control as pcc
 D=ov.D;NDS=400;N_DRAWS=200;N_INIT=ov.N_INIT;K_GRID=ov.K_GRID;ALPHA=ov.ALPHA;N_WORKERS=47;ROOT_SEED=20260916;EXPERIMENT_ID=31;ARCHIVE_BASE=6000000;DRAW_OFFSET=7919
-OUT=_R/"results"/"ambient_control.json"
+OUT=_R/"results"/"exploratory/controls/ambient_control.json"
 CELLS={"cell1_exp_n28":("exp",28,4.5,0,"popcov_control.json","cell1_exp_n28"),"cell2_exp_n200":("exp",200,4.5,1,"popcov_control.json","cell2_exp_n200"),"cell6_two_block_n180":("two_block",180,30.0,21,"popcov_control_cells567.json","cell6_two_block_n180"),"cell3_two_block_n28":("two_block",28,4.5,10,"popcov_control.json","cell3_two_block_n28"),"cell5_exp_n180":("exp",180,9.0,20,"popcov_control_cells567.json","cell5_exp_n180"),"cell7_exp_n119":("exp",119,6.0,22,"popcov_control_cells567.json","cell7_exp_n119")}
 FRESH=["cell1_exp_n28","cell6_two_block_n180","cell3_two_block_n28","cell5_exp_n180","cell7_exp_n119"]
 REPLAY=["cell1_exp_n28","cell2_exp_n200","cell6_two_block_n180","cell3_two_block_n28","cell5_exp_n180","cell7_exp_n119"];ARMS=["M_est","C_est","M_known","C_known","C_ambient","C_ambient_meanest"]
 _G={}
 def prepare(key):
-    s,n,t,o,at,a=CELLS[key];r=json.loads((_R/"results"/at).read_text())["cells"][a];pcc.PR_TARGET=t;l,p,pe,tr,ok,_=pcc.tune(s,n)
+    s,n,t,o,at,a=CELLS[key];r=json.loads((_R/"results/exploratory/controls"/at).read_text())["cells"][a];pcc.PR_TARGET=t;l,p,pe,tr,ok,_=pcc.tune(s,n)
     if pe!=r["param_value"] or tr!=r["tuned_pr"]:raise AssertionError("%s: tuning does not reproduce the archive (%r %r vs %r %r)"%(key,pe,tr,r["param_value"],r["tuned_pr"]))
     c=pcc.sphere_spectrum(l);assert round(float(c.sum()),10)==1.0;return(l,c,r,dict(param_name=p,param_value=pe,tuned_pr=tr,tuned_ok=bool(ok),archive=at,archive_key=a))
 def _init(lam,c):_G["lam"],_G["c"]=(lam,c)

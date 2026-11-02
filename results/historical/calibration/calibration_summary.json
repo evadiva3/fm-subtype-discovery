@@ -1,0 +1,24 @@
+{
+  "construction": "corrected",
+  "match_selection": true,
+  "match_geometry": true,
+  "n_datasets": 1000,
+  "n_draws": 1000,
+  "mean_p": 0.5556423576423576,
+  "median_p": 0.5689310689310689,
+  "rejection_rate_05": 0.005,
+  "n_rejections": 5,
+  "rejection_rate_05_ci95": [
+    0.002137535526921774,
+    0.01165095537554909
+  ],
+  "ks_D": 0.11574325674325678,
+  "ks_p": 3.9723016772635815e-12,
+  "selected_k_counts": {
+    "2": 337,
+    "3": 197,
+    "4": 263,
+    "5": 177,
+    "6": 26
+  }
+}

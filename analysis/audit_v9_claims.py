@@ -1,8 +1,8 @@
 #Every headline claim of the v9 angular study recomputed from its artifacts
 import json
 from pathlib import Path
-_R=Path(__file__).resolve().parents[1];OUT=_R/"results"/"audit_v9_claims.json";PRIMARY=json.loads((_R/"results"/"angular_v9"/"summary.json").read_text())
-BALANCED=json.loads((_R/"results"/"angular_v9_balanced"/"summary.json").read_text());APPLIED=json.loads((_R/"results"/"embeddings_v9"/"summary.json").read_text());ALPHA=0.05
+_R=Path(__file__).resolve().parents[1];OUT=_R/"results"/"angular/audit_v9_claims.json";PRIMARY=json.loads((_R/"results"/"angular/v9"/"summary.json").read_text())
+BALANCED=json.loads((_R/"results"/"angular/v9_balanced"/"summary.json").read_text());APPLIED=json.loads((_R/"results"/"angular/embeddings_v9"/"summary.json").read_text());ALPHA=0.05
 NULL_FAMILIES=("gaussian","anisotropic")
 def pct(x):return round(100*x,1)
 def cells(summary,kind=None):return{k:v for k,v in summary["cells"].items() if kind is None or v.get("kind")==kind}
@@ -24,7 +24,7 @@ def main():
         r.append(check("follow-up %s %s"%(cl,am),cd,rate(BALANCED,cl,am)))
     sc={s["path"].split("/")[-1]:s for s in APPLIED.get("sources",[])} if isinstance(APPLIED.get("sources"),list) else{};r.append(check("applied input arrays",23,len(sc) or None))
     c1=dict(n_primary_cells=len(PRIMARY["cells"]),n_followup_cells=len(BALANCED["cells"]),primary_datasets_per_cell=PRIMARY["config"]["datasets"],followup_datasets_per_cell=BALANCED["config"]["datasets"],draws=PRIMARY["config"]["draws"])
-    o=dict(source=["results/angular_v9/summary.json","results/angular_v9_balanced/summary.json","results/embeddings_v9/summary.json"],design=c1,intervals_excluding_nominal=el,checks=r,n_checks=len(r),n_disagreements=sum((not c["agrees"] for c in r)),disagreements=[c for c in r if not c["agrees"]])
+    o=dict(source=["results/angular/v9/summary.json","results/angular/v9_balanced/summary.json","results/angular/embeddings_v9/summary.json"],design=c1,intervals_excluding_nominal=el,checks=r,n_checks=len(r),n_disagreements=sum((not c["agrees"] for c in r)),disagreements=[c for c in r if not c["agrees"]])
     OUT.write_text(json.dumps(o,indent=1));print("design:",json.dumps(c1));print("checks %d, disagreements %d"%(o["n_checks"],o["n_disagreements"]))
     for c in o["disagreements"]:print("  MISMATCH %-34s claimed %s found %s"%(c["claim"],c["claimed"],c["found"]))
     print("intervals excluding .05 among null cells:")

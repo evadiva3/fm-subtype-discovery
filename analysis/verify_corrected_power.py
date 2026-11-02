@@ -5,6 +5,7 @@ import hashlib
 import json
 import numpy as np
 from scipy.stats import binomtest
+from moves import same
 ROOT=Path(__file__).resolve().parents[1]
 STUDIES={"shape_aware_article_geometry":("shape_aware_at_article_geometry",1200),"shape_aware_detection_floor":("shape_aware_detection_floor",2800),"shape_aware_minor_axis":("shape_aware_minor_axis",1200)}
 
@@ -20,11 +21,11 @@ def verify(folder):
             path=folder/(mod+"_eigenvector_corrected.json")
         res=json.loads(path.read_text())
         assert res["n_datasets"]==200 and res["draws"]==199
-        assert res["source_sha256"]==sha(ROOT/"analysis"/(mod+".py")),mod
-        assert res["spectrum_file_sha256"]==sha(ROOT/"results/overnight/e2_spectrum_shape.json")
+        assert same("analysis/"+mod+".py",res["source_sha256"]),mod
+        assert res["spectrum_file_sha256"]==sha(ROOT/"results/exploratory/screens_e1_e18/e2_spectrum_shape.json")
         for modname,val in res["module_sha256"].items():
-            p=ROOT/("experiments/ds002748_mdd/propagated_null" if modname=="ov_common" else "packaging")/(modname+".py")
-            assert sha(p)==val,modname
+            p=("experiments/ds002748_mdd/propagated_null/" if modname=="ov_common" else "packaging/")+modname+".py"
+            assert same(p,val),modname
         recs=res["per_dataset_results"]
         assert len(recs)==nrec and all(("error" not in r for r in recs))
         assert len({(r["cell"],r["q"],r["index"]) for r in recs})==nrec
@@ -52,5 +53,5 @@ def verify(folder):
     print(json.dumps(out,indent=2))
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--directory",type=Path,default=ROOT/"results/revision_20260923")
+    p.add_argument("--directory",type=Path,default=ROOT/"results/recorded/s6_s9")
     verify(p.parse_args().directory)

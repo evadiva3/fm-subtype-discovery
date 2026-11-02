@@ -35,10 +35,10 @@ def done(c,f):
     c.save();im=convert_from_path(str(OUT/f"Figure{f}.pdf"),dpi=180,poppler_path=POP)[0];im.save(OUT/f"Figure{f}.png")
 
 def fig3():
-    if (ROOT/"results/revision_20260924/headline/summary.json").exists():
+    if (ROOT/"results/recorded/s18_s22/headline/summary.json").exists():
         import json
         from followup_figures import fig3 as fresh
-        fresh(json.loads((ROOT/"results/revision_20260924/headline/summary.json").read_text(encoding="utf-8"))["summary"])
+        fresh(json.loads((ROOT/"results/recorded/s18_s22/headline/summary.json").read_text(encoding="utf-8"))["summary"])
         return
     c=canvas.Canvas(str(OUT/"Figure3.pdf"),pagesize=(900,355))
     axes(c,48,65,210,230,.23,[0,.05,.10,.15,.20],"A  Headline calibration",.05)
@@ -76,7 +76,7 @@ def fig9():
 def fig2():
     import json
     #e15 spike sweep, rounded as in the reported table
-    cs=list(json.loads((ROOT/"results/overnight/e15_boundary.json").read_text())["cells"].values())
+    cs=list(json.loads((ROOT/"results/exploratory/screens_e1_e18/e15_boundary.json").read_text())["cells"].values())
     hs=[e["spike_S"] for e in cs]
     shift=[round(e["shift_in_sd"],2) for e in cs]
     c=canvas.Canvas(str(OUT/"Figure2.pdf"),pagesize=(700,560))

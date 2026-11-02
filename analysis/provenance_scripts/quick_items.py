@@ -90,7 +90,7 @@ else:
 
 print()
 print("required_n_for_80_power for the clinical tests")
-cv=pd.read_csv(RP/"results/clinical_validation_results.csv")
+cv=pd.read_csv(RP/"results/cohorts/fm/clinical_validation_results.csv")
 print(f"  {len(cv)} tests; columns: {list(cv.columns)}")
 ecol=[c for c in cv.columns if "eps" in c.lower() or "effect" in c.lower()]
 kcol=[c for c in cv.columns if c.lower() in("k","n_groups","groups")]

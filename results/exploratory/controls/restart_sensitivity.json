@@ -1,0 +1,152 @@
+{
+ "experiment": "restart sensitivity of the reversal",
+ "written_utc": "20260919T004613Z",
+ "n": 28,
+ "d": 119,
+ "n_datasets": 400,
+ "n_draws": 200,
+ "restarts": [
+  5,
+  20
+ ],
+ "k_grid": [
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "alpha": 0.05,
+ "seed_rule": "ov_common.hashed_seed(20260918, 37, cell, restart index, dataset, purpose)",
+ "versions": {
+  "python": "3.13.9",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3",
+  "scikit_learn": "1.7.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "n_workers": 47
+ },
+ "cells": {
+  "two_block_pr4.5": {
+   "family": "two_block",
+   "param_value": "1/0.00504807",
+   "archived": {
+    "rej_M": 0.445,
+    "rej_C": 0.6575
+   },
+   "by_restarts": {
+    "5": {
+     "n_init": 5,
+     "n_datasets": 400,
+     "M": {
+      "events": 153,
+      "n": 400,
+      "rate": 0.3825,
+      "wilson95": [
+       0.3362046825295567,
+       0.4310307066400423
+      ]
+     },
+     "C": {
+      "events": 254,
+      "n": 400,
+      "rate": 0.635,
+      "wilson95": [
+       0.5867439222005686,
+       0.6806877583279773
+      ]
+     },
+     "C_only": 103,
+     "M_only": 2,
+     "wall_s": 30.4
+    },
+    "20": {
+     "n_init": 20,
+     "n_datasets": 400,
+     "M": {
+      "events": 163,
+      "n": 400,
+      "rate": 0.4075,
+      "wilson95": [
+       0.36044807923023103,
+       0.456311695222432
+      ]
+     },
+     "C": {
+      "events": 263,
+      "n": 400,
+      "rate": 0.6575,
+      "wilson95": [
+       0.6096946457774416,
+       0.702308981505862
+      ]
+     },
+     "C_only": 102,
+     "M_only": 2,
+     "wall_s": 88.1
+    }
+   }
+  },
+  "exp_pr4.5": {
+   "family": "exp",
+   "param_value": 2.1984794925044238,
+   "archived": {
+    "rej_M": 0.13,
+    "rej_C": 0.015
+   },
+   "by_restarts": {
+    "5": {
+     "n_init": 5,
+     "n_datasets": 400,
+     "M": {
+      "events": 49,
+      "n": 400,
+      "rate": 0.1225,
+      "wilson95": [
+       0.0939131551987736,
+       0.15826862702695896
+      ]
+     },
+     "C": {
+      "events": 3,
+      "n": 400,
+      "rate": 0.0075,
+      "wilson95": [
+       0.002553889194659511,
+       0.021815720728978263
+      ]
+     },
+     "C_only": 0,
+     "M_only": 46,
+     "wall_s": 32.1
+    },
+    "20": {
+     "n_init": 20,
+     "n_datasets": 400,
+     "M": {
+      "events": 48,
+      "n": 400,
+      "rate": 0.12,
+      "wilson95": [
+       0.0917153907479961,
+       0.15551395294943
+      ]
+     },
+     "C": {
+      "events": 3,
+      "n": 400,
+      "rate": 0.0075,
+      "wilson95": [
+       0.002553889194659511,
+       0.021815720728978263
+      ]
+     },
+     "C_only": 2,
+     "M_only": 47,
+     "wall_s": 93.7
+    }
+   }
+  }
+ },
+ "total_wall_s": 244.3
+}

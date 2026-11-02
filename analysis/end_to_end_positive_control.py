@@ -13,7 +13,7 @@ for _p in (_R,_R/"src",_R/"models",_R/"analysis"):
         sys.path.insert(0,str(_p))
 from config import config
 from evaluate import cluster_evaluate
-o=config.resultsRoot
+o=config.resultsRoot/"exploratory/controls"
 
 def build():
     from dataset import datasetPreparation
@@ -48,7 +48,7 @@ def ev(x,y,k,n,t):
     return {"variant":t,"k":int(k),"ari_vs_truth":float(a),"silhouette":float(s),"corrected_p":float(p),"n_items":int(len(x))}
 
 def _raw_decoding():
-    p=config.resultsRoot/"handoff_20260802"/"feature_validity"/"feature_validity.json"
+    p=config.resultsRoot/"historical/handoff"/"feature_validity"/"feature_validity.json"
     if not p.exists():
         raise FileNotFoundError(f"raw-edge decoding baseline not found at {p}. Run analysis/provenance_scripts/feature_validity.py first; this driver does not hardcode the raw accuracies.")
     fv=json.loads(p.read_text())

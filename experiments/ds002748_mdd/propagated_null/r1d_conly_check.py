@@ -19,7 +19,7 @@ def run(args):
     kw=dict(k_grid=K_GRID,n_draws=nd,min_size=g,n_init=N_INIT,seed=b+1000*i+7,observed=(s,k))
     return(i,float(nc.null_test(X,reproject=False,match_selection=False,**kw).p),float(nc.null_test(X,reproject=True,match_selection=True,**kw).p))
 def main():
-    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"phase1"/s;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1d_conly_check.json"
+    s=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ");o1=ov.ROOT/"results"/"exploratory/headline_recalibration"/s;o1.mkdir(parents=True,exist_ok=True);o=o1/"r1d_conly_check.json"
     import scipy
     import sklearn
     se={"header":{"experiment":"R1D C-only verification","purpose":"re-test every C-only discordance of the regenerated sweeps at 2,000 draws","written_utc":s,"d":D,"n_datasets":NDS,"n_draws_screen":200,"n_draws_deep":DEEP,"alpha":ALPHA,"n_init":N_INIT,"k_grid":list(K_GRID),"seed_base_sweep_A":SEED_A,"seed_base_sweep_B":SEED_B,"seed_rule":"dataset i uses seed_base + 1000*i; draws use seed_base + 1000*i + 7","protocol":"Section 3.3 and S3.1 of the article","versions":{"python":platform.python_version(),"numpy":np.__version__,"scipy":scipy.__version__,"scikit_learn":sklearn.__version__,"platform":platform.platform()}},"cells":{}}

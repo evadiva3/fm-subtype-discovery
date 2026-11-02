@@ -1,0 +1,254 @@
+{
+  "config": {
+    "study": "S31",
+    "root_seed": 20260926,
+    "experiment": 87,
+    "d": 119,
+    "cells": {
+      "cell1": {
+        "spectrum": "exp",
+        "n": 28,
+        "source": "results/popcov_control.json",
+        "key": "cell1_exp_n28",
+        "param": 2.1984794925044238
+      },
+      "cell3": {
+        "spectrum": "two_block",
+        "n": 28,
+        "source": "results/popcov_control.json",
+        "key": "cell3_two_block_n28",
+        "param": "1/0.00504807"
+      },
+      "cell6": {
+        "spectrum": "two_block",
+        "n": 180,
+        "source": "results/popcov_control_cells567.json",
+        "key": "cell6_two_block_n180",
+        "param": "1/0.0392419"
+      }
+    },
+    "groups": {
+      "cell1": 400,
+      "cell3": 400,
+      "cell6": 400
+    },
+    "draws": 200,
+    "retest_draws": null,
+    "arms": [
+      "M_fit",
+      "C_fit",
+      "M_H",
+      "C_H",
+      "C_genlaw"
+    ],
+    "alpha": 0.05,
+    "rule": "p < 0.05",
+    "k_grid": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "n_init": 5,
+    "protocol_sha256": "4c994bd9f1717695bb06d709a4b46babe7f3b1c0308545bdd8b3bdf3aef8082e",
+    "source_sha256": {
+      "analysis/recorded_controls.py": "a32a6b7004e2259791154ae6ffc89a4917ba01e5e6caaac2bcd975649bda2bfe",
+      "experiments/ds002748_mdd/propagated_null/nullcal.py": "d9539218ca0493f2a173b8ed91259032a8c5456f5f5cebaa4cebe286aeba698d",
+      "experiments/ds002748_mdd/propagated_null/ov_common.py": "f02e99d692350bd72f5e704d3d6a770fc94d8a618ef47043a905a3f79562a443",
+      "analysis/popcov_control.py": "726b4e77960dfd30dc21a5ed9649391e3aa03b4e25bf023f9e5398cff9df88b4"
+    },
+    "input_sha256": {
+      "results/popcov_control.json": "07e917ebfa8cd4f0cf1d67a3d1a340be4066ed420cc9506659264f3d5ca4e5d9",
+      "results/popcov_control_cells567.json": "feacc200edd603a8b4ab3364cec1a12c148d80674fe9477cba5a2b1d212938f7"
+    },
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "sklearn": "1.9.1"
+    }
+  },
+  "records_sha256": "470bf41b2a1c8211f0bcadb73d083806d2a683b63fd3452e838c3cb197af59fa",
+  "summary_source_sha256": "a32a6b7004e2259791154ae6ffc89a4917ba01e5e6caaac2bcd975649bda2bfe",
+  "cells": {
+    "cell1": {
+      "n": 400,
+      "observed_guard_failures": 0,
+      "participation_ratio_mean": 4.739328268721953,
+      "arms": {
+        "M_fit": {
+          "events": 47,
+          "n": 400,
+          "rate": 0.1175,
+          "wilson95": [
+            0.08952194094434901,
+            0.1527549642247707
+          ]
+        },
+        "C_fit": {
+          "events": 4,
+          "n": 400,
+          "rate": 0.01,
+          "wilson95": [
+            0.0038954837941864006,
+            0.025426564657757784
+          ]
+        },
+        "M_H": {
+          "events": 158,
+          "n": 400,
+          "rate": 0.395,
+          "wilson95": [
+            0.3483102375319486,
+            0.4436873442791824
+          ]
+        },
+        "C_H": {
+          "events": 100,
+          "n": 400,
+          "rate": 0.25,
+          "wilson95": [
+            0.2100790142277167,
+            0.29467713294164266
+          ]
+        },
+        "C_genlaw": {
+          "events": 20,
+          "n": 400,
+          "rate": 0.05,
+          "wilson95": [
+            0.03259742983390078,
+            0.07596363507094593
+          ]
+        }
+      },
+      "C_fit_to_C_H": {
+        "C_H_only": 97,
+        "C_fit_only": 1
+      },
+      "generating_law_within_3_7": true,
+      "generating_law_wilson_contains_5": true
+    },
+    "cell3": {
+      "n": 400,
+      "observed_guard_failures": 0,
+      "participation_ratio_mean": 4.844120230582944,
+      "arms": {
+        "M_fit": {
+          "events": 167,
+          "n": 400,
+          "rate": 0.4175,
+          "wilson95": [
+            0.37018126767077986,
+            0.46638826089510876
+          ]
+        },
+        "C_fit": {
+          "events": 254,
+          "n": 400,
+          "rate": 0.635,
+          "wilson95": [
+            0.5867439222005686,
+            0.6806877583279773
+          ]
+        },
+        "M_H": {
+          "events": 227,
+          "n": 400,
+          "rate": 0.5675,
+          "wilson95": [
+            0.5185345773239701,
+            0.615181262940303
+          ]
+        },
+        "C_H": {
+          "events": 284,
+          "n": 400,
+          "rate": 0.71,
+          "wilson95": [
+            0.6637014956540696,
+            0.7523033407236687
+          ]
+        },
+        "C_genlaw": {
+          "events": 16,
+          "n": 400,
+          "rate": 0.04,
+          "wilson95": [
+            0.024769063066961593,
+            0.06398224772465948
+          ]
+        }
+      },
+      "C_fit_to_C_H": {
+        "C_H_only": 48,
+        "C_fit_only": 18
+      },
+      "generating_law_within_3_7": true,
+      "generating_law_wilson_contains_5": true
+    },
+    "cell6": {
+      "n": 400,
+      "observed_guard_failures": 0,
+      "participation_ratio_mean": 31.361105964140833,
+      "arms": {
+        "M_fit": {
+          "events": 121,
+          "n": 400,
+          "rate": 0.3025,
+          "wilson95": [
+            0.25953936407432837,
+            0.34921799218946553
+          ]
+        },
+        "C_fit": {
+          "events": 231,
+          "n": 400,
+          "rate": 0.5775,
+          "wilson95": [
+            0.528581018114159,
+            0.6249445762633397
+          ]
+        },
+        "M_H": {
+          "events": 220,
+          "n": 400,
+          "rate": 0.55,
+          "wilson95": [
+            0.5010009985691114,
+            0.5980477719970169
+          ]
+        },
+        "C_H": {
+          "events": 262,
+          "n": 400,
+          "rate": 0.655,
+          "wilson95": [
+            0.607139016737716,
+            0.6999121720172814
+          ]
+        },
+        "C_genlaw": {
+          "events": 18,
+          "n": 400,
+          "rate": 0.045,
+          "wilson95": [
+            0.02865145865088141,
+            0.07000472919735247
+          ]
+        }
+      },
+      "C_fit_to_C_H": {
+        "C_H_only": 54,
+        "C_fit_only": 23
+      },
+      "generating_law_within_3_7": true,
+      "generating_law_wilson_contains_5": true
+    }
+  },
+  "checks": {
+    "generating_law_within_3_7_all_cells": true,
+    "C_H_above_C_fit_cells_1_and_6": true
+  }
+}

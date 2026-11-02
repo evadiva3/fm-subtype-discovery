@@ -16,7 +16,7 @@ import nullcal as nc
 import ov_common as ov
 D=ov.D;PR_TARGET=4.5;NDS=400;N_DRAWS=200;DEEP_DRAWS=2000;N_INIT=ov.N_INIT;K_GRID=ov.K_GRID;ALPHA=ov.ALPHA;TOL=ov.TOL;N_WORKERS=47;SEED_BASE=6000000;EXTRA_BASES=[16000000,26000000,36000000]
 DRAW_OFFSET=7919;CELLS=[("cell1_exp_n28","exp",28,0),("cell2_exp_n200","exp",200,1),("cell3_two_block_n28","two_block",28,10),("cell4_two_block_n200","two_block",200,11)]
-OUT=_R/"results"/"popcov_control_independent_v7.json";CSV=_R/"results"/"popcov_control_independent_v7.csv"
+OUT=_R/"results/exploratory/controls"/"popcov_control_independent_v7.json";CSV=_R/"results/exploratory/controls"/"popcov_control_independent_v7.csv"
 CSV_COLS=["cell","spectrum","n","d","regime","pr_target","pr_mean","pr_sd","param_name","param_value","tuned_pr","tuned_ok","n_datasets","n_draws","rej_M","count_M","ci_M_lo","ci_M_hi","rej_C","count_C","ci_C_lo","ci_C_hi","rej_M_known","count_M_known","ci_M_known_lo","ci_M_known_hi","rej_C_known","count_C_known","ci_C_known_lo","ci_C_known_hi","mean_pM","mean_pC","mean_pM_known","mean_pC_known","ks_M","ks_C","ks_M_known","ks_C_known","M_only","C_only","M_only_known","C_only_known","shift_est","shift_sign_est","shift_known","shift_sign_known","verified","total_C_only","total_datasets","deep_persist_frac","wall_s"]
 _LAM=None;_C=None
 def sphere_spectrum(lam,ulo=-50.0,uhi=90.0,npts=40001):

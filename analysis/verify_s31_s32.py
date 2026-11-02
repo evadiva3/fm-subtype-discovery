@@ -4,17 +4,18 @@ for v in ("OMP_NUM_THREADS","MKL_NUM_THREADS","OPENBLAS_NUM_THREADS"):
 import argparse,json
 from pathlib import Path
 import recorded_controls as rc
+from moves import same,summary_ok
 R=Path(__file__).resolve().parents[1]
-D=R/"results/revision_20260926"
+D=R/"results/recorded/s31_s32"
 
 def rows(d):
     return [json.loads(l) for l in (d/"records.jsonl").read_text(encoding="utf-8").splitlines()]
 
 def checksums(cfg):
     for p,v in cfg["source_sha256"].items():
-        assert rc.sha(R/p)==v,p
+        assert same(p,v),p
     for p,v in cfg["input_sha256"].items():
-        assert rc.sha(R/p)==v,p
+        assert same(p,v),p
     assert rc.sha(rc.PROTOCOL)==cfg["protocol_sha256"],"Protocol changed after execution"
 
 def seeds_distinct(rs):
@@ -27,7 +28,7 @@ def audit(d,study,replay):
     rs=rows(d)
     seeds_distinct(rs)
     fn=rc.summarize_a if study=="S31" else rc.summarize_b
-    assert json.loads(json.dumps(fn(d)))==json.loads((d/"summary.json").read_text(encoding="utf-8")),"Summary mismatch"
+    assert summary_ok(json.loads(json.dumps(fn(d))),json.loads((d/"summary.json").read_text(encoding="utf-8")),"analysis/recorded_controls.py"),"Summary mismatch"
     for r in rs:
         for v in r["p"].values():
             z=v*(cfg["draws"]+1)

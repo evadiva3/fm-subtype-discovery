@@ -6,8 +6,9 @@ import argparse,hashlib,json
 from pathlib import Path
 import numpy as np
 from summarize_detection import summarize
+from moves import same
 R=Path(__file__).resolve().parents[1]
-D=R/"results/revision_20260925"
+D=R/"results/recorded/s24_s29"
 
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -20,7 +21,7 @@ def records(d):
 
 def common(d,cfg,rows,protocol):
     for p,v in cfg["source_sha256"].items():
-        assert sha(R/p)==v,p
+        assert same(p,v),p
     assert sha(protocol)==cfg["protocol_sha256"],"Protocol changed after execution"
     assert not any("error" in r for r in rows)
 

@@ -13,8 +13,8 @@ from scipy import stats
 R=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(R/"analysis"))
 from summarize_detection import cutoff,reject,ci
-D=R/"results/revision_20260924"
-D25=R/"results/revision_20260925"
+D=R/"results/recorded/s18_s22"
+D25=R/"results/recorded/s24_s29"
 STUDIES={"S19":D/"calibrated_detection","S20":D/"asymmetric_detection","S22 n=28":D/"scope_detection_n28","S22 n=100":D/"scope_detection_n100","S25 n=50":D25/"sample_size_n50","S25 n=200":D25/"sample_size_n200"}
 A=("W","D4","K","E")
 

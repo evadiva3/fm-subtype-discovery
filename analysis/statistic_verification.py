@@ -14,7 +14,7 @@ _R=Path(__file__).resolve().parents[1];sys.path.insert(0,str(_R/"experiments"/"d
 import nullcal as nc
 import ov_common as ov
 from e6_statistics import best_stat,stat_at_k
-ARCHIVE=_R/"results"/"overnight"/"e16_nwb_check.json";OUT=_R/"results"/"statistic_verification.json";N_RUNS=4;N_WORKERS=47;ROOT_SEED=20260918;EXPERIMENT_ID=34;_LAM=None
+ARCHIVE=_R/"results"/"exploratory/screens_e1_e18"/"e16_nwb_check.json";OUT=_R/"results"/"exploratory/controls/statistic_verification.json";N_RUNS=4;N_WORKERS=47;ROOT_SEED=20260918;EXPERIMENT_ID=34;_LAM=None
 def _init(lam):
     global _LAM;_LAM=lam
 def one(args):

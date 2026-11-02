@@ -14,6 +14,7 @@ import angular_gof as gof
 import nullcal_validation as nv
 from asymmetric_detection import PROJ,spectrum,sha
 import mc_calibrated_sensitivity as s24
+from moves import here
 from summarize_detection import cutoff,reject,ci,summarize
 nc,ov=s24.nc,s24.ov
 PROTOCOL=R/"docs/FOLLOWUP_PROTOCOL_S29_20260925.md"
@@ -121,11 +122,11 @@ def config_a(root,n,ns):
     return dict(study="S29a",root_seed=root,experiment=82,n=n,d=119,qs=[5,10],spectra=["two_block_1_0.01","exponential_tau10"],groups=dict(zip(GA,ns)),draws=199,auxiliary=200,bootstrap_resamples=2000,bootstrap_address=83,diagnostics=["projected_between_scatter","projected_mean_shift"],projection="S19 fixed nested projection (experiment 72 address)",protocol_sha256=sha(PROTOCOL),source_sha256=sources(),versions=versions())
 
 def config_b(root,ns):
-    return dict(study="S29b",root_seed=root,experiment=84,n=s24.N,d=int(s24._X.shape[1]),arms=["M","C"],groups=dict(zip(GB,ns)),draws=499,bootstrap_resamples=2000,bootstrap_address=85,calibration="results/revision_20260925/mc_calibrated_sensitivity",input_sha256=sha(s24.EMB),protocol_sha256=sha(PROTOCOL),source_sha256=sources(),versions=versions())
+    return dict(study="S29b",root_seed=root,experiment=84,n=s24.N,d=int(s24._X.shape[1]),arms=["M","C"],groups=dict(zip(GB,ns)),draws=499,bootstrap_resamples=2000,bootstrap_address=85,calibration="results/recorded/s24_s29/mc_calibrated_sensitivity",input_sha256=sha(s24.EMB),protocol_sha256=sha(PROTOCOL),source_sha256=sources(),versions=versions())
 
 def summarize_b(d):
     cfg=json.loads((d/"config.json").read_text(encoding="utf-8"))
-    cal=[json.loads(l) for l in (R/cfg["calibration"]/"records.jsonl").read_text(encoding="utf-8").splitlines()]
+    cal=[json.loads(l) for l in (here(cfg["calibration"])/"records.jsonl").read_text(encoding="utf-8").splitlines()]
     cal=sorted([r for r in cal if r["group"]=="calibration"],key=lambda r:r["index"])
     assert len(cal)==1000 and not any("error" in r for r in cal)
     rows=[json.loads(l) for l in (d/"records.jsonl").read_text(encoding="utf-8").splitlines()]

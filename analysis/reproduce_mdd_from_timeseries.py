@@ -21,7 +21,7 @@ for p in (R,R/'src',R/'models',R/'experiments/ds002748_mdd'):
     sys.path.insert(0,str(p))
 from config import config
 import dataset_mdd
-C=R/'results/mdd/canonical_single'
+C=R/'results/cohorts/mdd/canonical_single'
 
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
