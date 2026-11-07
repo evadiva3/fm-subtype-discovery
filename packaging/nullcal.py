@@ -6,7 +6,7 @@ from typing import Iterable,Sequence
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
-__all__=["NullResult","LadderResult","CalibrationResult","l2_normalize","participation_ratio","separation_ratio","best_silhouette","null_test","ladder","calibrate_paired","type1_surface_cell","propagated_null_checklist"]
+__all__=["test","AngularResult","NullResult","LadderResult","CalibrationResult","l2_normalize","participation_ratio","separation_ratio","best_silhouette","null_test","ladder","calibrate_paired","type1_surface_cell","propagated_null_checklist"]
 DEFAULT_K_GRID=(2,3,4,5,6)
 _DEGENERATE=-1.0
 
@@ -191,10 +191,10 @@ class LadderResult:
 
     def table(self):
         ro=[("M  misspecified",self.M),("G  reprojected",self.G),("S  search matched",self.S),("C  procedure matched",self.C)]
-        out=[f"observed silhouette {self.C.observed:.4f} at k={self.C.observed_k}, {self.C.n_draws} draws","",f"{"construction":<26}{"p":>10}{"null mean":>12}{"null sd":>10}","-"*58]
+        out=[f"observed silhouette {self.C.observed:.4f} at k={self.C.observed_k}, {self.C.n_draws} draws","",f"{'construction':<26}{'p':>10}{'null mean':>12}{'null sd':>10}","-"*58]
         for na,r in ro:
             out.append(f"{na:<26}{r.p:>10.4f}{r.null_mean:>12.4f}{r.null_sd:>10.4f}")
-        out+=["-"*58,f"{"spread":<26}{self.p_spread:>10.4f}{self.null_mean_spread:>12.4f}","","null's own selected k under C: "+", ".join((f"{k}:{v}" for k,v in sorted(self.C.null_k_counts.items())))]
+        out+=["-"*58,f"{'spread':<26}{self.p_spread:>10.4f}{self.null_mean_spread:>12.4f}","","null's own selected k under C: "+", ".join((f"{k}:{v}" for k,v in sorted(self.C.null_k_counts.items())))]
         if self.C.null_k_counts:
             t=sum(self.C.null_k_counts.values())
             ao=self.C.null_k_counts.get(int(self.C.observed_k),0)
@@ -293,6 +293,36 @@ def type1_surface_cell(n,d,tau,*,n_datasets=120,n_draws=200,k_grid=DEFAULT_K_GRI
 
 def propagated_null_checklist():
     return "\n".join(["PROPAGATED NULL","1. fit a structureless model in raw data space across all subjects","2. write surrogate cohorts in the real layout and run the unmodified pipeline","3. check that real subjects reproduce through the surrogate path first","4. keep the training config and seed of the observed run","5. rerun ~30 draws at identical seeds to split data and retraining variance","cost: one full retraining per draw"])
+#w 
+@dataclass
+class AngularResult:
+    p:float
+    observed:float
+    k:int|None
+    n:int
+    q:int
+    n_draws:int
+    mean_resultant:float
+    reference:np.ndarray=field(repr=False)
+
+    def __repr__(self):
+        return f"<angular W: p={self.p:.4f} observed={self.observed:.4f} at k={self.k} n={self.n} q={self.q} mean_resultant={self.mean_resultant:.3f} ({self.n_draws} draws)>"
+def test(X,*,q=10,n_draws=199,n_init=5,seed=0,projection_seed=0):
+    from angular_null import fixed_projection,whitened_statistic
+    X=np.asarray(X,dtype=np.float64)
+    if X.ndim!=2 or not np.isfinite(X).all():
+        raise ValueError("X must be a finite 2-D array w/ one row per subject")
+    n,d=X.shape
+    q=min(q,d)
+    if q<2:
+        raise ValueError("need at least two features")
+    if n<=q:
+        raise ValueError(f"need more rows than projected dimensions (n={n}, q={q}); lower q")
+    x=l2_normalize(X@fixed_projection(d,q,projection_seed))
+    obs,k,_=whitened_statistic(x,n_init)
+    rng=np.random.default_rng(seed)
+    ref=np.array([whitened_statistic(l2_normalize(rng.standard_normal((n,q))),n_init)[0] for _ in range(n_draws)])
+    return AngularResult(p=float((1+np.count_nonzero(ref>=obs))/(n_draws+1)),observed=float(obs),k=k,n=n,q=q,n_draws=n_draws,mean_resultant=float(np.linalg.norm(x.mean(axis=0))),reference=ref)
 if __name__=="__main__":
     rng=np.random.default_rng(0)
     n,d=(28,119)
