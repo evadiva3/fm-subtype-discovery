@@ -102,7 +102,6 @@ Eva Bangsil wrote the original manuscript draft and the initial versions of the 
 - analysis/verify_geometry_surface.py
 - analysis/verify_repository.py
 - reproducibility/s16/verify_results.py
-- reproduce.py
 
 #### Analysis scripts
 

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nullcal"
-version = "0.4.0"
-description = "Diagnostic simulations of Gaussian cluster-validation nulls with explicit calibration controls."
+version = "0.5.0"
+description = "Cluster tests for normalized embeddings: a calibrated angular test + the historical Gaussian refs and their calibration controls."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

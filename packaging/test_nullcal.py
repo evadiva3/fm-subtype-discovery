@@ -133,3 +133,17 @@ def test_ks_uniform_is_zero_for_a_perfect_grid():
 def test_propagated_null_checklist_is_text():
     t=nc.propagated_null_checklist()
     assert isinstance(t,str) and"PROPAGATED NULL"in t
+
+def test_angular_test_gives_a_reproducible_valid_p():
+    X=anisotropic(d=40)
+    r=nc.test(X,n_draws=19)
+    assert 0.0<r.p<=1.0 and r.q==10 and r.reference.shape==(19,)
+    assert nc.test(X,n_draws=19).p==r.p
+
+def test_angular_test_ignores_row_scale():
+    X=anisotropic(d=40)
+    assert nc.test(X,n_draws=19).p==nc.test(X*np.arange(1,29)[:,None],n_draws=19).p
+
+def test_angular_test_needs_more_rows_than_dimensions():
+    with pytest.raises(ValueError):
+        nc.test(anisotropic(n=10,d=40),q=10)
